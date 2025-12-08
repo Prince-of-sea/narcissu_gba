@@ -1,0 +1,21 @@
+name: build
+
+on:
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        container:
+            image: devkitpro/devkitarm:20251117
+        steps:
+            - uses: actions/checkout@v6
+            - name: run .build.sh
+              run: |
+                  chmod +x ./build.sh
+                  ./build.sh
+            - name: upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  path: |
+                    **/*.gba
