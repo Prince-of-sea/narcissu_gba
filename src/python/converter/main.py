@@ -5,7 +5,7 @@ from core.image_converter import convert_images
 from core.audio_converter import convert_audio
 from core.packer import pack_resources
 
-from utils.logger import log_info
+from utils.log import log_info
 
 
 def main():
