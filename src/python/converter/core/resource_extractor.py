@@ -1,16 +1,10 @@
-def find_garbro_path() -> str:
-    """GARBro のパスを検索して返す"""
-    pass
-
-
-def is_garbro_available(path: str) -> bool:
-    """GARBro が存在するか確認"""
-    pass
+from pathlib import Path
 
 
 def extract_resources(input_path: str = "", output_path: str = "") -> None:
     """
-    GARBro を使ってリソース展開を行う
+    リソース展開を行う
     並列処理で実行される
     """
+    # garbroとりあえず使うとかやりかも 最終的には消す
     pass
