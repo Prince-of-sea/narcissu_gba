@@ -1,3 +1,5 @@
+from pathlib import Path
+
 def run_gbfs(input_dir: str, output_path: str) -> None:
     """gbfs.exe を使ってパックする"""
     pass

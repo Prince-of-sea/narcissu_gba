@@ -1,3 +1,5 @@
+from pathlib import Path
+
 def calc_crc32(filepath: str) -> int:
     """ファイルの CRC32 を返す"""
     pass

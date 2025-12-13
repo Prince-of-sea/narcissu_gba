@@ -1,3 +1,5 @@
+from pathlib import Path
+
 def list_image_paths(base_dir: str = "") -> list:
     """画像パス一覧を取得"""
     pass
