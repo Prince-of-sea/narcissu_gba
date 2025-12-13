@@ -272,3 +272,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# tools - debug
+src/python/converter/tools/
