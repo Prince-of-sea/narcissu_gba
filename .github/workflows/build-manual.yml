@@ -14,14 +14,16 @@ jobs:
               run: |
                   chmod +x ./build.sh
                   ./build.sh
-                  mv ./src/c/game_core/game_core.gba ./
+                  mv ./src/c/game_core/hello.gba ./
+                  mv ./src/c/game_core/hi.gba ./
 
             - name: upload artifact
               uses: actions/upload-artifact@v6
               with:
                   name: build-gba
                   path: |
-                    ./game_core.gba
+                    ./hello.gba
+                    ./hi.gba
 
     build-exe:
         runs-on: windows-latest
@@ -49,7 +51,7 @@ jobs:
             - name: build exe
               run: |
                 ls ./src/python/converter/
-                pyinstaller ./src/python/converter/main.py --onefile --add-data "./game_core.gba;."
+                pyinstaller ./src/python/converter/main.py --onefile --add-data "./hello.gba;." --add-data "./hi.gba;."
 
             - name: upload artifact
               uses: actions/upload-artifact@v6
