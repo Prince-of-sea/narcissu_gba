@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
 
 jobs:
-    build:
+    build-gba:
         runs-on: ubuntu-latest
         container:
             image: devkitpro/devkitarm:20251117
@@ -14,8 +14,38 @@ jobs:
               run: |
                   chmod +x ./build.sh
                   ./build.sh
+
             - name: upload artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v6
               with:
+                  name: build-gba
                   path: |
                     **/*.gba
+
+    build-exe:
+        runs-on: windows-latest
+        needs: [build-gba]
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: download artifact
+              uses: actions/download-artifact@v7
+              with:
+                  name: build-gba
+                  path: ./src/python/converter/
+
+            - name: setup Python
+              uses: actions/setup-python@v6
+              with:
+                  python-version: "3.14"
+            
+            - name: install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install pyinstaller
+                  pip install -r ./src/python/converter/requirements.txt
+
+            - name: build exe
+              run: |
+                ls ./src/python/converter/
+                pyinstaller ./src/python/converter/main.py --onefile
