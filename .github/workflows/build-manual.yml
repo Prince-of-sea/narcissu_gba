@@ -56,4 +56,4 @@ jobs:
               with:
                   name: build-exe
                   path: |
-                    ./src/python/converter/dist/main.exe
+                    ./dist/main.exe
