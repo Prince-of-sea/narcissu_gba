@@ -7,6 +7,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifndef MESSAGE
+#define MESSAGE "Hello World!"
+#endif
+
 //---------------------------------------------------------------------------------
 // Program entry point
 //---------------------------------------------------------------------------------
@@ -24,7 +28,8 @@ int main(void) {
 
 	// ansi escape sequence to set print co-ordinates
 	// /x1b[line;columnH
-	iprintf("\x1b[10;10HHello World!\n");
+	// iprintf("\x1b[10;10HHello World!\n");
+	iprintf("\x1b[10;10H%s\n", MESSAGE);
 
 	while (1) {
 		VBlankIntrWait();
