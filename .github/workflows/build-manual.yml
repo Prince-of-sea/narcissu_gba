@@ -51,11 +51,17 @@ jobs:
             - name: build exe
               run: |
                 ls ./src/python/converter/
-                pyinstaller ./src/python/converter/main.py --onefile --add-data "./hello.gba;." --add-data "./hi.gba;."
+                pyinstaller ./src/python/converter/main.py
+
+            - name: move gba files to dist folder
+              run: |
+                mkdir ./dist/main/core_gba
+                mv ./hello.gba ./dist/main/core_gba/
+                mv ./hi.gba ./dist/main/core_gba/
 
             - name: upload artifact
               uses: actions/upload-artifact@v6
               with:
                   name: build-exe
                   path: |
-                    ./dist/main.exe
+                    ./dist/main
