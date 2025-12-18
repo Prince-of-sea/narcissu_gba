@@ -41,38 +41,65 @@ import re
 
 def convert_txt_to_gbabin(txt_lines):
 
+    # パターン定義
+    BGM_PATTERN            = r'^mp3\s+"(?P<arg1>[^"]*)"'
+    BGM_LOOP_PATTERN       = r'^mp3loop\s+"(?P<arg1>[^"]*)"'
+    BGM_FADEOUT_PATTERN    = r'^mp3fadeout\s+(?P<arg1>\d+)'
+    SE_PATTERN             = r'^dwave\s+(?P<arg1>\d+),\s*"(?P<arg2>[^"]*)"'
+    SE_LOOP_PATTERN        = r'^dwaveloop\s+(?P<arg1>\d+),\s*"(?P<arg2>[^"]*)"'
+    SE_STOP_PATTERN        = r'^dwavestop\s+(?P<arg1>\d+)'
+    STOP_ALL_PATTERN       = r'^stop$'
+    BG_PATTERN             = r'^bg\s+"(?P<arg1>[^"]*)",\s*(?P<arg2>\d+)'
+    CLICK_PATTERN          = r'^click$'
+    WAIT_PATTERN           = r'^wait\s+(?P<arg1>\d+)'
+    WAIT_SHORT_PATTERN     = r'^!w(?P<arg1>\d+)'
+    PAGE_TEXT_PATTERN      = r'^([^\x01-\x7E]|@)+\\'
+    LINE_TEXT_PATTERN      = r'^([^\x01-\x7E]|@)+@'
+    TEXT_PATTERN           = r'^([^\x01-\x7E]|@)+'
+    TEXT_SPEED_RESET       = r'^!sd$'
+    TEXT_SPEED_SET         = r'^!s(?P<arg1>\d+)'
+    ERASE_TEXTWINDOW       = r'^erasetextwindow\s+'
+    SET_WINDOW             = r'^setwindow\s+'
+    MOV_STR_PATTERN        = r'^mov\s+\$(?P<arg1>.*),\s*"(?P<arg2>[^"]*)"'
+    MOV_NUM_PATTERN        = r'^mov\s+\%(?P<arg1>.*),\s*(?P<arg2>\d+)'
+    LABEL_PATTERN          = r'^\*(?P<arg1>.*)'
+
     # 正規表現そのものをキーにした辞書
     # キー：正規表現（名前付きグループ）
     # 値　：GBA側にシナリオとして読み込ませるためのバイナリそのもの
     PATTERNS = {
         # 上から順で読み取らせるので基準が緩いものほど下に
-        r'^dwave\s+(?P<arg1>\d+),\s*"(?P<arg2>.*)"':     (f"DUMMY{0x00}"), # 効果音
-        r'^dwaveloop\s+(?P<arg1>\d+),\s*"(?P<arg2>.*)"': (f"DUMMY{0x00}"), # 効果音ループ(単発 or BGM扱い 検討中)
-        r'^dwavestop\s+(?P<arg1>\d+)':                   (f"DUMMY{0x00}"), # 効果音停止
-        r'^mp3\s+"(?P<arg1>.*)"':                    (f"DUMMY{0x00}"), # bgm
-        r'^mp3loop\s+"(?P<arg1>.*)"':                (f"DUMMY{0x00}"), # bgmループ(とりあえず単発で実装)
-        r'^mp3fadeout\s+(?P<arg1>\d+)':              (f"DUMMY{0x00}"), # bgm止める
-        r'^stop$':                                   (f"DUMMY{0x00}"), # 音声全停止
 
-        r'^bg\s+"(?P<arg1>.*)",\s*(?P<arg2>\d+)':    (f"DUMMY{0x00}"), #背景
-        
-        r'^click$':                                  (f"DUMMY{0x00}"), # クリックして次へ(空文章用意で実装)
-        r'^wait\s+(?P<arg1>\d+)':                    (f"DUMMY{0x00}"), # ウェイト
-        r'^!w(?P<arg1>\d+)':                         (f"DUMMY{0x00}"), # ウェイト
-        
-        r'^([^\x01-\x7E]|@)+\x5c':                     (f"DUMMY{0x00}"), # 改ページ文章
-        r'^([^\x01-\x7E]|@)+@':                        (f"DUMMY{0x00}"), # 改行文章
-        r'^([^\x01-\x7E]|@)+':                         (f"DUMMY{0x00}"), # 普通の文章
+        BGM_PATTERN:         (f"DUMMY{0x00}"),  # bgm
+        BGM_LOOP_PATTERN:    (f"DUMMY{0x00}"),  # bgmループ(とりあえず単発で実装)
+        BGM_FADEOUT_PATTERN: (f"DUMMY{0x00}"),  # bgm止める
+        SE_PATTERN:          (f"DUMMY{0x00}"),  # 効果音
+        SE_LOOP_PATTERN:     (f"DUMMY{0x00}"),  # 効果音ループ(単発 or BGM扱い 検討中)
+        SE_STOP_PATTERN:     (f"DUMMY{0x00}"),  # 効果音停止
+        STOP_ALL_PATTERN:    (f"DUMMY{0x00}"),  # 音声全停止
+
+        BG_PATTERN:          (f"DUMMY{0x00}"),  # 背景
+
+        CLICK_PATTERN:       (f"DUMMY{0x00}"),  # クリックして次へ(空文章用意で実装)
+        WAIT_PATTERN:        (f"DUMMY{0x00}"),  # ウェイト
+        WAIT_SHORT_PATTERN:  (f"DUMMY{0x00}"),  # ウェイト
+
+        PAGE_TEXT_PATTERN:   (f"DUMMY{0x00}"),  # 改ページ文章
+        LINE_TEXT_PATTERN:   (f"DUMMY{0x00}"),  # 改行文章
+        TEXT_PATTERN:        (f"DUMMY{0x00}"),  # 普通の文章
 
         # 面倒なので場所ごとに個別で潰す可能性の高い命令
-        r'^!sd$':                                    (f"DUMMY{0x00}"), # 文字表示速度変更
-        r'^!s(?P<arg1>\d+)':                         (f"DUMMY{0x00}"), # 文字表示速度設定
-        r'^erasetextwindow\s+':                      (f"DUMMY{0x00}"), # 文字表示window削除
-        r'^setwindow\s+':                            (f"DUMMY{0x00}"), # 文字表示位置設定
-        r'^mov\s+\$(?P<arg1>.*),\s*"(?P<arg2>.*)"':  (f"DUMMY{0x00}"), # 文字変数代入(主に章のタイトルに利用)
-        r'^mov\s+\%(?P<arg1>.*),\s*(?P<arg2>\d+)':   (f"DUMMY{0x00}"), # 数字変数代入(詳細不明)
-        r'^\*(?P<arg1>.*)':                          (f"DUMMY{0x00}"), # jump用ラベル
+        TEXT_SPEED_RESET:    (f"DUMMY{0x00}"),  # 文字表示速度変更
+        TEXT_SPEED_SET:      (f"DUMMY{0x00}"),  # 文字表示速度設定
+        ERASE_TEXTWINDOW:    (f"DUMMY{0x00}"),  # 文字表示window削除
+        SET_WINDOW:          (f"DUMMY{0x00}"),  # 文字表示位置設定
+
+        MOV_STR_PATTERN:     (f"DUMMY{0x00}"),  # 文字変数代入(主に章のタイトルに利用)
+        MOV_NUM_PATTERN:     (f"DUMMY{0x00}"),  # 数字変数代入(詳細不明)
+
+        LABEL_PATTERN:       (f"DUMMY{0x00}"),  # jump用ラベル
     }
+
 
     # 一行ごと読み込み
     for line in txt_lines:
@@ -92,8 +119,22 @@ def convert_txt_to_gbabin(txt_lines):
                 if (matched_data := re.match(ptkey, line)):
                     ismatch = True
 
+                    # if (ptkey in [PAGE_TEXT_PATTERN, LINE_TEXT_PATTERN, TEXT_PATTERN]):
+                    #     print(line)
 
-                    # print(matched_data)
+                    if (ptkey in [BGM_PATTERN, BGM_LOOP_PATTERN]):
+                        # print(matched_data.group('arg1'))
+                        pass
+
+                    if (ptkey in [SE_PATTERN, SE_LOOP_PATTERN]):
+                        # print(matched_data.group('arg2'))
+                        pass
+
+                    if (ptkey in [BG_PATTERN]):
+                        print(matched_data.group('arg1'))
+                        pass
+
+                    break
 
             if (ismatch == False):
                 print(f'no_match: {line}')
