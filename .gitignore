@@ -275,3 +275,6 @@ __marimo__/
 
 # tools - debug
 src/python/converter/tools/
+
+
+*.gba
