@@ -23,21 +23,11 @@ import re
 "[]", 3,// 計算式
 
 起点を「1行」とした記録
-つまり配列に入れるときは -1 しようね
 開始地点は*表記から
 終了はgoto行
 
-*image_voice	"プロローグ　ボイスＶｅｒ  "		10126	10598
-*honpen2_voice	"７階　ボイスＶｅｒ"			10622	11709
-*honpen3_voice	"銀のクーペ　ボイスＶｅｒ"		11717	13244
-*honpen4_voice	"地図　ボイスＶｅｒ"			13247	14528
-*honpen5_voice	"エメラルドの海　ボイスＶｅｒ"	14531	15539
-*honpen6_voice	"一号線　ボイスＶｅｒ"			15543	16884
-*honpen7_voice	"エコー　ボイスＶｅｒ"			16889	17897
-*honpen8_voice	"ナルキッソス　ボイスＶｅｒ"	17899	19128
-*honpen9_voice	"白石工務店　ボイスＶｅｒ"		19131	19758
 '''
-
+DEBUG_LIST = []
 
 def convert_txt_to_gbabin(txt_lines):
 
@@ -50,6 +40,7 @@ def convert_txt_to_gbabin(txt_lines):
     SE_STOP_PATTERN        = r'^dwavestop\s+(?P<arg1>\d+)'
     STOP_ALL_PATTERN       = r'^stop$'
     BG_PATTERN             = r'^bg\s+"(?P<arg1>[^"]*)",\s*(?P<arg2>\d+)'
+    TEXTCLEAR_PATTERN      = r'^textclear$'
     CLICK_PATTERN          = r'^click$'
     WAIT_PATTERN           = r'^wait\s+(?P<arg1>\d+)'
     WAIT_SHORT_PATTERN     = r'^!w(?P<arg1>\d+)'
@@ -80,6 +71,7 @@ def convert_txt_to_gbabin(txt_lines):
 
         BG_PATTERN:          (f"DUMMY{0x00}"),  # 背景
 
+        TEXTCLEAR_PATTERN:   (f"DUMMY{0x00}"),  # テキストクリア(ボイス無しでのみ使用？)
         CLICK_PATTERN:       (f"DUMMY{0x00}"),  # クリックして次へ(空文章用意で実装)
         WAIT_PATTERN:        (f"DUMMY{0x00}"),  # ウェイト
         WAIT_SHORT_PATTERN:  (f"DUMMY{0x00}"),  # ウェイト
@@ -119,19 +111,16 @@ def convert_txt_to_gbabin(txt_lines):
                 if (matched_data := re.match(ptkey, line)):
                     ismatch = True
 
-                    # if (ptkey in [PAGE_TEXT_PATTERN, LINE_TEXT_PATTERN, TEXT_PATTERN]):
-                    #     print(line)
-
                     if (ptkey in [BGM_PATTERN, BGM_LOOP_PATTERN]):
-                        # print(matched_data.group('arg1'))
+                        # DEBUG_LIST.append(matched_data.group('arg1'))
                         pass
 
                     if (ptkey in [SE_PATTERN, SE_LOOP_PATTERN]):
-                        # print(matched_data.group('arg2'))
+                        # DEBUG_LIST.append(matched_data.group('arg2'))
                         pass
 
                     if (ptkey in [BG_PATTERN]):
-                        print(matched_data.group('arg1'))
+                        DEBUG_LIST.append(matched_data.group('arg1'))
                         pass
 
                     break
@@ -151,19 +140,30 @@ def main():
     lines = [line.strip() for line in lines]
 
     # 結果を表示
-    convert_txt_to_gbabin(lines[10126:10598])
-    convert_txt_to_gbabin(lines[10622:11709])
-    convert_txt_to_gbabin(lines[11717:13244])
-    convert_txt_to_gbabin(lines[13247:14528])
-    convert_txt_to_gbabin(lines[14531:15539])
-    convert_txt_to_gbabin(lines[15543:16884])
-    convert_txt_to_gbabin(lines[16889:17897])
-    convert_txt_to_gbabin(lines[17899:19128])
-    convert_txt_to_gbabin(lines[19131:19758])
+    convert_txt_to_gbabin(lines[639:1101])# *image	"プロローグ"
+    convert_txt_to_gbabin(lines[1105:2184])# *honpen2	"７階"
+    convert_txt_to_gbabin(lines[2188:3690])# *honpen3	"銀のクーペ"
+    convert_txt_to_gbabin(lines[3693:4945])# *honpen4	"地図"
+    convert_txt_to_gbabin(lines[4948:5926])# *honpen5	"エメラルドの海"
+    convert_txt_to_gbabin(lines[5930:7258])# *honpen6	"一号線"
+    convert_txt_to_gbabin(lines[7263:8255])# *honpen7	"エコー"
+    convert_txt_to_gbabin(lines[8257:9471])# *honpen8	"ナルキッソス"
+    convert_txt_to_gbabin(lines[9474:10120])# *honpen9	"白石工務店"
+
+    convert_txt_to_gbabin(lines[10126:10598])# *image_voice	"プロローグ　ボイスＶｅｒ  "		10126	10598
+    convert_txt_to_gbabin(lines[10622:11709])# *honpen2_voice	"７階　ボイスＶｅｒ"			10622	11709
+    convert_txt_to_gbabin(lines[11717:13244])# *honpen3_voice	"銀のクーペ　ボイスＶｅｒ"		11717	13244
+    convert_txt_to_gbabin(lines[13247:14528])# *honpen4_voice	"地図　ボイスＶｅｒ"			13247	14528
+    convert_txt_to_gbabin(lines[14531:15539])# *honpen5_voice	"エメラルドの海　ボイスＶｅｒ"	14531	15539
+    convert_txt_to_gbabin(lines[15543:16884])# *honpen6_voice	"一号線　ボイスＶｅｒ"			15543	16884
+    convert_txt_to_gbabin(lines[16889:17897])# *honpen7_voice	"エコー　ボイスＶｅｒ"			16889	17897
+    convert_txt_to_gbabin(lines[17899:19128])# *honpen8_voice	"ナルキッソス　ボイスＶｅｒ"	17899	19128
+    convert_txt_to_gbabin(lines[19131:19758])# *honpen9_voice	"白石工務店　ボイスＶｅｒ"		19131	19758
+
+    if DEBUG_LIST:
+        for p in set(DEBUG_LIST): print(p)
 
     pass
-
-
 
 
 main()
