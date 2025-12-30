@@ -6,7 +6,7 @@ from core.audio_converter import convert_audio
 from core.packer import pack_resources
 
 from utils.log import log_info
-
+# arc_unpacker.exe --dec=nscripter/nsa --out="D:\132_shuumatsu_gba\__temp_ex" C:\Users\xxxxx\Desktop\nana24\ナルキッソス\arc.nsa
 
 def main():
     log_info("Start conversion tool")
