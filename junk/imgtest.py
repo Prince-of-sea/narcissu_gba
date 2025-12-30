@@ -1,8 +1,6 @@
 # imgファイルの先頭に、画像の縦、横のパラメータを追加
 from pathlib import Path
 import subprocess
-import os
-import sys
 import struct
 from PIL import Image
 
@@ -195,7 +193,7 @@ def main():
 			right = 240
 			bottom = 180 - 10
 			img_cropped = img_resized.crop((left, top, right, bottom))
-			
+
 			# 4. PNGで保存
 			img_cropped.save(temppng_path, "PNG")
 
@@ -206,7 +204,11 @@ def main():
 		# パラメータ@Param
 		Param(temppng_path, tempbin_path)
 
+		# png削除
 		temppng_path.unlink()
+
+		# デバッグ:元々あったら消す
+		if output_path.exists(): output_path.unlink()
 
 		tempbin_path.rename(output_path)
 
