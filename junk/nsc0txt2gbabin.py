@@ -766,6 +766,7 @@ def convert_txt_to_gbabin(txt_lines):
 
             if (ismatch == False):
                 print(f'no_match: {line}')
+
     
     # 2→1次元配列へ変換してから0x00で結合してバイナリへ
     line_command_bin = b"\x00".join(
@@ -777,10 +778,16 @@ def convert_txt_to_gbabin(txt_lines):
     return bytes(line_command_bin)
 
 
-
+    #     ['0', str(command_cnt)],
+    #     ['!t', 'サブタイトル仮', str(command_cnt)],
+    #     ['#W', '0', str(command_cnt)],
+    # line_command_list.append(['!t', str(command_cnt)])
+    # line_command_list.append([';;'])
+    
 def main():
 
-    input_path = Path('D:/132_shuumatsu_gba/0.txt')
+    input_path =  Path('D:/132_shuumatsu_gba/0.txt')
+    output_path = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/SCN003_main.bin')
 
     scn_bin_list = []
 
@@ -813,7 +820,7 @@ def main():
 
     if DEBUG_LIST:
         for p in set(DEBUG_LIST): print(p)
-    with open("output.bin", "wb") as f: f.write(b"\x00".join(scn_bin_list))
+    with open(output_path, "wb") as f: f.write(b"\x00".join(scn_bin_list))
     pass
 
 
