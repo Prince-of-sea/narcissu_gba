@@ -463,6 +463,8 @@ FMX_LIST = [
 
 # ===== 変換画像一覧 =====
 IMG_LIST = [
+	[  0,'tui/title_off2.bmp'],
+	[  1,'tui/title_off.bmp'],
 	[ 10,'e/amazora02.jpg'],
 	[ 11,'e/amazora03.jpg'],
 	[ 12,'e/b.jpg'],

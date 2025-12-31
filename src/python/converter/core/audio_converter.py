@@ -3,22 +3,26 @@ import concurrent.futures
 import subprocess
 from pathlib import Path
 
-from paths import BGM_LIST, FMX_LIST
+from .paths import BGM_LIST, FMX_LIST
 
 #####後で消す#####
 SOX_EXE = Path(r"C:/Program Files (x86)/sox-14-4-2/sox.exe")
-input_dir = Path(r'D:/132_shuumatsu_gba/__test_ex')
-temp_dir = Path(r'D:/132_shuumatsu_gba/__temp_ex')
+input_dir = Path(r'D:/132_shuumatsu_gba/__test_ex/arc~.nsa')
+temp_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
 ##############
 
 
-def run_sox(input_path: Path, tempraw_path: Path) -> None:
+def run_sox(input_path: Path, tempraw_path: Path, is_bgm: bool) -> None:
     """sox.exeを使って変換"""
 
     # ここ後でGUI側で編集できるようにする予定
     rate = 5256
 
-    cmd = [SOX_EXE, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_path]
+    if is_bgm:
+        cmd = [SOX_EXE, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_path]
+    else:
+        cmd = [SOX_EXE, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_path, 'gain', '-l', '6']
+    
     subprocess.run(cmd, cwd = temp_dir)
 
     return
@@ -44,7 +48,7 @@ def convert_audio_parallel(img_info: list[int, str], is_bgm: bool) -> None:
         tempraw_path.unlink()
 
     # sox.exeを使って変換
-    run_sox(input_path, tempraw_path)
+    run_sox(input_path, tempraw_path, is_bgm)
 
     # 競合するファイルがあれば削除
     if output_path.exists(): 

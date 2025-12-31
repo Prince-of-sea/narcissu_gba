@@ -5,13 +5,16 @@ import struct
 from pathlib import Path
 from PIL import Image
 
-from paths import IMG_LIST
+from .paths import IMG_LIST
 
 
 #####後で消す#####
 GRIT_EXE = Path(r"D:/132_shuumatsu_gba/gbfs/exe/img/grit.exe")
-input_dir = Path(r'D:/132_shuumatsu_gba/__test_ex')
-temp_dir = Path(r'D:/132_shuumatsu_gba/__temp_ex')
+input_dir = Path(r'D:/132_shuumatsu_gba/__test_ex/arc~.nsa')
+temp_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
+
+# arc_unpackerはbmpをpngでデコードするので治す
+
 ##############
 
 # def compress_image(img):
@@ -82,9 +85,13 @@ def convert_image_parallel(img_info: list[int, str]) -> None:
     input_path = (input_dir / Path(p_relative_path))
 
     p_index = str(img_info[0]).zfill(3)
-    temppng_path = (temp_dir / f'{p_index}.png')
-    tempbin_path = (temp_dir / f'{p_index}.img.bin')
-    output_path = (temp_dir / f'{p_index}.bin')
+    temppng_path = (temp_dir / f'img{p_index}.png')
+    tempbin_path = (temp_dir / f'img{p_index}.img.bin')
+    output_path = (temp_dir / f'img{p_index}.bin')
+
+    # arc_unpackerはbmpをpngでデコードするのでパスもそれに合わせる
+    if (input_path.suffix == '.bmp'):
+        input_path = (input_path.with_suffix('.png'))
 
     # リサイズ@pil - ここも関数分け予定
     # 1. 画像を読み込み
