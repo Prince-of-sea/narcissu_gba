@@ -5,7 +5,7 @@ import re
 from .paths import IMG_LIST, BGM_LIST, FMX_LIST
 
 #####後で消す#####
-input_path = Path('D:/132_shuumatsu_gba/0.txt')
+nsdat_path = Path('D:/132_shuumatsu_gba/nscript.dat')
 temp_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
 ##################
 
@@ -38,20 +38,16 @@ temp_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
 #     pass
 
 
-# def decrypt_0x84(data: bytes) -> bytes:
-#     """0x84 複合化"""
-#     pass
+def decrypt_0x84(data: bytes) -> bytes:
+    """0x84 複合化"""
+    bin_list = []  # 復号したバイナリを格納する配列の作成
 
-# def openread0x84bitxor(p: Path, charset: str = 'cp932'):
-#     data = open(p, 'rb').read()  # 復号化前のtxt読み込み用変数
-#     bin_list = []  # 復号したバイナリを格納する配列の作成
+    for b in range(len(data)):  # 復号 0x84でbitxor
+        bin_list.append(bytes.fromhex(
+            str((hex(int(data[b]) ^ int(0x84))[2:].zfill(2)))))
 
-#     for b in range(len(data)):  # 復号 0x84でbitxor
-#         bin_list.append(bytes.fromhex(
-#             str((hex(int(data[b]) ^ int(0x84))[2:].zfill(2)))))
-
-#     decode_text = (b''.join(bin_list)).decode(charset, errors='ignore')
-#     return decode_text
+    decode_text = (b''.join(bin_list)).decode('cp932', errors='ignore')
+    return decode_text
 
 
 # def split_scenario_into_chapters(data: bytes) -> dict:
@@ -257,7 +253,7 @@ def convert_txt_to_gbabin(txt_lines):
     return scn_list
 
 
-def convert_scenario(debug: bool = False) -> None:
+def convert_scenario() -> None:
     """シナリオ変換の全処理"""
 
     scn_list = {
@@ -267,9 +263,14 @@ def convert_scenario(debug: bool = False) -> None:
         '005': ['0', '0000', '!t', '起動ーボイスあり', '0000', '#W', '0', '0000'],
     }
 
+    nsdat_data = open(nsdat_path, 'rb').read()
+    lines = decrypt_0x84(nsdat_data).splitlines()
+
     # 0.txtを読み取り
-    with open(input_path, 'r', encoding='cp932') as file:
-        lines = file.readlines()
+    # with open(input_path, 'r', encoding='cp932') as file:
+    #     lines = file.readlines()
+
+
 
     # 改行文字を削除
     lines = [line.strip() for line in lines]
