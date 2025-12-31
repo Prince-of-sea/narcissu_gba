@@ -42,6 +42,17 @@ temp_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
 #     """0x84 複合化"""
 #     pass
 
+# def openread0x84bitxor(p: Path, charset: str = 'cp932'):
+#     data = open(p, 'rb').read()  # 復号化前のtxt読み込み用変数
+#     bin_list = []  # 復号したバイナリを格納する配列の作成
+
+#     for b in range(len(data)):  # 復号 0x84でbitxor
+#         bin_list.append(bytes.fromhex(
+#             str((hex(int(data[b]) ^ int(0x84))[2:].zfill(2)))))
+
+#     decode_text = (b''.join(bin_list)).decode(charset, errors='ignore')
+#     return decode_text
+
 
 # def split_scenario_into_chapters(data: bytes) -> dict:
 #     """章ごとに分割して辞書で返す"""
@@ -295,6 +306,15 @@ def convert_scenario(debug: bool = False) -> None:
         
         with open(output_path, "wb") as f:
             f.write(scn_bin)
+    
+    ################################
+    # byte列として変数に格納
+    savid = bytes.fromhex('53 52 41 4D 5F 56 6E 6E 6E 00 00 00 00 00 00 00')
+
+    # ファイル「savid.bin」として保存
+    with open(temp_dir / 'savid.bin', 'wb') as f:
+        f.write(savid)
+    ####################################
         
     pass
 
