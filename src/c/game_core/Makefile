@@ -1,167 +1,100 @@
-#---------------------------------------------------------------------------------
-.SUFFIXES:
-#---------------------------------------------------------------------------------
+MAKEFLAGS += --no-print-directory
 
-ifeq ($(strip $(DEVKITARM)),)
-$(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM")
-endif
+SHELL      = sh
+NAME       = test
+GAMECODE   = TEST
+PREFIX     = arm-none-eabi-
 
-include $(DEVKITARM)/gba_rules
+AS         = $(PREFIX)as
+CC         = $(PREFIX)gcc
+CPP        = $(PREFIX)g++
+LD         = $(PREFIX)g++
+AR         = $(PREFIX)ar
+OBJCOPY    = $(PREFIX)objcopy
+NM         = $(PREFIX)nm
 
-#---------------------------------------------------------------------------------
-# TARGET is the name of the output
-# BUILD is the directory where object files & intermediate files will be placed
-# SOURCES is a list of directories containing source code
-# INCLUDES is a list of directories containing extra header files
-# DATA is a list of directories containing binary data
-# GRAPHICS is a list of directories containing files to be processed by grit
-#
-# All directories are specified relative to the project directory where
-# the makefile is found
-#
-#---------------------------------------------------------------------------------
-TARGET		:= $(notdir $(CURDIR))
-BUILD		:= build
-SOURCES		:= source
-INCLUDES	:= include
-DATA		:=
-MUSIC		:=
+OBJDIR     = obj
+MAPFILE    = $(NAME).map
+NMFILE     = $(NAME).nm
+TARGET_ELF = $(NAME).elf
+TARGET_BIN = $(NAME).gba
 
-#---------------------------------------------------------------------------------
-# options for code generation
-#---------------------------------------------------------------------------------
-ARCH	:=	-mthumb -mthumb-interwork
+INCDIR	= .  ./libbios ./libgba ./libmy
 
-CFLAGS	:=	-g -Wall -O2\
-		-mcpu=arm7tdmi -mtune=arm7tdmi\
-		$(ARCH)
+SFILES	= \
+	$(wildcard res/*.s) \
+	$(wildcard snd/*.s) \
+	$(wildcard libbios/*.s) \
+	$(wildcard libgba/*.s) \
+	$(wildcard libmy/*.s) \
+	$(wildcard *.s) \
 
-CFLAGS	+=	$(INCLUDE)
+CFILES	= \
+	$(wildcard res/*.c) \
+	$(wildcard snd/*.c) \
+	$(wildcard libbios/*.c) \
+	$(wildcard libgba/*.c) \
+	$(wildcard libmy/*.c) \
+	$(wildcard *.c) \
 
+VPATH = $(dir $(CFILES) $(SFILES))
 
-CFLAGS += -DMESSAGE=\"$(MESSAGE)\"
+#=============================================================================
+# added libgba
 
+LIBS = -lgba
+LIBPATHS = $(foreach dir,$(DEVKITPRO)/libgba,-L$(dir)/lib)
 
-CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
+INCDIR1 = $(foreach dir,$(INCDIR),-I$(dir))
+INCDIR2 = $(foreach dir,$(DEVKITPRO)/libgba,-I$(dir)/include)
 
-ASFLAGS	:=	-g $(ARCH)
-LDFLAGS	=	-g $(ARCH) -Wl,-Map,$(notdir $*.map)
+#=============================================================================
 
-#---------------------------------------------------------------------------------
-# any extra libraries we wish to link with the project
-#---------------------------------------------------------------------------------
-LIBS	:= -lmm -lgba
+ASFLAGS = 
+LDFLAGS = -Map $(MAPFILE) -Wall -specs=gba.specs -nostartfiles -nostdlib $(LIBS) $(LIBPATHS)
+CFLAGS  = -g -O3 -mcpu=arm7tdmi -mtune=arm7tdmi -fomit-frame-pointer -ffast-math -Wall -W -Wshadow -Wno-unused-parameter -Wno-strict-aliasing $(INCDIR1) $(INCDIR2)
+OFILES  = $(addprefix $(OBJDIR)/, $(addsuffix .o, $(basename $(notdir $(SFILES) $(CFILES)))))
+DFILES  = $(addprefix $(OBJDIR)/, $(addsuffix .d, $(basename $(notdir $(SFILES) $(CFILES)))))
 
+#=============================================================================
 
-#---------------------------------------------------------------------------------
-# list of directories containing libraries, this must be the top level containing
-# include and lib
-#---------------------------------------------------------------------------------
-LIBDIRS	:=	$(LIBGBA)
+.PHONY: all clean
+all: 
+	@make -C res
+	@make $(TARGET_BIN);
 
-#---------------------------------------------------------------------------------
-# no real need to edit anything past this point unless you need to add additional
-# rules for different file extensions
-#---------------------------------------------------------------------------------
-
-
-ifneq ($(BUILD),$(notdir $(CURDIR)))
-#---------------------------------------------------------------------------------
-
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
-
-export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
-			$(foreach dir,$(DATA),$(CURDIR)/$(dir)) \
-			$(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir))
-
-export DEPSDIR	:=	$(CURDIR)/$(BUILD)
-
-CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
-CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
-SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
-BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
-
-ifneq ($(strip $(MUSIC)),)
-	export AUDIOFILES	:=	$(foreach dir,$(notdir $(wildcard $(MUSIC)/*.*)),$(CURDIR)/$(MUSIC)/$(dir))
-	BINFILES += soundbank.bin
-endif
-
-#---------------------------------------------------------------------------------
-# use CXX for linking C++ projects, CC for standard C
-#---------------------------------------------------------------------------------
-ifeq ($(strip $(CPPFILES)),)
-#---------------------------------------------------------------------------------
-	export LD	:=	$(CC)
-#---------------------------------------------------------------------------------
-else
-#---------------------------------------------------------------------------------
-	export LD	:=	$(CXX)
-#---------------------------------------------------------------------------------
-endif
-#---------------------------------------------------------------------------------
-
-export OFILES_BIN := $(addsuffix .o,$(BINFILES))
-
-export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
-
-export OFILES := $(OFILES_BIN) $(OFILES_SOURCES)
-
-export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES)))
-
-export INCLUDE	:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
-					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-					-I$(CURDIR)/$(BUILD)
-
-export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
-
-.PHONY: $(BUILD) clean
-
-#---------------------------------------------------------------------------------
-$(BUILD):
-	@[ -d $@ ] || mkdir -p $@
-	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
-
-#---------------------------------------------------------------------------------
 clean:
-	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).gba
+	@make clean -C res
+	rm -f $(OFILES) $(DFILES) $(MAPFILE) $(NMFILE) $(TARGET_ELF) $(TARGET_BIN)
 
+$(TARGET_BIN): $(TARGET_ELF)
+	@$(PREFIX)objcopy -v -O binary $< $@
+	@gbafix $@ -t$(NAME) -c$(GAMECODE)
+	@padbin 256 $@
 
-#---------------------------------------------------------------------------------
-else
+$(TARGET_ELF): $(OBJDIR) $(OFILES) Makefile
+	@echo \# Linking $@
+	@echo > $(MAPFILE)
+	@$(LD) -o $@ $(OFILES) -Wl,$(LDFLAGS)
+	@$(NM) -n $@ > $(NMFILE)
 
-#---------------------------------------------------------------------------------
-# main targets
-#---------------------------------------------------------------------------------
+$(OBJDIR):
+	@[ -d $@ ] || mkdir -p $@
 
-$(OUTPUT).gba	:	$(OUTPUT).elf
+#=============================================================================
 
-$(OUTPUT).elf	:	$(OFILES)
+.SUFFIXES: .s .c .o .d
 
-$(OFILES_SOURCES) : $(HFILES)
+$(OBJDIR)/%.arm.o: %.arm.c
+	@echo \# compiling $<
+	@$(CC) -MMD -MP -MF $(OBJDIR)/$*.arm.d $(CFLAGS) -marm -c $< -o $@
 
-#---------------------------------------------------------------------------------
-# The bin2o rule should be copied and modified
-# for each extension used in the data directories
-#---------------------------------------------------------------------------------
+$(OBJDIR)/%.o: %.c
+	@echo \# compiling $<
+	@$(CC) -MMD -MP -MF $(OBJDIR)/$*.d $(CFLAGS) -mthumb -c $< -o $@
 
-#---------------------------------------------------------------------------------
-# rule to build soundbank from music files
-#---------------------------------------------------------------------------------
-soundbank.bin soundbank.h : $(AUDIOFILES)
-#---------------------------------------------------------------------------------
-	@mmutil $^ -osoundbank.bin -hsoundbank.h
+$(OBJDIR)/%.o: %.s
+	@echo \# assembling $<
+	@$(CC) -MMD -MP -MF $(OBJDIR)/$*.d -x assembler-with-cpp $(ASFLAGS) -c $< -o $@
 
-#---------------------------------------------------------------------------------
-# This rule links in binary data with the .bin extension
-#---------------------------------------------------------------------------------
-%.bin.o	%_bin.h :	%.bin
-#---------------------------------------------------------------------------------
-	@echo $(notdir $<)
-	@$(bin2o)
-
-
--include $(DEPSDIR)/*.d
-#---------------------------------------------------------------------------------------
-endif
-#---------------------------------------------------------------------------------------
+-include $(DFILES)
