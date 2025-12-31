@@ -10,7 +10,7 @@ from .paths import IMG_LIST
 
 #####後で消す#####
 GRIT_EXE = Path(r"D:/132_shuumatsu_gba/gbfs/exe/img/grit.exe")
-input_dir = Path(r'D:/132_shuumatsu_gba/__test_ex/arc~.nsa')
+nsa_extract_dir = Path(r'D:/132_shuumatsu_gba/__test_ex/arc~.nsa')
 temp_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
 
 # arc_unpackerはbmpをpngでデコードするので治す
@@ -82,7 +82,7 @@ def convert_image_parallel(img_info: list[int, str]) -> None:
     """画像の並列変換処理"""
 
     p_relative_path = img_info[1]
-    input_path = (input_dir / Path(p_relative_path))
+    nsa_extract_path = (nsa_extract_dir / Path(p_relative_path))
 
     p_index = str(img_info[0]).zfill(3)
     temppng_path = (temp_dir / f'img{p_index}.png')
@@ -90,12 +90,12 @@ def convert_image_parallel(img_info: list[int, str]) -> None:
     output_path = (temp_dir / f'img{p_index}.bin')
 
     # arc_unpackerはbmpをpngでデコードするのでパスもそれに合わせる
-    if (input_path.suffix == '.bmp'):
-        input_path = (input_path.with_suffix('.png'))
+    if (nsa_extract_path.suffix == '.bmp'):
+        nsa_extract_path = (nsa_extract_path.with_suffix('.png'))
 
     # リサイズ@pil - ここも関数分け予定
     # 1. 画像を読み込み
-    with Image.open(input_path) as img:
+    with Image.open(nsa_extract_path) as img:
 
         # 2. 240x180にリサイズ（縮小）
         img = img.resize((240, 180), Image.LANCZOS)
