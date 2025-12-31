@@ -5,13 +5,14 @@ import struct
 from pathlib import Path
 from PIL import Image
 
+from core.config import AppConfig
 from .paths import IMG_LIST
 
 
 #####後で消す#####
-GRIT_EXE = Path(r"D:/132_shuumatsu_gba/gbfs/exe/img/grit.exe")
-nsa_extract_dir = Path(r'D:/132_shuumatsu_gba/__test_ex/arc~.nsa')
-temp_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
+# GRIT_EXE = Path(r"D:/132_shuumatsu_gba/gbfs/exe/img/grit.exe")
+# nsa_extract_dir = Path(r'D:/132_shuumatsu_gba/__test_ex/arc~.nsa')
+# convert_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
 
 # arc_unpackerはbmpをpngでデコードするので治す
 
@@ -47,11 +48,11 @@ temp_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
 #     pass
 
 
-def run_grit(in_path: Path) -> None:
+def run_grit(cfg: AppConfig, in_path: Path) -> None:
     """grit.exe を使って変換"""
 
-    cmd = [GRIT_EXE, in_path, '-gb', '-gB16', '-ftb', '-gu16', '-fh!']
-    subprocess.run(cmd, cwd = temp_dir)
+    cmd = [cfg.grit_exe, in_path, '-gb', '-gB16', '-ftb', '-gu16', '-fh!']
+    subprocess.run(cmd, cwd = cfg.convert_dir)
     
     return
 
@@ -78,16 +79,16 @@ def append_footer_data(i: Path, f: Path) -> None:
     return
 
 
-def convert_image_parallel(img_info: list[int, str]) -> None:
+def convert_image_parallel(cfg: AppConfig, img_info: list[int, str]) -> None:
     """画像の並列変換処理"""
 
     p_relative_path = img_info[1]
-    nsa_extract_path = (nsa_extract_dir / Path(p_relative_path))
+    nsa_extract_path = (cfg.nsa_extract_dir / Path(p_relative_path))
 
     p_index = str(img_info[0]).zfill(3)
-    temppng_path = (temp_dir / f'img{p_index}.png')
-    tempbin_path = (temp_dir / f'img{p_index}.img.bin')
-    output_path = (temp_dir / f'img{p_index}.bin')
+    temppng_path = (cfg.convert_dir / f'img{p_index}.png')
+    tempbin_path = (cfg.convert_dir / f'img{p_index}.img.bin')
+    output_path = (cfg.convert_dir / f'img{p_index}.bin')
 
     # arc_unpackerはbmpをpngでデコードするのでパスもそれに合わせる
     if (nsa_extract_path.suffix == '.bmp'):
@@ -110,7 +111,7 @@ def convert_image_parallel(img_info: list[int, str]) -> None:
         img.save(temppng_path, "PNG")
 
     # grit.exeを使って変換
-    run_grit(temppng_path)
+    run_grit(cfg, temppng_path)
 
     # 末尾に独自データを追記
     append_footer_data(temppng_path, tempbin_path)
@@ -128,7 +129,7 @@ def convert_image_parallel(img_info: list[int, str]) -> None:
     return
 
 
-def convert_images() -> None:
+def convert_images(cfg: AppConfig) -> None:
     """画像の全変換処理"""
 
     # 並列ファイル変換
@@ -138,14 +139,9 @@ def convert_images() -> None:
         for img_info in IMG_LIST:
             # 画像の並列変換処理
             futures.append(executor.submit(
-                convert_image_parallel, img_info))
+                convert_image_parallel, cfg, img_info))
         
         # gui対応時にはプログレスバー用に改良予定
         concurrent.futures.as_completed(futures)
 
     return
-
-
-if __name__ == '__main__':
-    # 画像の全変換処理
-    convert_images()

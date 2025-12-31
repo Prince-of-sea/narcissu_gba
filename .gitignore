@@ -275,6 +275,6 @@ __marimo__/
 
 # tools - debug
 src/python/converter/tools/
-
+core_gba/
 
 *.gba

@@ -1,23 +1,26 @@
+#!/usr/bin/env python3
 from pathlib import Path
 import subprocess
 import shutil
 
+from core.config import AppConfig
+
 #####後で消す#####
-GBFS_EXE = Path("D:/132_shuumatsu_gba/gbfs/exe/rom/gbfs.exe")
-GAME_GBA = Path("D:/132_shuumatsu_gba/src/test.gba")
-result_gba = "D:/132_shuumatsu_gba/narci_test.gba"
-temp_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
-gbfs_path = (temp_dir / 'data.gbfs')
+# GBFS_EXE = Path("D:/132_shuumatsu_gba/gbfs/exe/rom/gbfs.exe")
+# GAME_GBA = Path("D:/132_shuumatsu_gba/src/test.gba")
+# result_gba = "D:/132_shuumatsu_gba/narci_test.gba"
+# convert_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
+# gbfs_path = (convert_dir / 'data.gbfs')
 ##################
 
 
-def join_binary_files():
+def join_binary_files(cfg: AppConfig):
     """
     2つのバイナリファイルを明示的に1つに結合する
     """
-    out = Path(result_gba)
-    src1 = Path(GAME_GBA)
-    src2 = Path(gbfs_path)
+    out = Path(cfg.result_gba)
+    src1 = Path(cfg.base_gba)
+    src2 = Path(cfg.gbfs_path)
 
     if out.is_file():
        out.unlink() 
@@ -32,24 +35,16 @@ def join_binary_files():
             shutil.copyfileobj(infile2, outfile)
 
 
-def run_gbfs() -> None:
+def run_gbfs(cfg: AppConfig) -> None:
     """gbfs.exe を使ってパックする"""
 
-    if gbfs_path.is_file():
-       gbfs_path.unlink() 
-
-    cmd = [GBFS_EXE, gbfs_path, f'{temp_dir}/*.*']
-    subprocess.run(cmd, cwd = temp_dir)
+    cmd = [cfg.gbfs_exe, cfg.gbfs_path, f'{cfg.convert_dir}/*.*']
+    subprocess.run(cmd, cwd = cfg.convert_dir)
     pass
 
 
-def pack_resources() -> None:
+def pack_resources(cfg: AppConfig) -> None:
     """結合処理全体"""
-    run_gbfs()
-    join_binary_files()
+    run_gbfs(cfg)
+    join_binary_files(cfg)
     pass
-
-
-if __name__ == '__main__':
-    # 結合処理全体
-    pack_resources()

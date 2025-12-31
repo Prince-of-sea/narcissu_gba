@@ -2,11 +2,12 @@
 from pathlib import Path
 import re
 
+from core.config import AppConfig
 from .paths import IMG_LIST, BGM_LIST, FMX_LIST
 
 #####後で消す#####
-nsdat_path = Path('D:/132_shuumatsu_gba/nscript.dat')
-temp_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
+# nsdat_path = Path('D:/132_shuumatsu_gba/nscript.dat')
+# convert_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
 ##################
 
 '''
@@ -253,7 +254,7 @@ def convert_txt_to_gbabin(txt_lines):
     return scn_list
 
 
-def convert_scenario() -> None:
+def convert_scenario(cfg: AppConfig) -> None:
     """シナリオ変換の全処理"""
 
     scn_list = {
@@ -263,14 +264,12 @@ def convert_scenario() -> None:
         '005': ['0', '0000', '!t', '起動ーボイスあり', '0000', '#W', '0', '0000'],
     }
 
-    nsdat_data = open(nsdat_path, 'rb').read()
+    nsdat_data = open(cfg.nsdat_path, 'rb').read()
     lines = decrypt_0x84(nsdat_data).splitlines()
 
     # 0.txtを読み取り
     # with open(input_path, 'r', encoding='cp932') as file:
     #     lines = file.readlines()
-
-
 
     # 改行文字を削除
     lines = [line.strip() for line in lines]
@@ -300,7 +299,7 @@ def convert_scenario() -> None:
 
     for scn_key, scn_val in scn_list.items():
 
-        output_path = temp_dir / f'SCN{scn_key}.bin'
+        output_path = cfg.convert_dir / f'SCN{scn_key}.bin'
 
         scn_temp = [s.encode('cp932') for s in scn_val]
         scn_bin = b"\x00".join(scn_temp)
@@ -316,13 +315,8 @@ def convert_scenario() -> None:
     savid = bytes.fromhex('53 52 41 4D 5F 56 6E 6E 6E 00 00 00 00 00 00 00')
 
     # ファイル「savid.bin」として保存
-    with open(temp_dir / 'savid.bin', 'wb') as f:
+    with open(cfg.convert_dir / 'savid.bin', 'wb') as f:
         f.write(savid)
     ####################################
         
     pass
-
-
-if __name__ == '__main__':
-    # シナリオの全変換処理
-    convert_scenario()
