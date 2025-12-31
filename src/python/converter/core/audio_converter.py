@@ -6,12 +6,6 @@ from pathlib import Path
 from core.config import AppConfig
 from .paths import BGM_LIST, FMX_LIST
 
-#####後で消す#####
-# SOX_EXE = Path(r"C:/Program Files (x86)/sox-14-4-2/sox.exe")
-# input_dir = Path(r'D:/132_shuumatsu_gba/__test_ex/arc~.nsa')
-# convert_dir = Path(r'D:/132_shuumatsu_gba/gbfs/data/tmp/')
-##############
-
 
 def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) -> None:
     """sox.exeを使って変換"""
@@ -26,11 +20,18 @@ def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) 
     
     subprocess.run(cmd, cwd = cfg.convert_dir)
 
+    # 無音ファイル作成(音声再生後に、「データ上で次にあるファイル」の先頭が一瞬流れるバグがあるのでその解消用)
+    # 次が流れてもそれが無音なら気づかれなくて済む、実害無い、とかいう雑な回避策
+    tempraw_none_path = tempraw_path.with_stem(f"{tempraw_path.stem}_")
+    cmd = [cfg.sox_exe, '-n', '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_none_path, 'trim', '0', '0.7']
+
+    subprocess.run(cmd, cwd = cfg.convert_dir)
+
     return
 
 
 def convert_audio_parallel(cfg: AppConfig, img_info: list[int, str], is_bgm: bool) -> None:
-    """画像の並列変換処理"""
+    """音声の並列変換処理"""
 
     p_relative_path = img_info[1]
     input_path   = (cfg.nsa_extract_dir / Path(p_relative_path))

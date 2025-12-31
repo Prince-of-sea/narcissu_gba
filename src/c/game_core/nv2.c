@@ -129,7 +129,7 @@ void NvExecParse1T(void)
 
 	TxtSetMsg(s);
 	TxtSetExec();
-	CurSetLf();
+	CurSetPage();	/* ƒ\[ƒX‰ü•Ï‚±‚± Œ³: CurSetLf(); */
 	CurSetExec();
 
 	Nv.isPage = false;

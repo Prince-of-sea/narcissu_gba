@@ -14,7 +14,7 @@ jobs:
               run: |
                   chmod +x ./build.sh
                   ./build.sh
-                  mv ./src/c/game_core/test.gba ./
+                  mv ./src/c/game_core/NarcissuGBA.gba ./
                   # mv ./src/c/game_core/hi.gba ./
 
             - name: upload artifact
@@ -22,7 +22,7 @@ jobs:
               with:
                   name: build-gba
                   path: |
-                    ./test.gba
+                    ./NarcissuGBA.gba
                     # ./hi.gba
 
     build-exe:
@@ -56,7 +56,7 @@ jobs:
             - name: 必要なファイルを移動
               run: |
                 mkdir ./dist/main/core_gba
-                mv ./test.gba ./dist/main/core_gba/
+                mv ./NarcissuGBA.gba ./dist/main/core_gba/
                 # mv ./hi.gba ./dist/main/core_gba/
                 mv ./tools ./dist/main/
 

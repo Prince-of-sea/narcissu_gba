@@ -5,10 +5,6 @@ import re
 from core.config import AppConfig
 from .paths import IMG_LIST, BGM_LIST, FMX_LIST
 
-#####後で消す#####
-# nsdat_path = Path('D:/132_shuumatsu_gba/nscript.dat')
-# convert_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
-##################
 
 '''
 "_r", 1,// キー入力＋改ページ（紙アイコン）
@@ -173,15 +169,19 @@ def convert_txt_to_gbabin(txt_lines):
 
                     # BGM
                     if (ptkey in [BGM_PATTERN, BGM_LOOP_PATTERN]):
+                        bgm_path = matched_data.group('arg1')
+
                         for iml in BGM_LIST:
-                            if (Path(iml[1]) == Path(matched_data.group('arg1'))):
+                            if (Path(iml[1]) == Path(bgm_path)):
                                 line_command = ['!b', str(iml[0]), str(command_cnt)]
                                 break
 
                     # 効果音・ボイス
                     elif (ptkey in [SE_PATTERN, SE_LOOP_PATTERN]):
+                        se_path = matched_data.group('arg2')
+
                         for iml in FMX_LIST:
-                            if (Path(iml[1]) == Path(matched_data.group('arg2'))):
+                            if (Path(iml[1]) == Path(se_path)):
                                 line_command = ['!e', str(iml[0]), str(command_cnt)]
                                 break
 
@@ -193,9 +193,35 @@ def convert_txt_to_gbabin(txt_lines):
                     
                     # 背景
                     elif (ptkey in [BG_PATTERN]):
+                        bg_path = matched_data.group('arg1')
+                        bg_fadenum_nsc = matched_data.group('arg2')
+
+                        # 0.txt エフェクト定義参照
+                        #   effect 2,6,500
+                        #   effect 3,10,600
+                        #   effect 4,13,3000
+                        #   effect 5,10,800
+                        #   effect 6,6,500
+
+                        match bg_fadenum_nsc:
+                            case '2':
+                                wait_time = 5
+                            case '3':
+                                wait_time = 6
+                            case '4':
+                                wait_time = 30
+                            case '5':
+                                wait_time = 8
+                            case '6':
+                                wait_time = 5
+                            case _:
+                                wait_time = 1
+
                         for iml in IMG_LIST:
-                            if (Path(iml[1]) == Path(matched_data.group('arg1'))):
-                                line_command = ['!g', str(iml[0]), str(command_cnt)]
+                            if (Path(iml[1]) == Path(bg_path)):
+                                line_command  = ['!g', str(iml[0]),    str(command_cnt)]
+                                line_command += ['#t', str(wait_time), str(command_cnt)]
+
                                 break
 
                     # テキスト
@@ -228,7 +254,8 @@ def convert_txt_to_gbabin(txt_lines):
                             # 普通の文章
                             elif (ptkey == TEXT_PATTERN):
                                 line_command += ['_m', ls, str(command_cnt)]
-                    
+
+
                     # 見出し
                     elif (ptkey in [MOV_STR_PATTERN]):
                         val_name = matched_data.group('arg1')
@@ -239,6 +266,16 @@ def convert_txt_to_gbabin(txt_lines):
                             line_command = ['!t', midasi, str(command_cnt)]
                         else:
                             print(f'unknown val_name: {line}')
+
+                    elif (ptkey in [WAIT_PATTERN, WAIT_SHORT_PATTERN]):
+                        wait_time_rawstr = matched_data.group('arg1')
+                        wait_time_rawint = int(wait_time_rawstr)
+                        wait_time = int(wait_time_rawint / 100)
+
+                        if (wait_time < 1):
+                            wait_time = 1
+
+                        line_command = ['#t', str(wait_time), str(command_cnt)]
 
                     if line_command:
                         line_command_list.append(line_command)
@@ -284,6 +321,8 @@ def convert_scenario(cfg: AppConfig) -> None:
     scn_list['004'] += convert_txt_to_gbabin(lines[7263:8255])# *honpen7	"エコー"
     scn_list['004'] += convert_txt_to_gbabin(lines[8257:9471])# *honpen8	"ナルキッソス"
     scn_list['004'] += convert_txt_to_gbabin(lines[9474:10120])# *honpen9	"白石工務店"
+    scn_list['004'] += (['!g', '1', '0014'])
+    scn_list['004'] += (['#t', '1', '0014'])
     scn_list['004'] += (['!j', '1', '0014', ';;', ''])
 
     scn_list['005'] += (convert_txt_to_gbabin(lines[10126:10598]))# *image_voice	"プロローグ　ボイスＶｅｒ  "		10126	10598
@@ -295,6 +334,8 @@ def convert_scenario(cfg: AppConfig) -> None:
     scn_list['005'] += (convert_txt_to_gbabin(lines[16889:17897]))# *honpen7_voice	"エコー　ボイスＶｅｒ"			16889	17897
     scn_list['005'] += (convert_txt_to_gbabin(lines[17899:19128]))# *honpen8_voice	"ナルキッソス　ボイスＶｅｒ"	17899	19128
     scn_list['005'] += (convert_txt_to_gbabin(lines[19131:19758]))# *honpen9_voice	"白石工務店　ボイスＶｅｒ"		19131	19758
+    scn_list['005'] += (['!g', '1', '0014'])
+    scn_list['004'] += (['#t', '1', '0014'])
     scn_list['005'] += (['!j', '1', '0014', ';;', ''])
 
     for scn_key, scn_val in scn_list.items():

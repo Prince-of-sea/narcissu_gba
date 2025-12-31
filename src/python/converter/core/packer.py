@@ -5,14 +5,6 @@ import shutil
 
 from core.config import AppConfig
 
-#####後で消す#####
-# GBFS_EXE = Path("D:/132_shuumatsu_gba/gbfs/exe/rom/gbfs.exe")
-# GAME_GBA = Path("D:/132_shuumatsu_gba/src/test.gba")
-# result_gba = "D:/132_shuumatsu_gba/narci_test.gba"
-# convert_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
-# gbfs_path = (convert_dir / 'data.gbfs')
-##################
-
 
 def join_binary_files(cfg: AppConfig):
     """
