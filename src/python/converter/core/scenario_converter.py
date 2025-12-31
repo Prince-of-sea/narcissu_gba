@@ -308,6 +308,9 @@ def convert_scenario(debug: bool = False) -> None:
             f.write(scn_bin)
     
     ################################
+    # savid作成(用途不明、元々あるのでつけた)
+    # 将来的にはこれも関数化する
+
     # byte列として変数に格納
     savid = bytes.fromhex('53 52 41 4D 5F 56 6E 6E 6E 00 00 00 00 00 00 00')
 
