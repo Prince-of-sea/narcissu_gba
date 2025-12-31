@@ -14,16 +14,16 @@ jobs:
               run: |
                   chmod +x ./build.sh
                   ./build.sh
-                  mv ./src/c/game_core/hello.gba ./
-                  mv ./src/c/game_core/hi.gba ./
+                  mv ./src/c/game_core/test.gba ./
+                  # mv ./src/c/game_core/hi.gba ./
 
             - name: upload artifact
               uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
               with:
                   name: build-gba
                   path: |
-                    ./hello.gba
-                    ./hi.gba
+                    ./test.gba
+                    # ./hi.gba
 
     build-exe:
         runs-on: windows-latest
@@ -56,8 +56,8 @@ jobs:
             - name: 必要なファイルを移動
               run: |
                 mkdir ./dist/main/core_gba
-                mv ./hello.gba ./dist/main/core_gba/
-                mv ./hi.gba ./dist/main/core_gba/
+                mv ./test.gba ./dist/main/core_gba/
+                # mv ./hi.gba ./dist/main/core_gba/
                 mv ./tools ./dist/main/
 
             - name: upload artifact

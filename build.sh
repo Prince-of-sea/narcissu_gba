@@ -2,7 +2,7 @@
 
 cd ./src/c/game_core
 make clean
-make MESSAGE="Hello" TARGET=hello
+make MESSAGE="Test" TARGET=test
 make clean
-make MESSAGE="Hi" TARGET=hi
-make clean
+# make MESSAGE="Hi" TARGET=hi
+# make clean
