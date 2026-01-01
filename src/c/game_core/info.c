@@ -3,8 +3,6 @@
 //---------------------------------------------------------------------------
 ROM_DATA s32 InfoImg[] = {
 	/* ソース改変ここから */
-	  0,		// tui/title_off2.bmp
-	  1,		// tui/title_off.bmp
 	 10,		// e/amazora02.jpg
 	 11,		// e/amazora03.jpg
 	 12,		// e/b.jpg
@@ -12,21 +10,6 @@ ROM_DATA s32 InfoImg[] = {
 	 14,		// e/byoin_chusyajo.jpg
 	 15,		// e/byoin_heya_yu2.jpg
 	 16,		// e/byoin_rouka.jpg
-	 17,		// e/c00.jpg
-	 18,		// e/c001.jpg
-	 19,		// e/c001a.jpg
-	 20,		// e/c001b.jpg
-	 21,		// e/c002.jpg
-	 22,		// e/c003.jpg
-	 23,		// e/c004.jpg
-	 24,		// e/c005.jpg
-	 25,		// e/c0052.jpg
-	 26,		// e/c02.jpg
-	 27,		// e/c03.jpg
-	 28,		// e/c032.jpg
-	 29,		// e/c033.jpg
-	 30,		// e/c04.jpg
-	 31,		// e/c042.jpg
 	 32,		// e/car_byoin_chusyajo.jpg
 	 33,		// e/car_byoin_chusyajo_yoru.jpg
 	 34,		// e/car_byoin_chusyajo_yoru_ame.jpg
@@ -36,7 +19,6 @@ ROM_DATA s32 InfoImg[] = {
 	 38,		// e/chara_001.jpg
 	 39,		// e/chara_0012.jpg
 	 40,		// e/chara_0013.jpg
-	 41,		// e/chara_0013b.jpg
 	 42,		// e/chara_k01.jpg
 	 43,		// e/chara_k02.jpg
 	 44,		// e/chusha_hamabe_yu.jpg
@@ -108,37 +90,15 @@ ROM_DATA s32 InfoImg[] = {
 	110,		// e/soukou_machi_yoru.jpg
 	111,		// e/soukou_machi_yu.jpg
 	112,		// e/soukou_yoru.jpg
-	113,		// e/st00.jpg
-	114,		// e/st01.jpg
-	115,		// e/st02.jpg
-	116,		// e/st03.jpg
-	117,		// e/st04.jpg
-	118,		// e/st05.jpg
 	119,		// e/tv_hana.jpg
 	120,		// e/umibe_yoru.jpg
 	121,		// e/w.jpg
 	122,		// e/yakkyoku.jpg
 	123,		// e/yuki_kohan.jpg
 	124,		// e/yukizora.jpg
-	125,		// tui2/c0432.bmp
-	126,		// tui2/c044.bmp
-	127,		// tui2/c0442.bmp
-	128,		// tui2/c045.bmp
-	129,		// tui2/c046.bmp
-	130,		// tui2/c047.bmp
-	131,		// tui2/c049.bmp
-	132,		// tui2/cat02.bmp
-	133,		// tui2/cat03.bmp
-	134,		// tui2/cat05.bmp
-	135,		// tui2/cat06.bmp
-	136,		// tui2/cat07.bmp
-	137,		// tui2/cat072.bmp
-	138,		// tui2/cat073.bmp
-	139,		// tui/imege98.bmp
 	140,		// tui/naname_inaka_yoru2.bmp
 	141,		// yobi/car_byoin_chusyajo_yu.bmp
-	142,		// yobi/cat03.bmp
-	143,		// yobi/cat09.bmp	/* ソース改変ここまで */
+	/* ソース改変ここまで */
 };
 
 // 昇順（アーカイブ順でなく）
