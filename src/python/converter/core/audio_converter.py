@@ -20,9 +20,9 @@ def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) 
     rate = 5256
 
     if is_bgm:
-        cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'unsigned-integer', tempraw_path, 'pad', '0', '1.0']   #末尾無音一秒追加
+        cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_path]
     else:
-        cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'unsigned-integer', tempraw_path, 'gain', '-l', '6']
+        cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_path, 'gain', '-l', '6']
     
     subprocess.run(cmd, cwd = cfg.convert_dir)
 
