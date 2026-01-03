@@ -20,17 +20,24 @@ def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) 
     rate = 5256
 
     if is_bgm:
-        cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_path, 'pad', '0.7', '0'] #先頭0.7秒無音(ループ時貫通対策)
+        cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_path]
     else:
         cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_path, 'gain', '-l', '6']
     
+    subprocess.run(cmd, cwd = cfg.convert_dir)
+
+    # 無音ファイル作成(音声再生後に、「データ上で次にあるファイル」の先頭が一瞬流れるバグがあるのでその解消用)
+    # 次が流れてもそれが無音なら気づかれなくて済む、実害無い、とかいう雑な回避策
+    tempraw_none_path = tempraw_path.with_stem(f"{tempraw_path.stem}_")
+    cmd = [cfg.sox_exe, '-n', '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_none_path, 'trim', '0', '0.7']
+
     subprocess.run(cmd, cwd = cfg.convert_dir)
 
     return
 
 
 def convert_audio_parallel(cfg: AppConfig, img_info: list[int, str], is_bgm: bool) -> None:
-    """画像の並列変換処理"""
+    """音声の並列変換処理"""
 
     p_relative_path = img_info[1]
     input_path   = (cfg.nsa_extract_dir / Path(p_relative_path))
