@@ -57,7 +57,7 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
         gbfs_exe         = Path(cwd / "tools" / "gbfs" / "gbfs.exe"),
         grit_exe         = Path(cwd / "tools" / "grit" / "grit.exe"),
         sox_exe          = Path(cwd / "tools" / "sox" / "sox.exe"),
-        base_gba         = Path(cwd / "core_gba" / "test.gba"),
+        base_gba         = Path(cwd / "core_gba" / "NarcissuGBA.gba"),
 
         nsdat_path       = Path(input_dir_cfg / "nscript.dat"),
         nsa_path         = Path(input_dir_cfg / "arc.nsa"),
@@ -67,7 +67,7 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
         convert_dir      = Path(temp_dir / "convert"),
         gbfs_path        = Path(temp_dir / "convert" / "data.gbfs"),
 
-        result_gba       = Path(output_dir_cfg / "narci_test.gba"),
+        result_gba       = Path(output_dir_cfg / "NarcissuGBA.gba"),
 
     )
 

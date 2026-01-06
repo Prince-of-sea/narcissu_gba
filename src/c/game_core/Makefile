@@ -1,7 +1,7 @@
 MAKEFLAGS += --no-print-directory
 
 SHELL      = sh
-NAME       = test
+NAME       = NarcissuGBA
 GAMECODE   = TEST
 PREFIX     = arm-none-eabi-
 
