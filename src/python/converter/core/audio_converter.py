@@ -6,12 +6,6 @@ from pathlib import Path
 from core.config import AppConfig
 from .paths import BGM_LIST, FMX_LIST
 
-#####後で消す#####
-# SOX_EXE = Path(r"C:/Program Files (x86)/sox-14-4-2/sox.exe")
-# input_dir = Path(r'D:/132_shuumatsu_gba/__test_ex/arc~.nsa')
-# convert_dir = Path(r'D:/132_shuumatsu_gba/gbfs/data/tmp/')
-##############
-
 
 def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) -> None:
     """sox.exeを使って変換"""

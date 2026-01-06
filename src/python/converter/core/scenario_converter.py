@@ -5,10 +5,6 @@ import re
 from core.config import AppConfig
 from .paths import IMG_LIST, BGM_LIST, FMX_LIST
 
-#####後で消す#####
-# nsdat_path = Path('D:/132_shuumatsu_gba/nscript.dat')
-# convert_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
-##################
 
 '''
 "_r", 1,// キー入力＋改ページ（紙アイコン）

@@ -9,15 +9,6 @@ from core.config import AppConfig
 from .paths import IMG_LIST
 
 
-#####後で消す#####
-# GRIT_EXE = Path(r"D:/132_shuumatsu_gba/gbfs/exe/img/grit.exe")
-# nsa_extract_dir = Path(r'D:/132_shuumatsu_gba/__test_ex/arc~.nsa')
-# convert_dir = Path('D:/132_shuumatsu_gba/gbfs/data/tmp/')
-
-# arc_unpackerはbmpをpngでデコードするので治す
-
-##############
-
 # def compress_image(img):
 #     """圧縮処理"""
 #     pass
