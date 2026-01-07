@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import math
 import re
 
 from core.config import AppConfig
@@ -270,7 +271,7 @@ def convert_txt_to_gbabin(txt_lines):
                     elif (ptkey in [WAIT_PATTERN, WAIT_SHORT_PATTERN]):
                         wait_time_rawstr = matched_data.group('arg1')
                         wait_time_rawint = int(wait_time_rawstr)
-                        wait_time = int(wait_time_rawint / 100)
+                        wait_time = math.ceil(wait_time_rawint / 100)
 
                         if (wait_time < 1):
                             wait_time = 1
