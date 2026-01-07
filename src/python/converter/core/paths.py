@@ -463,8 +463,22 @@ FMX_LIST = [
 
 # ===== 変換画像一覧 =====
 IMG_LIST = [
+    # タイトル
 	[  0,'tui/title_off2.bmp'],
 	[  1,'tui/title_off.bmp'],
+
+
+	# 2~9章開始時のミニタイトル
+	[  2,'sys/mini_title.bmp'],    
+	[  3,'sys/mini_title.bmp'],    
+	[  4,'sys/mini_title.bmp'],    
+	[  5,'sys/mini_title.bmp'],    
+	[  6,'sys/mini_title.bmp'],    
+	[  7,'sys/mini_title.bmp'],    
+	[  8,'sys/mini_title.bmp'],    
+	[  9,'sys/mini_title.bmp'],
+
+	# 他の画像
 	[ 10,'e/amazora02.jpg'],
 	[ 11,'e/amazora03.jpg'],
 	[ 12,'e/b.jpg'],
