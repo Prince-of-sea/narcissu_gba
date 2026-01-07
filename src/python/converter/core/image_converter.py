@@ -6,37 +6,8 @@ from pathlib import Path
 from PIL import Image
 
 from core.config import AppConfig
+from .image_special import convert_default
 from .paths import IMG_LIST
-
-
-# def compress_image(img):
-#     """圧縮処理"""
-#     pass
-
-
-# def crop_image(img):
-#     """クロップ処理"""
-#     pass
-
-
-# def apply_common_effects(img):
-#     """汎用特殊効果 (アンシャープマスク等)"""
-#     pass
-
-
-# def apply_special_effects(img):
-#     """個別特殊効果 (黒塗り等)"""
-#     pass
-
-
-# def reduce_color(img):
-#     """減色処理"""
-#     pass
-
-
-# def export_temp_file(img, out_path: str):
-#     """一時ファイルとして保存"""
-#     pass
 
 
 def run_grit(cfg: AppConfig, in_path: Path) -> None:
@@ -70,10 +41,12 @@ def append_footer_data(i: Path, f: Path) -> None:
     return
 
 
-def convert_image_parallel(cfg: AppConfig, img_info: list[int, str]) -> None:
+def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> None:
     """画像の並列変換処理"""
 
     p_relative_path = img_info[1]
+    p_convert_mode = img_info[2]
+
     nsa_extract_path = (cfg.nsa_extract_dir / Path(p_relative_path))
 
     p_index = str(img_info[0]).zfill(3)
@@ -85,21 +58,16 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str]) -> None:
     if (nsa_extract_path.suffix == '.bmp'):
         nsa_extract_path = (nsa_extract_path.with_suffix('.png'))
 
-    # リサイズ@pil - ここも関数分け予定
-    # 1. 画像を読み込み
-    with Image.open(nsa_extract_path) as img:
-
-        # 2. 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
-        
-        # 3. 上下10pxを捨てる（240x160にクロップ）
-        # cropの引数は (左, 上, 右, 下)
-        img = img.crop((0, 11, 240, 171))
-
-        # X. この辺に画像ごとの個別処理追加予定
-
-        # 4. PNGで保存
-        img.save(temppng_path, "PNG")
+    # PILを使って画像をリサイズ(画像ごとの特殊モードを利用)
+    match p_convert_mode:
+        case 'special_XXX': # 仮こんな感じの想定
+            pass # convert_IMGXXX(nsa_extract_path, temppng_path)
+        case 'special_YYY':
+            pass # convert_IMGYYY(nsa_extract_path, temppng_path)
+        case 'special_ZZZ':
+            pass # convert_IMGZZZ(nsa_extract_path, temppng_path)
+        case _:
+            convert_default(nsa_extract_path, temppng_path)
 
     # grit.exeを使って変換
     run_grit(cfg, temppng_path)
