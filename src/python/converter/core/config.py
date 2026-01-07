@@ -33,6 +33,7 @@ class AppConfig:
     # ===== 設定関連(仮) =====
     bgm_high_quality: bool = False
     voice_on: bool = True
+    debug_mode: bool = True
 
 
 def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:

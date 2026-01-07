@@ -353,13 +353,20 @@ def convert_scenario(cfg: AppConfig) -> None:
 
     for scn_key, scn_val in scn_list.items():
 
-        output_path = cfg.convert_dir / f'SCN{scn_key}.bin'
-
+        output_bin_path = cfg.convert_dir / f'SCN{scn_key}.bin'
         scn_temp = [s.encode('cp932') for s in scn_val]
         scn_bin = b"\x00".join(scn_temp)
         
-        with open(output_path, "wb") as f:
+        
+        with open(output_bin_path, "wb") as f:
             f.write(scn_bin)
+        
+        if (cfg.debug_mode):
+            output_txt_path = cfg.output_dir / f'SCN{scn_key}.txt'
+            debug_txt = "\n".join(scn_val)
+            
+            with open(output_txt_path, "w", encoding="cp932") as f:
+                f.write(debug_txt)
     
     ################################
     # savid作成(用途不明、元々あるのでつけた)
