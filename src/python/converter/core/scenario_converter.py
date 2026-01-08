@@ -300,6 +300,7 @@ def convert_scenario(cfg: AppConfig) -> None:
         '003': ['0', '0000', '!t', '選択画面', '0000', '#W',   '0', '0000', '!g', '0', '0000', '#t',  '1', '0000', '#W', '1', '0000', '!j', '5', '0000', ';;', ''], # 最終的にはここに選択肢入れてボイス有無選べるように
         '004': ['0', '0000', '!t', '起動ーボイスなし', '0000', '#W', '0', '0000'],
         '005': ['0', '0000', '!t', '起動ーボイスあり', '0000', '#W', '0', '0000'],
+        '006': ['0', '0000', '!t', 'Ｐｒｏｄｕｃｔ',   '0000', '#W', '0', '0000'],
     }
 
     nsdat_data = open(cfg.nsdat_path, 'rb').read()
@@ -351,12 +352,16 @@ def convert_scenario(cfg: AppConfig) -> None:
     scn_list['005'] += (convert_txt_to_gbabin(lines[19131:19758]))# *honpen9_voice	"白石工務店　ボイスＶｅｒ"		19131	19758
     scn_list['005'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
 
+    # Ｐｒｏｄｕｃｔシナリオ - 後で変換作る
+    # scn_list['006'] += (convert_txtprod_to_gbabin(lines[xxxxx:xxxxx]))
+    scn_list['006'] += (['!g', '2', '0000', '#t', '2', '0000', '_r', 'プロダクト仮', '0000', '_r', 'あとで実装します', '0000'])
+    scn_list['006'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
+
     for scn_key, scn_val in scn_list.items():
 
         output_bin_path = cfg.convert_dir / f'SCN{scn_key}.bin'
         scn_temp = [s.encode('cp932') for s in scn_val]
         scn_bin = b"\x00".join(scn_temp)
-        
         
         with open(output_bin_path, "wb") as f:
             f.write(scn_bin)
