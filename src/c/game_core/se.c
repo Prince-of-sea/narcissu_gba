@@ -21,22 +21,7 @@ void SePlay(s32 no)
 	u8* p = FileGetFmx(no);
 	s32 size = FileGetSize();
 
-	/* ソース改変ここから */
-	
-	// pythonより FMX_LIST ループ再生SE
-	// [ 10,"se/amadare.wav"],
-	// [ 44,"se/rain_12.wav"],
-	
-	if(no == 10 || no == 44)
-	{
-		SndPlay(SND_ID_FMX, p, size, 2, true);	// ループ
-	}
-	else
-	{
-		SndPlay(SND_ID_FMX, p, size, 2, false);
-	}
-	
-	/* ソース改変ここまで */
+	SndPlay(SND_ID_FMX, p, size, 2, false);
 }
 //---------------------------------------------------------------------------
 void SeStop(void)
