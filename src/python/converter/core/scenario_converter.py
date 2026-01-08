@@ -82,66 +82,45 @@ def decrypt_0x84(data: bytes) -> bytes:
 def convert_txt_to_gbabin(txt_lines):
 
     # パターン定義
-    BGM_PATTERN            = r'^mp3\s+"(?P<arg1>[^"]*)"'
-    BGM_LOOP_PATTERN       = r'^mp3loop\s+"(?P<arg1>[^"]*)"'
-    BGM_FADEOUT_PATTERN    = r'^mp3fadeout\s+(?P<arg1>\d+)'
-    SE_PATTERN             = r'^dwave\s+(?P<arg1>\d+),\s*"(?P<arg2>[^"]*)"'
-    SE_LOOP_PATTERN        = r'^dwaveloop\s+(?P<arg1>\d+),\s*"(?P<arg2>[^"]*)"'
-    SE_STOP_PATTERN        = r'^dwavestop\s+(?P<arg1>\d+)'
-    STOP_ALL_PATTERN       = r'^stop$'
-    BG_PATTERN             = r'^bg\s+"(?P<arg1>[^"]*)",\s*(?P<arg2>\d+)'
-    TEXTCLEAR_PATTERN      = r'^textclear$'
-    CLICK_PATTERN          = r'^click$'
-    WAIT_PATTERN           = r'^wait\s+(?P<arg1>\d+)'
-    WAIT_SHORT_PATTERN     = r'^!w(?P<arg1>\d+)'
-    PAGE_TEXT_PATTERN      = r'^([^\x01-\x7E]|@)+\\'
-    LINE_TEXT_PATTERN      = r'^([^\x01-\x7E]|@)+@'
-    TEXT_PATTERN           = r'^([^\x01-\x7E]|@)+'
-    TEXT_SPEED_RESET       = r'^!sd$'
-    TEXT_SPEED_SET         = r'^!s(?P<arg1>\d+)'
-    ERASE_TEXTWINDOW       = r'^erasetextwindow\s+'
-    SET_WINDOW             = r'^setwindow\s+'
-    MOV_STR_PATTERN        = r'^mov\s+\$(?P<arg1>.*),\s*"(?P<arg2>[^"]*)"'
-    MOV_NUM_PATTERN        = r'^mov\s+\%(?P<arg1>.*),\s*(?P<arg2>\d+)'
-    LABEL_PATTERN          = r'^\*(?P<arg1>.*)'
+    # 上から順で読み取らせるので基準が緩いものほど下に
+    BGM_PATTERN            = r'^mp3\s+"(?P<arg1>[^"]*)"'                         # bgm
+    BGM_LOOP_PATTERN       = r'^mp3loop\s+"(?P<arg1>[^"]*)"'                     # bgmループ(とりあえず単発で実装)
+    BGM_FADEOUT_PATTERN    = r'^mp3fadeout\s+(?P<arg1>\d+)'                      # bgm止める
+    SE_PATTERN             = r'^dwave\s+(?P<arg1>\d+),\s*"(?P<arg2>[^"]*)"'      # 効果音
+    SE_LOOP_PATTERN        = r'^dwaveloop\s+(?P<arg1>\d+),\s*"(?P<arg2>[^"]*)"'  # 効果音ループ(単発 or BGM扱い 検討中)
+    SE_STOP_PATTERN        = r'^dwavestop\s+(?P<arg1>\d+)'                       # 効果音停止
+    STOP_ALL_PATTERN       = r'^stop$'                                           # 音声全停止
 
-    # 正規表現そのものをキーにした辞書
-    # キー：正規表現（名前付きグループ）
-    # 値　：GBA側にシナリオとして読み込ませるためのバイナリそのもの
-    # 追記...ここあとで統合予定　上のやつと被って滅茶苦茶なので
-    PATTERNS = {
-        # 上から順で読み取らせるので基準が緩いものほど下に
+    BG_PATTERN             = r'^bg\s+"(?P<arg1>[^"]*)",\s*(?P<arg2>\d+)'         # 背景
 
-        BGM_PATTERN        : r'^mp3\s+"(?P<arg1>[^"]*)"',                        # bgm
-        BGM_LOOP_PATTERN   : r'^mp3loop\s+"(?P<arg1>[^"]*)"',                    # bgmループ(とりあえず単発で実装)
-        BGM_FADEOUT_PATTERN: r'^mp3fadeout\s+(?P<arg1>\d+)',                     # bgm止める
-        SE_PATTERN         : r'^dwave\s+(?P<arg1>\d+),\s*"(?P<arg2>[^"]*)"',     # 効果音
-        SE_LOOP_PATTERN    : r'^dwaveloop\s+(?P<arg1>\d+),\s*"(?P<arg2>[^"]*)"', # 効果音ループ(単発 or BGM扱い 検討中)
-        SE_STOP_PATTERN    : r'^dwavestop\s+(?P<arg1>\d+)',                      # 効果音停止
-        STOP_ALL_PATTERN   : r'^stop$',                                          # 音声全停止
-        
-        BG_PATTERN         : r'^bg\s+"(?P<arg1>[^"]*)",\s*(?P<arg2>\d+)',        # 背景
-        
-        TEXTCLEAR_PATTERN  : r'^textclear$',                                     # テキストクリア(ボイス無しでのみ使用？)
-        CLICK_PATTERN      : r'^click$',                                         # クリックして次へ(空文章用意で実装)
-        WAIT_PATTERN       : r'^wait\s+(?P<arg1>\d+)',                           # ウェイト
-        WAIT_SHORT_PATTERN : r'^!w(?P<arg1>\d+)',                                # ウェイト
-        
-        PAGE_TEXT_PATTERN  : r'^([^\x01-\x7E]|@)+\\',                            # 改ページ文章
-        LINE_TEXT_PATTERN  : r'^([^\x01-\x7E]|@)+@',                             # 改行文章
-        TEXT_PATTERN       : r'^([^\x01-\x7E]|@)+',                              # 普通の文章
-        
-        # 面倒なので場所ごとに個別で潰す可能性の高い命令
-        TEXT_SPEED_RESET   : r'^!sd$',                                           # 文字表示速度変更
-        TEXT_SPEED_SET     : r'^!s(?P<arg1>\d+)',                                # 文字表示速度設定
-        ERASE_TEXTWINDOW   : r'^erasetextwindow\s+',                             # 文字表示window削除
-        SET_WINDOW         : r'^setwindow\s+',                                   # 文字表示位置設定
-        
-        MOV_STR_PATTERN    : r'^mov\s+\$(?P<arg1>.*),\s*"(?P<arg2>[^"]*)"',      # 文字変数代入(主に章のタイトルに利用)
-        MOV_NUM_PATTERN    : r'^mov\s+\%(?P<arg1>.*),\s*(?P<arg2>\d+)',          # 数字変数代入(詳細不明)
-        
-        LABEL_PATTERN      : r'^\*(?P<arg1>.*)',                                 # jump用ラベル
-    }
+    TEXTCLEAR_PATTERN      = r'^textclear$'                                      # テキストクリア(ボイス無しでのみ使用？)
+    CLICK_PATTERN          = r'^click$'                                          # クリックして次へ(空文章用意で実装)
+    WAIT_PATTERN           = r'^wait\s+(?P<arg1>\d+)'                            # ウェイト
+    WAIT_SHORT_PATTERN     = r'^!w(?P<arg1>\d+)'                                 # ウェイト
+
+    PAGE_TEXT_PATTERN      = r'^([^\x01-\x7E]|@)+\\'                             # 改ページ文章
+    LINE_TEXT_PATTERN      = r'^([^\x01-\x7E]|@)+@'                              # 改行文章
+    TEXT_PATTERN           = r'^([^\x01-\x7E]|@)+'                               # 普通の文章
+    
+    # 面倒なので場所ごとに個別で潰す可能性の高い命令
+    TEXT_SPEED_RESET       = r'^!sd$'                                            # 文字表示速度変更
+    TEXT_SPEED_SET         = r'^!s(?P<arg1>\d+)'                                 # 文字表示速度設定
+    ERASE_TEXTWINDOW       = r'^erasetextwindow\s+'                              # 文字表示window削除
+    SET_WINDOW             = r'^setwindow\s+'                                    # 文字表示位置設定
+
+    MOV_STR_PATTERN        = r'^mov\s+\$(?P<arg1>.*),\s*"(?P<arg2>[^"]*)"'       # 文字変数代入(主に章のタイトルに利用)
+    MOV_NUM_PATTERN        = r'^mov\s+\%(?P<arg1>.*),\s*(?P<arg2>\d+)'           # 数字変数代入(詳細不明)
+
+    LABEL_PATTERN          = r'^\*(?P<arg1>.*)'                                  # jump用ラベル
+
+    # 正規表現
+    PATTERNS = [
+        BGM_PATTERN, BGM_LOOP_PATTERN, BGM_FADEOUT_PATTERN, SE_PATTERN, SE_LOOP_PATTERN,
+        SE_STOP_PATTERN, STOP_ALL_PATTERN, BG_PATTERN, TEXTCLEAR_PATTERN, CLICK_PATTERN,
+        WAIT_PATTERN, WAIT_SHORT_PATTERN, PAGE_TEXT_PATTERN, LINE_TEXT_PATTERN, TEXT_PATTERN,
+        TEXT_SPEED_RESET, TEXT_SPEED_SET, ERASE_TEXTWINDOW, SET_WINDOW, MOV_STR_PATTERN,
+        MOV_NUM_PATTERN, LABEL_PATTERN, 
+    ]
 
     # 仮
     command_cnt = '0014'
@@ -160,7 +139,7 @@ def convert_txt_to_gbabin(txt_lines):
             ismatch = False
 
             # 正規表現検索
-            for ptkey, ptval in PATTERNS.items():
+            for ptkey in PATTERNS:
 
                 line_command = []
 
@@ -300,6 +279,7 @@ def convert_scenario(cfg: AppConfig) -> None:
         '003': ['0', '0000', '!t', '選択画面', '0000', '#W',   '0', '0000', '!g', '0', '0000', '#t',  '1', '0000', '#W', '1', '0000', '!j', '5', '0000', ';;', ''], # 最終的にはここに選択肢入れてボイス有無選べるように
         '004': ['0', '0000', '!t', '起動ーボイスなし', '0000', '#W', '0', '0000'],
         '005': ['0', '0000', '!t', '起動ーボイスあり', '0000', '#W', '0', '0000'],
+        '006': ['0', '0000', '!t', 'Ｐｒｏｄｕｃｔ',   '0000', '#W', '0', '0000'],
     }
 
     nsdat_data = open(cfg.nsdat_path, 'rb').read()
@@ -351,12 +331,16 @@ def convert_scenario(cfg: AppConfig) -> None:
     scn_list['005'] += (convert_txt_to_gbabin(lines[19131:19758]))# *honpen9_voice	"白石工務店　ボイスＶｅｒ"		19131	19758
     scn_list['005'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
 
+    # Ｐｒｏｄｕｃｔシナリオ - 後で変換作る
+    # scn_list['006'] += (convert_txtprod_to_gbabin(lines[xxxxx:xxxxx]))
+    scn_list['006'] += (['!g', '2', '0000', '#t', '2', '0000', '_r', 'プロダクト仮', '0000', '_r', 'あとで実装します', '0000'])
+    scn_list['006'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
+
     for scn_key, scn_val in scn_list.items():
 
         output_bin_path = cfg.convert_dir / f'SCN{scn_key}.bin'
         scn_temp = [s.encode('cp932') for s in scn_val]
         scn_bin = b"\x00".join(scn_temp)
-        
         
         with open(output_bin_path, "wb") as f:
             f.write(scn_bin)

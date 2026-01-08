@@ -189,11 +189,15 @@ void NvExecParse2E(void)
 
 //	TRACE("%d\n", no);
 
+	/* ソース改変ここから */
+	/*
 	// スキップ中、学校のベルは騒音なので無効
 	if(Nv.isSkip == true && no == 0)
 	{
 		return;
 	}
+	*/
+	/* ソース改変ここまで */
 
 	SePlay(no);
 }
@@ -384,6 +388,8 @@ void NvExecParse3T(void)
 
 	TRACE("%d\n", w);
 
+	/* ソース改変ここから */
+	/*
 	// ゲーム終了「良い終末を」のタイミング
 	if(w == 50 && Nv.no == 84)
 	{
@@ -394,6 +400,8 @@ void NvExecParse3T(void)
 	{
 		return;
 	}
+	*/
+	/* ソース改変ここまで */
 
 	Nv.wait = w * 2;
 	Nv.isLoop = false;

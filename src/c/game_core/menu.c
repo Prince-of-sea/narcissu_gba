@@ -23,7 +23,7 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 	"　　文字を消す",
 	"　　メッセージ履歴",
 	"　　オプション",
-	"　　デバッグ",
+	"　　プロダクト", /* ソース改変ここ 元: "　　デバッグ", */
 	"　　ゲーム終了",
 
 	// 9
@@ -52,13 +52,15 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 	"　　Ｌｏａｄ",		/* ソース改変ここ 元: 　ロードする*/
 
 	// 24
+	/* ソース改変ここから */
 	"使わないので仮の値で埋め中",
 	"Ｒ４　　１６：０　２８：０",
 	"ＴＴ　　２１：０　２９：０",
 	"Ｍ３　　２２：０　３０：０",
 	"Ａｃｅ　２０：０　３１：０",
 	"ＥＺＦ　２６：０　３２：０",
-	"ＳＣ　　２７：０　３３：０",
+	"ＳＣ　　２７：０　３３：０", // ここ結局デバッグメニューごと潰したからそもそも不要かも？
+	/* ソース改変ここまで */
 };
 
 ROM_DATA char MenuColStr[][4+1] = {
@@ -192,7 +194,25 @@ void MenuExecSystem(u16 trg)
 
 	// デバッグ
 	case 6:
-		MenuSetDebug(MENU_DEBUG_VAR_1);
+		/* ソース編集ここから */
+		// MenuSetDebug(MENU_DEBUG_VAR_1);
+		
+		// 乗っ取ってプロダクトモード遷移に使う
+		SeStop();
+		BgmStop();
+		
+		ImgLoadFade();
+		
+		LogInit();
+		TxtClear();
+
+		NvInitVar();
+		NvSetScn(6);
+
+		NvSetAct(NV_ACT_PARSE);
+		ManageSetAct(MANAGE_ACT_NV);
+		
+		/* ソース編集ここまで */
 		break;
 
 	// ゲーム終了
