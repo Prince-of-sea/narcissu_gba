@@ -189,11 +189,15 @@ void NvExecParse2E(void)
 
 //	TRACE("%d\n", no);
 
+	/* ソース改変ここから */
+	/*
 	// スキップ中、学校のベルは騒音なので無効
 	if(Nv.isSkip == true && no == 0)
 	{
 		return;
 	}
+	*/
+	/* ソース改変ここまで */
 
 	SePlay(no);
 }
