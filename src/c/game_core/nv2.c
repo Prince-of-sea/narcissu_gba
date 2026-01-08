@@ -384,6 +384,8 @@ void NvExecParse3T(void)
 
 	TRACE("%d\n", w);
 
+	/* ソース改変ここから */
+	/*
 	// ゲーム終了「良い終末を」のタイミング
 	if(w == 50 && Nv.no == 84)
 	{
@@ -394,6 +396,8 @@ void NvExecParse3T(void)
 	{
 		return;
 	}
+	*/
+	/* ソース改変ここまで */
 
 	Nv.wait = w * 2;
 	Nv.isLoop = false;
