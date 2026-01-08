@@ -222,7 +222,7 @@ void MenuExecSystem(u16 trg)
 
 		SeStop();
 		BgmStop();
-		BgmPlay(10);
+		BgmPlay(2);
 
 		MenuSetTitle(MENU_TITLE_SEL_LOAD);
 		

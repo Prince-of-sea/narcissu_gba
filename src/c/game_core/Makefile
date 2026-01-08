@@ -5,6 +5,8 @@ NAME       = NarcissuGBA
 GAMECODE   = TEST
 PREFIX     = arm-none-eabi-
 
+RATES := 5256 8192
+
 AS         = $(PREFIX)as
 CC         = $(PREFIX)gcc
 CPP        = $(PREFIX)g++
@@ -13,11 +15,11 @@ AR         = $(PREFIX)ar
 OBJCOPY    = $(PREFIX)objcopy
 NM         = $(PREFIX)nm
 
-OBJDIR     = obj
+OBJDIR     = obj/$(SND_AUDIO_RATE)
 MAPFILE    = $(NAME).map
 NMFILE     = $(NAME).nm
 TARGET_ELF = $(NAME).elf
-TARGET_BIN = $(NAME).gba
+TARGET_BIN = base_$(SND_AUDIO_RATE).gba
 
 INCDIR	= .  ./libbios ./libgba ./libmy
 
@@ -53,19 +55,27 @@ INCDIR2 = $(foreach dir,$(DEVKITPRO)/libgba,-I$(dir)/include)
 ASFLAGS = 
 LDFLAGS = -Map $(MAPFILE) -Wall -specs=gba.specs -nostartfiles -nostdlib $(LIBS) $(LIBPATHS)
 CFLAGS  = -g -O3 -mcpu=arm7tdmi -mtune=arm7tdmi -fomit-frame-pointer -ffast-math -Wall -W -Wshadow -Wno-unused-parameter -Wno-strict-aliasing $(INCDIR1) $(INCDIR2)
+CFLAGS += -DSND_AUDIO_RATE=$(SND_AUDIO_RATE)
 OFILES  = $(addprefix $(OBJDIR)/, $(addsuffix .o, $(basename $(notdir $(SFILES) $(CFILES)))))
 DFILES  = $(addprefix $(OBJDIR)/, $(addsuffix .d, $(basename $(notdir $(SFILES) $(CFILES)))))
 
 #=============================================================================
 
-.PHONY: all clean
-all: 
+.PHONY: all clean rate
+all:
+# 	@make -C res
+# 	@make $(TARGET_BIN);
+	@for r in $(RATES); do \
+		$(MAKE) rate SND_AUDIO_RATE=$$r; \
+	done
+
+rate:
 	@make -C res
-	@make $(TARGET_BIN);
+	@make $(TARGET_BIN)
 
 clean:
 	@make clean -C res
-	rm -f $(OFILES) $(DFILES) $(MAPFILE) $(NMFILE) $(TARGET_ELF) $(TARGET_BIN)
+	rm -f $(OFILES) $(DFILES) $(MAPFILE) $(NMFILE) $(TARGET_ELF) $(TARGET_BIN) base_*.gba
 
 $(TARGET_BIN): $(TARGET_ELF)
 	@$(PREFIX)objcopy -v -O binary $< $@

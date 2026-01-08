@@ -258,7 +258,7 @@ void NvExecParse2J(void)
 	Nv.isEffect = true;
 	*/
 	
-	BgmPlay(10);// /* å≥:0 */
+	BgmPlay(2);// /* å≥:0 */
 	
 	/* É\Å[ÉXâ¸ïœÇ±Ç±Ç‹Ç≈ */
 

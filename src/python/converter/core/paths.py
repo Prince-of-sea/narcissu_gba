@@ -2,6 +2,10 @@
 
 # ===== 変換BGM一覧 =====
 BGM_LIST = [
+	# タイトル
+	[ 2,"se/umi13.wav"],
+		
+	# 他のBGM
 	[10,"bgm/3_12.mp3"],
 	[11,"bgm/a01.mp3"],
 	[12,"bgm/e02.mp3"],
@@ -20,6 +24,7 @@ BGM_LIST = [
 
 # ===== 変換効果音・ボイス一覧 =====
 FMX_LIST = [
+	# 効果音
 	[ 10,"se/amadare.wav"],
 	[ 11,"se/autodoor.wav"],
 	[ 12,"se/c-1.wav"],
@@ -59,6 +64,8 @@ FMX_LIST = [
 	[ 46,"se/umitori.wav"],
 	[ 47,"se/water_x2.wav"],
 	[ 48,"se/z42r.wav"],
+	
+	# ボイス
 	[ 49,"w/n001.ogg"],
 	[ 50,"w/n002.ogg"],
 	[ 51,"w/n003.ogg"],
@@ -463,7 +470,7 @@ FMX_LIST = [
 
 # ===== 変換画像一覧 =====
 IMG_LIST = [
-    # タイトル
+	# タイトル
 	[  0,'tui/title_off2.bmp', ''],
 	[  1,'tui/title_off.bmp', ''],
 
