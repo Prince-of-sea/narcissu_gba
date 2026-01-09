@@ -55,7 +55,8 @@ jobs:
               run: |
                 mkdir ./dist/main/core_gba
                 mv ./*.gba ./dist/main/core_gba/
-                mv ./tools ./dist/main/
+                mv ./src/python/converter/tools ./dist/main/
+                mv ./src/python/converter/res ./dist/main/
 
             - name: upload artifact
               uses: actions/upload-artifact@v6

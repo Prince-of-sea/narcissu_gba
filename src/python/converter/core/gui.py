@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import tkinter
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 
 def gui_main() -> dict:
     '''gui本処理'''
@@ -12,6 +12,8 @@ def gui_main() -> dict:
     gui_cfg = {
         'input_dir': None,
         'output_dir': None,
+        'include_voice': False,
+        'sound_quality': 0,
     }
 
     while (not gui_cfg['input_dir']):
@@ -29,5 +31,21 @@ def gui_main() -> dict:
         gui_cfg['output_dir'] = Path(filedialog.askdirectory())
         print(gui_cfg['output_dir'])
         root.destroy()
+    
+    root = tkinter.Tk()
+    gui_cfg['include_voice'] = messagebox.askokcancel("確認", "ボイス入れる？")
+    root.destroy()
+
+    root = tkinter.Tk()
+    sndhigh = messagebox.askokcancel("確認", "音質上げる?\nyes:8192 no:5256")
+    gui_cfg['sound_quality'] = 8192 if sndhigh else 5256
+    root.destroy()
+
+    # 高音質でボイス有りは容量的に厳しいので警告
+    if (gui_cfg['include_voice']) and (gui_cfg['sound_quality'] >= 8192):
+        root = tkinter.Tk()
+        messagebox.showinfo("だめだね", "ボイスを入れる場合、音質は8192にはできません(容量的に厳しいので)\nとりあえず今は5256扱いで通します\n\n※正式版ではOK押せないようにしてね")
+        root.destroy()
+        gui_cfg['sound_quality'] = 5256
 
     return gui_cfg

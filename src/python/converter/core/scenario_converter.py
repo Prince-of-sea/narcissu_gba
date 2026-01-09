@@ -4,7 +4,7 @@ import math
 import re
 
 from core.config import AppConfig
-from .paths import IMG_LIST, BGM_LIST, FMX_LIST
+from .paths import IMG_LIST, BGM_LIST, SE_LIST, VOICE_LIST
 
 
 '''
@@ -29,11 +29,6 @@ from .paths import IMG_LIST, BGM_LIST, FMX_LIST
 ";;", 0,// 選択肢
 "[]", 3,// 計算式
 '''
-
-
-# def find_scenario_paths(base_dir: str = "") -> list:
-#     """シナリオファイル一覧を返す"""
-#     pass
 
 
 def decrypt_0x84(data: bytes) -> bytes:
@@ -160,7 +155,7 @@ def convert_txt_to_gbabin(txt_lines):
                     elif (ptkey in [SE_PATTERN, SE_LOOP_PATTERN]):
                         se_path = matched_data.group('arg2')
 
-                        for iml in FMX_LIST:
+                        for iml in (SE_LIST + VOICE_LIST):
                             if (Path(iml[1]) == Path(se_path)):
                                 line_command = ['!e', str(iml[0]), str(command_cnt)]
                                 break
@@ -275,10 +270,9 @@ def convert_scenario(cfg: AppConfig) -> None:
     """シナリオ変換の全処理"""
 
     scn_list = {
-        '000': ['0', '0000', '!t', '起動処理', '0000', '#W', '200', '0000', '!g', '1', '0000', '#t', '10', '0000', '!j', '1', '0000',                    ';;', ''],
-        '003': ['0', '0000', '!t', '選択画面', '0000', '#W',   '0', '0000', '!g', '0', '0000', '#t',  '1', '0000', '#W', '1', '0000', '!j', '5', '0000', ';;', ''], # 最終的にはここに選択肢入れてボイス有無選べるように
-        '004': ['0', '0000', '!t', '起動ーボイスなし', '0000', '#W', '0', '0000'],
-        '005': ['0', '0000', '!t', '起動ーボイスあり', '0000', '#W', '0', '0000'],
+        '000': ['0', '0000', '!t', '起動', '0000', '#W', '200', '0000', '#t', '10', '0000', 
+                '!g', '0', '0000', '#t', '6', '0000', '!g', '1', '0000', '#t', '6', '0000', '!j', '1', '0000', ';;', ''],
+        '003': ['0', '0000', '#W',  '0', '0000', '#t',  '1', '0000', '#W', '1', '0000'],
         '006': ['0', '0000', '!t', 'Ｐｒｏｄｕｃｔ',   '0000', '#W', '0', '0000'],
     }
 
@@ -293,43 +287,45 @@ def convert_scenario(cfg: AppConfig) -> None:
     lines = [line.strip() for line in lines]
 
     # 結果を表示
-    scn_list['004'] += convert_txt_to_gbabin(lines[639:1101])# *image	    "プロローグ"
-    scn_list['004'] += (['!g', '2', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['004'] += convert_txt_to_gbabin(lines[1105:2184])# *honpen2	"７階"
-    scn_list['004'] += (['!g', '3', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['004'] += convert_txt_to_gbabin(lines[2188:3690])# *honpen3	"銀のクーペ"
-    scn_list['004'] += (['!g', '4', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['004'] += convert_txt_to_gbabin(lines[3693:4945])# *honpen4	"地図"
-    scn_list['004'] += (['!g', '5', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['004'] += convert_txt_to_gbabin(lines[4948:5926])# *honpen5	"エメラルドの海"
-    scn_list['004'] += (['!g', '6', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['004'] += convert_txt_to_gbabin(lines[5930:7258])# *honpen6	"一号線"
-    scn_list['004'] += (['!g', '7', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['004'] += convert_txt_to_gbabin(lines[7263:8255])# *honpen7	"エコー"
-    scn_list['004'] += (['!g', '8', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['004'] += convert_txt_to_gbabin(lines[8257:9471])# *honpen8	"ナルキッソス"
-    scn_list['004'] += (['!g', '9', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['004'] += convert_txt_to_gbabin(lines[9474:10120])# *honpen9	"白石工務店"
-    scn_list['004'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
+    if (not cfg.include_voice):
+        scn_list['003'] += convert_txt_to_gbabin(lines[639:1101])# *image	    "プロローグ"
+        scn_list['003'] += (['!g', '2', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += convert_txt_to_gbabin(lines[1105:2184])# *honpen2	"７階"
+        scn_list['003'] += (['!g', '3', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += convert_txt_to_gbabin(lines[2188:3690])# *honpen3	"銀のクーペ"
+        scn_list['003'] += (['!g', '4', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += convert_txt_to_gbabin(lines[3693:4945])# *honpen4	"地図"
+        scn_list['003'] += (['!g', '5', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += convert_txt_to_gbabin(lines[4948:5926])# *honpen5	"エメラルドの海"
+        scn_list['003'] += (['!g', '6', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += convert_txt_to_gbabin(lines[5930:7258])# *honpen6	"一号線"
+        scn_list['003'] += (['!g', '7', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += convert_txt_to_gbabin(lines[7263:8255])# *honpen7	"エコー"
+        scn_list['003'] += (['!g', '8', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += convert_txt_to_gbabin(lines[8257:9471])# *honpen8	"ナルキッソス"
+        scn_list['003'] += (['!g', '9', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += convert_txt_to_gbabin(lines[9474:10120])# *honpen9	"白石工務店"
+        scn_list['003'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
 
-    scn_list['005'] += (convert_txt_to_gbabin(lines[10126:10598]))# *image_voice	"プロローグ　ボイスＶｅｒ  "		10126	10598
-    scn_list['005'] += (['!g', '2', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['005'] += (convert_txt_to_gbabin(lines[10622:11709]))# *honpen2_voice	"７階　ボイスＶｅｒ"			10622	11709
-    scn_list['005'] += (['!g', '3', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['005'] += (convert_txt_to_gbabin(lines[11717:13244]))# *honpen3_voice	"銀のクーペ　ボイスＶｅｒ"		11717	13244
-    scn_list['005'] += (['!g', '4', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['005'] += (convert_txt_to_gbabin(lines[13247:14528]))# *honpen4_voice	"地図　ボイスＶｅｒ"			13247	14528
-    scn_list['005'] += (['!g', '5', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['005'] += (convert_txt_to_gbabin(lines[14531:15539]))# *honpen5_voice	"エメラルドの海　ボイスＶｅｒ"	14531	15539
-    scn_list['005'] += (['!g', '6', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['005'] += (convert_txt_to_gbabin(lines[15543:16884]))# *honpen6_voice	"一号線　ボイスＶｅｒ"			15543	16884
-    scn_list['005'] += (['!g', '7', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['005'] += (convert_txt_to_gbabin(lines[16889:17897]))# *honpen7_voice	"エコー　ボイスＶｅｒ"			16889	17897
-    scn_list['005'] += (['!g', '8', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['005'] += (convert_txt_to_gbabin(lines[17899:19128]))# *honpen8_voice	"ナルキッソス　ボイスＶｅｒ"	17899	19128
-    scn_list['005'] += (['!g', '9', '0000', '#t', '2', '0000', '_r', '', '0000'])
-    scn_list['005'] += (convert_txt_to_gbabin(lines[19131:19758]))# *honpen9_voice	"白石工務店　ボイスＶｅｒ"		19131	19758
-    scn_list['005'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
+    else:
+        scn_list['003'] += (convert_txt_to_gbabin(lines[10126:10598]))# *image_voice	"プロローグ　ボイスＶｅｒ  "		10126	10598
+        scn_list['003'] += (['!g', '2', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += (convert_txt_to_gbabin(lines[10622:11709]))# *honpen2_voice	"７階　ボイスＶｅｒ"			10622	11709
+        scn_list['003'] += (['!g', '3', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += (convert_txt_to_gbabin(lines[11717:13244]))# *honpen3_voice	"銀のクーペ　ボイスＶｅｒ"		11717	13244
+        scn_list['003'] += (['!g', '4', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += (convert_txt_to_gbabin(lines[13247:14528]))# *honpen4_voice	"地図　ボイスＶｅｒ"			13247	14528
+        scn_list['003'] += (['!g', '5', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += (convert_txt_to_gbabin(lines[14531:15539]))# *honpen5_voice	"エメラルドの海　ボイスＶｅｒ"	14531	15539
+        scn_list['003'] += (['!g', '6', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += (convert_txt_to_gbabin(lines[15543:16884]))# *honpen6_voice	"一号線　ボイスＶｅｒ"			15543	16884
+        scn_list['003'] += (['!g', '7', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += (convert_txt_to_gbabin(lines[16889:17897]))# *honpen7_voice	"エコー　ボイスＶｅｒ"			16889	17897
+        scn_list['003'] += (['!g', '8', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += (convert_txt_to_gbabin(lines[17899:19128]))# *honpen8_voice	"ナルキッソス　ボイスＶｅｒ"	17899	19128
+        scn_list['003'] += (['!g', '9', '0000', '#t', '2', '0000', '_r', '', '0000'])
+        scn_list['003'] += (convert_txt_to_gbabin(lines[19131:19758]))# *honpen9_voice	"白石工務店　ボイスＶｅｒ"		19131	19758
+        scn_list['003'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
 
     # Ｐｒｏｄｕｃｔシナリオ - 後で変換作る
     # scn_list['006'] += (convert_txtprod_to_gbabin(lines[xxxxx:xxxxx]))

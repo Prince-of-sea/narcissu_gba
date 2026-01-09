@@ -4,14 +4,13 @@ import subprocess
 from pathlib import Path
 
 from core.config import AppConfig
-from .paths import BGM_LIST, FMX_LIST
+from .paths import BGM_LIST, SE_LIST, VOICE_LIST
 
 
 def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) -> None:
     """sox.exeを使って変換"""
 
-    # ここ後でGUI側で編集できるようにする予定
-    rate = 5256
+    rate = cfg.sound_quality
 
     if is_bgm:
         cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_path]
@@ -69,12 +68,17 @@ def convert_audio(cfg: AppConfig) -> None:
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = []
 
+        if cfg.include_voice:
+            fmx_list = (SE_LIST + VOICE_LIST)
+        else:
+            fmx_list = (SE_LIST)
+
         for img_info in BGM_LIST:
             # 音源の並列変換処理(is_bgm=True)
             futures.append(executor.submit(
                 convert_audio_parallel, cfg, img_info, True))
             
-        for img_info in FMX_LIST:
+        for img_info in fmx_list:
             # 音源の並列変換処理(is_bgm=True)
             futures.append(executor.submit(
                 convert_audio_parallel, cfg, img_info, False))
