@@ -54,8 +54,7 @@ jobs:
             - name: 必要なファイルを移動
               run: |
                 mkdir ./dist/main/core_gba
-                mv ./NarcissuGBA.gba ./dist/main/core_gba/
-                # mv ./hi.gba ./dist/main/core_gba/
+                mv ./*.gba ./dist/main/core_gba/
                 mv ./tools ./dist/main/
 
             - name: upload artifact
