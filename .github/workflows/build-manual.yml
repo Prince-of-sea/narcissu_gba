@@ -14,16 +14,14 @@ jobs:
               run: |
                   chmod +x ./build.sh
                   ./build.sh
-                  mv ./src/c/game_core/NarcissuGBA.gba ./
-                  # mv ./src/c/game_core/hi.gba ./
+                  mv ./src/c/game_core/*.gba ./
 
             - name: upload artifact
               uses: actions/upload-artifact@v6
               with:
                   name: build-gba
                   path: |
-                    ./NarcissuGBA.gba
-                    # ./hi.gba
+                    ./*.gba
 
     build-exe:
         runs-on: windows-latest
