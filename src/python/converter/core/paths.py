@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 
+# ===== リソース一覧 =====
+FILE_CRC32_LIST = [
+    # ファイルチェック用CRC32値と対応ファイル名
+    [0x916C810F, "nscript.dat"],
+    [0x3752F726, "arc.nsa"],
+]
+
+
 # ===== 変換BGM一覧 =====
 BGM_LIST = [
 	# タイトル
@@ -473,7 +481,6 @@ IMG_LIST = [
 	# タイトル
 	[  0,'tui/title_off2.bmp', ''],
 	[  1,'tui/title_off.bmp', ''],
-
 
 	# 2~9章開始時のミニタイトル
 	[  2,'sys/mini_title.bmp', ''],    
