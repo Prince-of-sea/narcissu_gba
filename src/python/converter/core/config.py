@@ -9,6 +9,8 @@ class AppConfig:
     # ===== 入出力 =====
     input_dir: Path
     output_dir: Path
+    include_voice: bool
+    sound_quality: int
 
     # ===== 外部ツール（exe）=====
     arc_unpacker_exe: Path
@@ -49,16 +51,20 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
     
     input_dir_cfg = gui_cfg['input_dir']
     output_dir_cfg = gui_cfg['output_dir']
+    include_voice_cfg = gui_cfg['include_voice']
+    sound_quality_cfg = gui_cfg['sound_quality']
 
     cfg = AppConfig(
         input_dir        = Path(input_dir_cfg),
         output_dir       = Path(output_dir_cfg),
+        include_voice    = bool(include_voice_cfg),
+        sound_quality    = int(sound_quality_cfg),
 
         arc_unpacker_exe = Path(cwd / "tools" / "arc_unpacker" / "arc_unpacker.exe"),
         gbfs_exe         = Path(cwd / "tools" / "gbfs" / "gbfs.exe"),
         grit_exe         = Path(cwd / "tools" / "grit" / "grit.exe"),
         sox_exe          = Path(cwd / "tools" / "sox" / "sox.exe"),
-        base_gba         = Path(cwd / "core_gba" / "NarcissuGBA.gba"),
+        base_gba         = Path(cwd / "core_gba" / f"base_{sound_quality_cfg}.gba"),
 
         nsdat_path       = Path(input_dir_cfg / "nscript.dat"),
         nsa_path         = Path(input_dir_cfg / "arc.nsa"),
@@ -69,7 +75,6 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
         gbfs_path        = Path(temp_dir / "convert" / "data.gbfs"),
 
         result_gba       = Path(output_dir_cfg / "NarcissuGBA.gba"),
-
     )
 
     cfg.extract_dir.mkdir(parents=True, exist_ok=True)

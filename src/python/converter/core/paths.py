@@ -30,8 +30,8 @@ BGM_LIST = [
 ]
 
 
-# ===== 変換効果音・ボイス一覧 =====
-FMX_LIST = [
+# ===== 変換効果音一覧 =====
+SE_LIST = [
 	# 効果音
 	[ 10,"se/amadare.wav"],
 	[ 11,"se/autodoor.wav"],
@@ -72,7 +72,10 @@ FMX_LIST = [
 	[ 46,"se/umitori.wav"],
 	[ 47,"se/water_x2.wav"],
 	[ 48,"se/z42r.wav"],
-	
+]
+
+# ===== 変換ボイス一覧 =====
+VOICE_LIST = [
 	# ボイス
 	[ 49,"w/n001.ogg"],
 	[ 50,"w/n002.ogg"],
