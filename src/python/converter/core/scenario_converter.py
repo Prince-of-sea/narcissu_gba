@@ -31,11 +31,6 @@ from .paths import IMG_LIST, BGM_LIST, SE_LIST, VOICE_LIST
 '''
 
 
-# def find_scenario_paths(base_dir: str = "") -> list:
-#     """シナリオファイル一覧を返す"""
-#     pass
-
-
 def decrypt_0x84(data: bytes) -> bytes:
     """0x84 複合化"""
     bin_list = []  # 復号したバイナリを格納する配列の作成

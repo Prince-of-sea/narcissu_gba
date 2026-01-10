@@ -9,11 +9,10 @@ from core.audio_converter import convert_audio
 from core.packer import pack_resources
 from core.config import create_config
 from core.gui import gui_main
-from utils.log import log_info
 
 
 def main():
-    log_info("Start conversion tool")
+    print("Start conversion tool")
 
     # メイン
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -29,7 +28,7 @@ def main():
             convert_audio(cfg)
             pack_resources(cfg)
 
-    log_info("All done!")
+    print("All done!")
 
 
 if __name__ == "__main__":
