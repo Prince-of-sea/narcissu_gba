@@ -273,8 +273,7 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# tools - debug
-src/python/converter/tools/
+# core_gba
 core_gba/
 
 *.gba

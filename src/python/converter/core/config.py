@@ -41,13 +41,7 @@ class AppConfig:
 def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
 
     temp_dir = Path(temp_dir)
-
-    if getattr(sys, 'frozen', False):
-        # .exeとして実行されている時の処理
-        cwd = Path.cwd()
-    else:
-        # 通常のPythonスクリプトとして実行されている時の処理
-        cwd = Path.cwd().parent.parent.parent
+    cwd = Path.cwd()
     
     input_dir_cfg = gui_cfg['input_dir']
     output_dir_cfg = gui_cfg['output_dir']
