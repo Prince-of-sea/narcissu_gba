@@ -70,6 +70,33 @@ def convert_IMG001(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
 
 ###################################################################################################
+def convert_fit_frame(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """フレームに合わせてリサイズ変換(汎用)"""
+
+    # 元画像を読み込み
+    with Image.open(nsa_extract_path) as img:
+        img = img.convert("RGB")
+        
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        bg_color = img.getpixel((0, 0))
+        img_new = Image.new("RGB", (240, 160), bg_color)
+        
+        # 元画像の(1,145)から(800,349)を切り出し
+        img_cropped = img.crop((1, 145, 800, 349))
+        
+        # 240x60に縮小
+        img_resized = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
+        
+        # 新画像の(1,32)にはりつけ
+        img_new.paste(img_resized, (1, 32))
+        
+        # 保存
+        img_new.save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
 def convert_default(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """デフォルト変換"""
 
