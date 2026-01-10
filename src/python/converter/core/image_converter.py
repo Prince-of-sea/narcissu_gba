@@ -8,6 +8,7 @@ from PIL import Image
 from core.config import AppConfig
 from .image_special import convert_IMG000
 from .image_special import convert_IMG001
+from .image_special import convert_IMG015
 from .image_special import convert_fit_frame
 from .image_special import convert_default
 from .paths import IMG_LIST
@@ -67,11 +68,13 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
             convert_IMG000(nsa_extract_path, temppng_path, cfg)
         case 'special_001':
             convert_IMG001(nsa_extract_path, temppng_path, cfg)
+        case 'special_015':
+            convert_IMG015(nsa_extract_path, temppng_path, cfg)
         case 'fit_frame':
             convert_fit_frame(nsa_extract_path, temppng_path, cfg)
         case _:
             convert_default(nsa_extract_path, temppng_path, cfg)
-            
+
     # grit.exeを使って変換
     run_grit(cfg, temppng_path)
 

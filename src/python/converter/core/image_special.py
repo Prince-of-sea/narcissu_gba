@@ -70,6 +70,28 @@ def convert_IMG001(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
 
 ###################################################################################################
+def convert_IMG015(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/byoin_heya_yu2.jpg 変換"""
+
+    # 画像を読み込み
+    with Image.open(nsa_extract_path) as img:
+
+        # 240x180にリサイズ（縮小）
+        img = img.resize((240, 180), Image.LANCZOS)
+
+        # 上12px、下8pxを捨てる（240x160にクロップ）
+        img = img.crop((0, 12, 240, 172))
+
+        # シャープネスを少し上げる
+        img = img.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
+
+        # PNGで保存
+        img.save(temppng_path, "PNG")
+
+    return
+
+
+###################################################################################################
 def convert_fit_frame(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """フレームに合わせてリサイズ変換(汎用)"""
 
@@ -90,6 +112,9 @@ def convert_fit_frame(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig
         # 新画像の(1,32)にはりつけ
         img_new.paste(img_resized, (1, 32))
         
+        # シャープネスを少し上げる
+        img_new = img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
+
         # 保存
         img_new.save(temppng_path, "PNG")
     

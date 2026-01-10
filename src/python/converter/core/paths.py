@@ -501,7 +501,7 @@ IMG_LIST = [
 	[ 12,'e/b.jpg',                            'fit_frame'],
 	[ 13,'e/byoin7_rouka.jpg',                 'fit_frame'],
 	[ 14,'e/byoin_chusyajo.jpg',               'fit_frame'],
-	[ 15,'e/byoin_heya_yu2.jpg',               ''],
+	[ 15,'e/byoin_heya_yu2.jpg',               'special_015'],
 	[ 16,'e/byoin_rouka.jpg',                  'fit_frame'],
 	[ 17,'e/c00.jpg',                          'fit_frame'],
 	[ 18,'e/c001.jpg',                         ''],
