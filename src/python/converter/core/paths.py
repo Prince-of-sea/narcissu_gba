@@ -482,7 +482,7 @@ VOICE_LIST = [
 # ===== 変換画像一覧 =====
 IMG_LIST = [
 	# タイトル
-	[  0,'tui/title_off2.bmp', ''],
+	[  0,'e/title_off2.jpg', ''],
 	[  1,'tui/title_off.bmp', ''],
 
 	# 2~9章開始時のミニタイトル
