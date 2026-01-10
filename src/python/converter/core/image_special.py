@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageFilter
 
 
 def convert_default(nsa_extract_path: Path, temppng_path: Path):
@@ -14,9 +14,10 @@ def convert_default(nsa_extract_path: Path, temppng_path: Path):
         
         # 3. 上下10pxを捨てる（240x160にクロップ）
         # cropの引数は (左, 上, 右, 下)
-        img = img.crop((0, 11, 240, 171))
+        img = img.crop((0, 10, 240, 170))
 
-        # X. この辺に画像ごとの個別処理追加予定
+        # 3.5. シャープネスを少し上げる
+        img = img.filter(ImageFilter.UnsharpMask(radius=2, percent=30, threshold=3))
 
         # 4. PNGで保存
         img.save(temppng_path, "PNG")
