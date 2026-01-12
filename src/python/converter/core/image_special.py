@@ -110,8 +110,8 @@ def convert_IMG018_023(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfi
         # 240x61に縮小
         img_cropped = img_cropped.resize((240, 61), Image.LANCZOS)
 
-        # 新切り出し画像を新画像の(1, 32)にはりつけ
-        img_new.paste(img_cropped, (1, 32))
+        # 新切り出し画像を新画像の(0, 32)にはりつけ
+        img_new.paste(img_cropped, (0, 32))
 
         # PNGで保存
         img_new.save(temppng_path, "PNG")
@@ -138,8 +138,8 @@ def convert_IMG028(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         img_cropped = img.crop((306, 252, 451, 269))
         img_cropped = img_cropped.resize((88, 10), Image.LANCZOS)
 
-        # 新背景画像を新画像の(1,32)にはりつけ
-        img_new.paste(img_bgcolor, (1, 32))
+        # 新背景画像を新画像の(0,32)にはりつけ
+        img_new.paste(img_bgcolor, (0, 32))
 
         # 新切り出し画像を新画像の(76,58)にはりつけ
         img_new.paste(img_cropped, (76, 58))
@@ -165,14 +165,14 @@ def convert_fit_frame(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig
         bg_color = img.getpixel((0, 0))
         img_new = Image.new("RGB", (240, 160), bg_color)
         
-        # 元画像の(1,145)から(800,349)を切り出し
-        img_cropped = img.crop((1, 145, 800, 349))
+        # 元画像の(0,145)から(800,349)を切り出し
+        img_cropped = img.crop((0, 145, 800, 349))
         
         # 240x61に縮小
         img_resized = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
         
-        # 新画像の(1,32)にはりつけ
-        img_new.paste(img_resized, (1, 32))
+        # 新画像の(0,32)にはりつけ
+        img_new.paste(img_resized, (0, 32))
         
         # シャープネスを少し上げる
         img_new = img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
