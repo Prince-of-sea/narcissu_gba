@@ -169,6 +169,59 @@ def convert_IMG028(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
 
 ###################################################################################################
+def convert_IMG067(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/imege95.jpg 変換"""
+
+    # 画像を読み込み
+    with Image.open(nsa_extract_path).convert("RGB") as img:
+        img = img.convert("RGB")
+        
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        bg_color = img.getpixel((0, 0))
+        img_new = Image.new("RGB", (240, 160), bg_color)
+        
+        # image96.jpg(95の黒帯ついてない版)を読み込み
+        img96_path = nsa_extract_path.parent / Path('imege96.jpg')
+        with Image.open(img96_path) as img96:
+
+            # 240x180にリサイズ（縮小）
+            img96 = img96.resize((240, 180), Image.LANCZOS)
+
+            # 切り出し部分のみ（240x61）にクロップ
+            img96 = img96.crop((0, 42, 240, (42 + 61)))
+            
+            # 新画像の(0,32)にはりつけ
+            img_new.paste(img96, (0, 32))
+        
+        # 保存
+        img_new.save(temppng_path, "PNG")
+
+    return
+
+
+###################################################################################################
+def convert_IMG068_069(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/imege96.jpg～e/imege97.jpg 変換"""
+
+    # 画像を読み込み
+    with Image.open(nsa_extract_path) as img:
+
+        # 240x180にリサイズ（縮小）
+        img = img.resize((240, 180), Image.LANCZOS)
+        
+        # 上下10pxを捨てる（240x160）にクロップ
+        img = img.crop((0, 10, 240, 170))
+
+        # シャープネスを少し上げる
+        img = img.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
+
+        # PNGで保存
+        img.save(temppng_path, "PNG")
+
+    return
+
+
+###################################################################################################
 def convert_IMG082_084(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """e/nar01.jpg～e/nar01d.jpg 変換"""
 
@@ -236,7 +289,7 @@ def convert_default(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         # 240x180にリサイズ（縮小）
         img = img.resize((240, 180), Image.LANCZOS)
         
-        # 上下10pxを捨てる（240x160にクロップ
+        # 上下10pxを捨てる（240x160）にクロップ
         img = img.crop((0, 10, 240, 170))
 
         # シャープネスを少し上げる
