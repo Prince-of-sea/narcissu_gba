@@ -486,7 +486,6 @@ IMG_LIST = [
 	[  1,'tui/title_off.bmp',                  'special_001'],
 
 	# 2~9章開始時のミニタイトル
-	[  2,'sys/mini_title.bmp',                 'fit_frame'],    
 	[  3,'sys/mini_title.bmp',                 'fit_frame'],    
 	[  4,'sys/mini_title.bmp',                 'fit_frame'],    
 	[  5,'sys/mini_title.bmp',                 'fit_frame'],    

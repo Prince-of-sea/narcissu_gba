@@ -289,7 +289,6 @@ def convert_scenario(cfg: AppConfig) -> None:
     # 結果を表示
     if (not cfg.include_voice):
         scn_list['003'] += convert_txt_to_gbabin(lines[639:1101])# *image	    "プロローグ"
-        scn_list['003'] += (['!g', '2', '0000', '#t', '120', '0000'])
         scn_list['003'] += convert_txt_to_gbabin(lines[1105:2184])# *honpen2	"７階"
         scn_list['003'] += (['!g', '3', '0000', '#t', '120', '0000'])
         scn_list['003'] += convert_txt_to_gbabin(lines[2188:3690])# *honpen3	"銀のクーペ"
@@ -309,7 +308,6 @@ def convert_scenario(cfg: AppConfig) -> None:
 
     else:
         scn_list['003'] += (convert_txt_to_gbabin(lines[10126:10598]))# *image_voice	"プロローグ　ボイスＶｅｒ  "		10126	10598
-        scn_list['003'] += (['!g', '2', '0000', '#t', '120', '0000'])
         scn_list['003'] += (convert_txt_to_gbabin(lines[10622:11709]))# *honpen2_voice	"７階　ボイスＶｅｒ"			10622	11709
         scn_list['003'] += (['!g', '3', '0000', '#t', '120', '0000'])
         scn_list['003'] += (convert_txt_to_gbabin(lines[11717:13244]))# *honpen3_voice	"銀のクーペ　ボイスＶｅｒ"		11717	13244
