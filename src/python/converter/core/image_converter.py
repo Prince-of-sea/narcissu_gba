@@ -11,6 +11,9 @@ from .image_special import convert_IMG001
 from .image_special import convert_IMG015
 from .image_special import convert_IMG018_023
 from .image_special import convert_IMG028
+from .image_special import convert_IMG029
+from .image_special import convert_IMG030
+from .image_special import convert_IMG031
 from .image_special import convert_IMG067
 from .image_special import convert_IMG068_069
 from .image_special import convert_IMG082_084
@@ -79,6 +82,12 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
             convert_IMG018_023(nsa_extract_path, temppng_path, cfg)
         case 'special_028':
             convert_IMG028(nsa_extract_path, temppng_path, cfg)
+        case 'special_029':
+            convert_IMG029(nsa_extract_path, temppng_path, cfg)
+        case 'special_030':
+            convert_IMG030(nsa_extract_path, temppng_path, cfg)
+        case 'special_031':
+            convert_IMG031(nsa_extract_path, temppng_path, cfg)
         case 'special_067':
             convert_IMG067(nsa_extract_path, temppng_path, cfg)
         case 'special_068_069':
