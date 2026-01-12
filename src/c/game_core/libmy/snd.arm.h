@@ -10,7 +10,7 @@ extern "C" {
 #define SND_CPU_CLOCK			(16 * 1024 * 1024)
 
 #ifndef SND_AUDIO_RATE
-#define SND_AUDIO_RATE			5256	/* ソース改変ここ 元:21024 */
+#define SND_AUDIO_RATE			6241	/* ソース改変ここ 元:21024 */
 #endif
 
 #define SND_FPS					60

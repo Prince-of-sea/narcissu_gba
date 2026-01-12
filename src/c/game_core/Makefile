@@ -5,7 +5,7 @@ NAME       = NarcissuGBA
 GAMECODE   = TEST
 PREFIX     = arm-none-eabi-
 
-RATES := 5256 8192
+RATES := 6241 8192
 
 AS         = $(PREFIX)as
 CC         = $(PREFIX)gcc
