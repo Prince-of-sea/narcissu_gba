@@ -169,6 +169,34 @@ def convert_IMG028(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
 
 ###################################################################################################
+def convert_IMG082_084(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/nar01.jpg～e/nar01d.jpg 変換"""
+
+    # 画像を読み込み
+    with Image.open(nsa_extract_path).convert("RGB") as img:
+        
+        # 元画像の左上 (0, 0) の色を取得
+        bg_color = img.getpixel((0, 0))
+
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        img_new = Image.new("RGB", (240, 160), bg_color)
+
+        # 元画像の(185, 196)から(585, 298)までを切り出し
+        img_cropped = img.crop((188, 196, 588, 298))
+
+        # 240x61に縮小
+        img_cropped = img_cropped.resize((240, 61), Image.LANCZOS)
+
+        # 新切り出し画像を新画像の(0, 32)にはりつけ
+        img_new.paste(img_cropped, (0, 32))
+
+        # PNGで保存
+        img_new.save(temppng_path, "PNG")
+
+    return
+
+
+###################################################################################################
 def convert_fit_frame(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """フレームに合わせてリサイズ変換(汎用)"""
 
