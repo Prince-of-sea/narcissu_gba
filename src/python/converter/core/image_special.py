@@ -126,6 +126,15 @@ def convert_IMG028(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     # 画像を読み込み
     with Image.open(nsa_extract_path).convert("RGB") as img:
 
+        # 切り出し位置とサイズ
+        crop_x = 306
+        crop_y = 252
+        crop_w = 145
+        crop_h = 17
+
+        # 本来の縮小後サイズの何倍のサイズにするか
+        scale = 2
+
         # 元画像の左上の色をもとに240x160の新画像(img_new)を作成
         bg_color_topleft = img.getpixel((0, 0))
         img_new = Image.new("RGB", (240, 160), bg_color_topleft)
@@ -134,15 +143,21 @@ def convert_IMG028(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         bg_color_target = img.getpixel((5, 150))
         img_bgcolor = Image.new("RGB", (240, 61), bg_color_target)
 
-        # 元画像の(306,252)から(451,269)を切り出し、88x10に縮小した新切り出し画像(img_cropped)を作成
-        img_cropped = img.crop((306, 252, 451, 269))
-        img_cropped = img_cropped.resize((88, 10), Image.LANCZOS)
+        # 元画像から一部を切り出し、縮小した新切り出し画像(img_cropped)を作成
+        crop_w_scaled = int(crop_w * 0.3 * scale)
+        crop_h_scaled = int(crop_h * 0.3 * scale)
+        if crop_w_scaled % 2 != 0:
+            crop_w_scaled += 1  # 幅が奇数の場合は偶数に調整
+        img_cropped = img.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_h))
+        img_cropped = img_cropped.resize((crop_w_scaled, crop_h_scaled), Image.LANCZOS)
 
         # 新背景画像を新画像の(0,32)にはりつけ
         img_new.paste(img_bgcolor, (0, 32))
 
-        # 新切り出し画像を新画像の(76,58)にはりつけ
-        img_new.paste(img_cropped, (76, 58))
+        # 新切り出し画像を新画像にはりつけ
+        paste_x = 120 - crop_w_scaled // 2
+        paste_y = 32 + (61 - crop_h_scaled) // 2
+        img_new.paste(img_cropped, (paste_x, paste_y))
 
         # シャープネスを少し上げる
         img_new = img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
