@@ -120,6 +120,40 @@ def convert_IMG018_023(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfi
 
 
 ###################################################################################################
+def convert_IMG028(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c032.jpg 変換"""
+
+    # 画像を読み込み
+    with Image.open(nsa_extract_path).convert("RGB") as img:
+
+        # 元画像の左上の色をもとに240x160の新画像(img_new)を作成
+        bg_color_topleft = img.getpixel((0, 0))
+        img_new = Image.new("RGB", (240, 160), bg_color_topleft)
+
+        # 元画像の(5,150)の色をもとに240x61の新背景画像(img_bgcolor)を作成
+        bg_color_target = img.getpixel((5, 150))
+        img_bgcolor = Image.new("RGB", (240, 61), bg_color_target)
+
+        # 元画像の(306,252)から(451,269)を切り出し、88x10に縮小した新切り出し画像(img_cropped)を作成
+        img_cropped = img.crop((306, 252, 451, 269))
+        img_cropped = img_cropped.resize((88, 10), Image.LANCZOS)
+
+        # 新背景画像を新画像の(1,32)にはりつけ
+        img_new.paste(img_bgcolor, (1, 32))
+
+        # 新切り出し画像を新画像の(76,58)にはりつけ
+        img_new.paste(img_cropped, (76, 58))
+
+        # シャープネスを少し上げる
+        img_new = img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
+
+        # PNGで保存
+        img_new.save(temppng_path, "PNG")
+
+    return
+
+
+###################################################################################################
 def convert_fit_frame(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """フレームに合わせてリサイズ変換(汎用)"""
 

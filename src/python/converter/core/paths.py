@@ -514,7 +514,7 @@ IMG_LIST = [
 	[ 25,'e/c0052.jpg',                        'fit_frame'],
 	[ 26,'e/c02.jpg',                          'fit_frame'],
 	[ 27,'e/c03.jpg',                          'fit_frame'],
-	[ 28,'e/c032.jpg',                         ''],
+	[ 28,'e/c032.jpg',                         'special_028'],
 	[ 29,'e/c033.jpg',                         ''],
 	[ 30,'e/c04.jpg',                          ''],
 	[ 31,'e/c042.jpg',                         ''],
