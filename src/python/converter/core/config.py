@@ -39,7 +39,7 @@ class AppConfig:
     # ===== 設定関連(仮) =====
     bgm_high_quality: bool = False
     voice_on: bool = True
-    debug_mode: bool = True
+    debug_mode: bool = False
 
 
 def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
@@ -76,10 +76,14 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
 
         result_gba       = Path(output_dir_cfg / "NarcissuGBA.gba"),
         base_gba         = Path(cwd / "core_gba" / f"base_{sound_quality_cfg}.gba"),
+
+        debug_mode       = bool(Path(cwd / ".debug").exists()),
     )
 
     cfg.extract_dir.mkdir(parents=True, exist_ok=True)
     cfg.convert_dir.mkdir(parents=True, exist_ok=True)
-    cfg.debug_dir.mkdir(parents=True, exist_ok=True)
+
+    if (cfg.debug_mode):
+        cfg.debug_dir.mkdir(parents=True, exist_ok=True)
 
     return cfg

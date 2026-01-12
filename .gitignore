@@ -275,6 +275,7 @@ __marimo__/
 
 # core_gba
 src/python/converter/core_gba/
+src/python/converter/.debug
 src/c/game_core/res/*.s
 src/c/game_core/res/*.h
 *.nm
