@@ -342,7 +342,7 @@ def convert_scenario(cfg: AppConfig) -> None:
             f.write(scn_bin)
         
         if (cfg.debug_mode):
-            output_txt_path = cfg.output_dir / f'SCN{scn_key}.txt'
+            output_txt_path = cfg.debug_dir / f'SCN{scn_key}.txt'
             debug_txt = "\n".join(scn_val)
             
             with open(output_txt_path, "w", encoding="cp932") as f:

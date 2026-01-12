@@ -39,4 +39,15 @@ def pack_resources(cfg: AppConfig) -> None:
     """結合処理全体"""
     run_gbfs(cfg)
     join_binary_files(cfg)
-    pass
+
+    # デバッグモード時はdebug_dir内の中間生成物を保存
+    if (cfg.debug_mode):
+        # debug_dirをoutput_dir以下にコピー
+        debug_output_dir = cfg.output_dir / "NarcissuGBA_debug"
+        
+        if debug_output_dir.exists():
+            shutil.rmtree(debug_output_dir)
+
+        shutil.copytree(cfg.debug_dir, debug_output_dir)
+
+    return
