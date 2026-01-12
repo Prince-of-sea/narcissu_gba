@@ -47,7 +47,19 @@ u8* FileGetEff(s32 no)
 u8* FileGetBgm(s32 no)
 {
 	char buf[20];
-	_Sprintf(buf, "bgm%02d.bin", no);
+	/* ソース改変ここから */
+	if(no == 2)
+	{
+		// タイトルで利用 "se/umi13.wav"
+		// こいつだけ効果音をBGM扱いさせるので特別に2を割り当て
+		_Sprintf(buf, "fmx%03d.bin", 45);
+	}
+	else
+	{
+		_Sprintf(buf, "bgm%02d.bin", no);
+	}
+	// _Sprintf(buf, "bgm%02d.bin", no);
+	/* ソース改変ここまで */
 
 	return GbfsGetSafePointer(buf);
 }

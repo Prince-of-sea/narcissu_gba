@@ -37,15 +37,15 @@ def gui_main() -> dict:
     root.destroy()
 
     root = tkinter.Tk()
-    sndhigh = messagebox.askokcancel("確認", "音質上げる?\nyes:8192 no:5256")
-    gui_cfg['sound_quality'] = 8192 if sndhigh else 5256
+    sndhigh = messagebox.askokcancel("確認", "音質上げる?\nok:8192 キャンセル:6241")
+    gui_cfg['sound_quality'] = 8192 if sndhigh else 6241
     root.destroy()
 
     # 高音質でボイス有りは容量的に厳しいので警告
     if (gui_cfg['include_voice']) and (gui_cfg['sound_quality'] >= 8192):
         root = tkinter.Tk()
-        messagebox.showinfo("だめだね", "ボイスを入れる場合、音質は8192にはできません(容量的に厳しいので)\nとりあえず今は5256扱いで通します\n\n※正式版ではOK押せないようにしてね")
+        messagebox.showinfo("だめだね", "ボイスを入れる場合、音質は8192にはできません(容量的に厳しいので)\nとりあえず今は6241扱いで通します\n\n※正式版ではOK押せないようにしてね")
         root.destroy()
-        gui_cfg['sound_quality'] = 5256
+        gui_cfg['sound_quality'] = 6241
 
     return gui_cfg
