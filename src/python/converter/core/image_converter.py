@@ -10,19 +10,10 @@ from .image_special import convert_IMG000
 from .image_special import convert_IMG001
 from .image_special import convert_IMG015
 from .image_special import convert_IMG018_023
-from .image_special import convert_IMG028
-from .image_special import convert_IMG029
-from .image_special import convert_IMG030
-from .image_special import convert_IMG031
 from .image_special import convert_IMG067
 from .image_special import convert_IMG068_069
 from .image_special import convert_IMG082_084
-from .image_special import convert_IMG113
-from .image_special import convert_IMG118
-from .image_special import convert_IMG125
-from .image_special import convert_IMG126
-from .image_special import convert_IMG127
-from .image_special import convert_IMG128_130
+from .image_special import convert_gray_background
 from .image_special import convert_fit_frame
 from .image_special import convert_default
 from .paths import IMG_LIST
@@ -86,32 +77,14 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
             convert_IMG015(nsa_extract_path, temppng_path, cfg)
         case 'special_018_023':
             convert_IMG018_023(nsa_extract_path, temppng_path, cfg)
-        case 'special_028':
-            convert_IMG028(nsa_extract_path, temppng_path, cfg)
-        case 'special_029':
-            convert_IMG029(nsa_extract_path, temppng_path, cfg)
-        case 'special_030':
-            convert_IMG030(nsa_extract_path, temppng_path, cfg)
-        case 'special_031':
-            convert_IMG031(nsa_extract_path, temppng_path, cfg)
         case 'special_067':
             convert_IMG067(nsa_extract_path, temppng_path, cfg)
         case 'special_068_069':
             convert_IMG068_069(nsa_extract_path, temppng_path, cfg)
         case 'special_082_084':
             convert_IMG082_084(nsa_extract_path, temppng_path, cfg)
-        case 'special_113':
-            convert_IMG113(nsa_extract_path, temppng_path, cfg)
-        case 'special_118':
-            convert_IMG118(nsa_extract_path, temppng_path, cfg)
-        case 'special_125':
-            convert_IMG125(nsa_extract_path, temppng_path, cfg)
-        case 'special_126':
-            convert_IMG126(nsa_extract_path, temppng_path, cfg)
-        case 'special_127':
-            convert_IMG127(nsa_extract_path, temppng_path, cfg)
-        case 'special_128_130':
-            convert_IMG128_130(nsa_extract_path, temppng_path, cfg)
+        case 'gray_background':
+            convert_gray_background(nsa_extract_path, temppng_path, cfg)
         case 'fit_frame':
             convert_fit_frame(nsa_extract_path, temppng_path, cfg)
         case _:
