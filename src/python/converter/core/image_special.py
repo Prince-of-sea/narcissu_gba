@@ -168,7 +168,7 @@ def convert_fit_frame(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig
         # 元画像の(1,145)から(800,349)を切り出し
         img_cropped = img.crop((1, 145, 800, 349))
         
-        # 240x60に縮小
+        # 240x61に縮小
         img_resized = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
         
         # 新画像の(1,32)にはりつけ
