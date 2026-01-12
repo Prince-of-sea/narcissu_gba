@@ -625,7 +625,7 @@ IMG_LIST = [
 	[136,'tui2/cat07.bmp',                     'gray_background'],
 	[137,'tui2/cat072.bmp',                    'gray_background'],
 	[138,'tui2/cat073.bmp',                    'gray_background'],
-	[139,'tui/imege98.bmp',                    ''],
+	[139,'tui/imege98.bmp',                    'special_139'],
 	[140,'tui/naname_inaka_yoru2.bmp',         'fit_frame'],
 	[141,'yobi/car_byoin_chusyajo_yu.bmp',     'fit_frame'],
 	[142,'yobi/cat03.bmp',                     'gray_background'],

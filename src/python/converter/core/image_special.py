@@ -201,6 +201,37 @@ def convert_IMG082_084(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfi
 
 
 ###################################################################################################
+def convert_IMG139(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """tui/imege98.bmp 変換"""
+
+    # フィルター画像のパス
+    filter_image_path = cfg.res_dir / Path('filter_139_1.png')
+
+    # 画像を読み込み
+    with Image.open(nsa_extract_path) as img:
+
+        # 240x180にリサイズ（縮小）
+        img = img.resize((240, 180), Image.LANCZOS)
+        
+        # 上下10pxを捨てる（240x160にクロップ）
+        img = img.crop((0, 10, 240, 170))
+
+        # シャープネスを少し上げる
+        img = img.filter(ImageFilter.UnsharpMask(radius=2, percent=30, threshold=3))
+
+        # フィルター画像を読み込み
+        with Image.open(filter_image_path) as filter_img:
+            
+            # 画像にフィルターを合成
+            img = Image.alpha_composite(img.convert('RGBA'), filter_img.convert('RGBA'))
+
+        # PNGで保存
+        img.save(temppng_path, "PNG")
+
+    return
+
+
+###################################################################################################
 def convert_gray_background(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """グレー背景CG変換(汎用)"""
 
