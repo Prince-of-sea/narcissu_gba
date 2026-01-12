@@ -9,6 +9,12 @@ from core.config import AppConfig
 from .image_special import convert_IMG000
 from .image_special import convert_IMG001
 from .image_special import convert_IMG015
+from .image_special import convert_IMG018_023
+from .image_special import convert_IMG067
+from .image_special import convert_IMG068_069
+from .image_special import convert_IMG082_084
+from .image_special import convert_IMG139
+from .image_special import convert_gray_background
 from .image_special import convert_fit_frame
 from .image_special import convert_default
 from .paths import IMG_LIST
@@ -70,6 +76,18 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
             convert_IMG001(nsa_extract_path, temppng_path, cfg)
         case 'special_015':
             convert_IMG015(nsa_extract_path, temppng_path, cfg)
+        case 'special_018_023':
+            convert_IMG018_023(nsa_extract_path, temppng_path, cfg)
+        case 'special_067':
+            convert_IMG067(nsa_extract_path, temppng_path, cfg)
+        case 'special_068_069':
+            convert_IMG068_069(nsa_extract_path, temppng_path, cfg)
+        case 'special_082_084':
+            convert_IMG082_084(nsa_extract_path, temppng_path, cfg)
+        case 'special_139':
+            convert_IMG139(nsa_extract_path, temppng_path, cfg)
+        case 'gray_background':
+            convert_gray_background(nsa_extract_path, temppng_path, cfg)
         case 'fit_frame':
             convert_fit_frame(nsa_extract_path, temppng_path, cfg)
         case _:
@@ -81,8 +99,13 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
     # 末尾に独自データを追記
     append_footer_data(temppng_path, tempbin_path)
 
-    # 変換し終わったpngファイルを削除
-    temppng_path.unlink()
+    if (cfg.debug_mode):
+        # デバッグ用に中間pngファイルをdebug_dirにコピー
+        debug_png_path = cfg.debug_dir / f'img{p_index}.png'
+        temppng_path.replace(debug_png_path)
+    else:
+        # 変換し終わったpngファイルを削除
+        temppng_path.unlink()
 
     # 競合するファイルがあれば削除
     if output_path.exists():

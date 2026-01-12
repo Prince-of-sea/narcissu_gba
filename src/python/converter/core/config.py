@@ -25,6 +25,7 @@ class AppConfig:
     extract_dir: Path
     nsa_extract_dir: Path
     convert_dir: Path
+    debug_dir: Path
     gbfs_path: Path
 
     # ===== 入力起点 =====
@@ -63,7 +64,6 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
         gbfs_exe         = Path(cwd / "tools" / "gbfs" / "gbfs.exe"),
         grit_exe         = Path(cwd / "tools" / "grit" / "grit.exe"),
         sox_exe          = Path(cwd / "tools" / "sox" / "sox.exe"),
-        base_gba         = Path(cwd / "core_gba" / f"base_{sound_quality_cfg}.gba"),
 
         nsdat_path       = Path(input_dir_cfg / "nscript.dat"),
         nsa_path         = Path(input_dir_cfg / "arc.nsa"),
@@ -71,12 +71,19 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
         extract_dir      = Path(temp_dir / "extract"),
         nsa_extract_dir  = Path(temp_dir / "extract" / "arc~.nsa"),
         convert_dir      = Path(temp_dir / "convert"),
+        debug_dir        = Path(temp_dir / "debug"),
         gbfs_path        = Path(temp_dir / "convert" / "data.gbfs"),
 
         result_gba       = Path(output_dir_cfg / "NarcissuGBA.gba"),
+        base_gba         = Path(cwd / "core_gba" / f"base_{sound_quality_cfg}.gba"),
+
+        debug_mode       = bool(Path(cwd / ".debug").exists()),
     )
 
     cfg.extract_dir.mkdir(parents=True, exist_ok=True)
     cfg.convert_dir.mkdir(parents=True, exist_ok=True)
+
+    if (cfg.debug_mode):
+        cfg.debug_dir.mkdir(parents=True, exist_ok=True)
 
     return cfg
