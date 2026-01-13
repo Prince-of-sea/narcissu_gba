@@ -10,10 +10,6 @@ FILE_CRC32_LIST = [
 
 # ===== 変換BGM一覧 =====
 BGM_LIST = [
-	# タイトル
-	[ 2,"se/umi13.wav"],
-		
-	# 他のBGM
 	[10,"bgm/3_12.mp3"],
 	[11,"bgm/a01.mp3"],
 	[12,"bgm/e02.mp3"],
