@@ -194,7 +194,10 @@ def convert_txt_to_gbabin(txt_lines):
 
                         for iml in IMG_LIST:
                             if (Path(iml[1]) == Path(bg_path)):
-                                line_command  = ['!g', str(iml[0]),    str(command_cnt)]
+                                iml_0 = iml[0]
+                                if (iml_0 == 130):  # 130番は特殊扱い - 129と同じ画像なので129扱い
+                                    iml_0 = 129
+                                line_command  = ['!g', str(iml_0),    str(command_cnt)]
                                 line_command += ['#t', str(wait_time), str(command_cnt)]
 
                                 break
