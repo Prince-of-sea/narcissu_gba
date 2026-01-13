@@ -196,8 +196,8 @@ void TxtExecMenu(void)
 	// 選択肢
 	if(type == MENU_TYPE_TITLE)
 	{
-		x = 9;/* ソース改変ここ 元:5 */
-		y = 8;/* ソース改変ここ 元:6 */
+		x = 10;/* ソース改変ここ 元:5 */
+		y = 7;/* ソース改変ここ 元:6 */
 	}
 	else if(type == MENU_TYPE_DEBUG)
 	{

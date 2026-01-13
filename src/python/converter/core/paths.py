@@ -611,7 +611,7 @@ IMG_LIST = [
 	[127,'tui2/c0442.bmp',                     'gray_background'],
 	[128,'tui2/c045.bmp',                      'gray_background'],
 	[129,'tui2/c046.bmp',                      'gray_background'],
-	[130,'tui2/c047.bmp',                      'gray_background'],
+	[130,'tui2/c047.bmp',                      'none_background'],
 	[131,'tui2/c049.bmp',                      'gray_background'],
 	[132,'tui2/cat02.bmp',                     'gray_background'],
 	[133,'tui2/cat03.bmp',                     'gray_background'],

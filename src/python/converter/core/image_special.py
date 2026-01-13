@@ -230,6 +230,11 @@ def convert_IMG139(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
     return
 
+###################################################################################################
+def convert_none_background(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """何もしない背景CG変換(汎用)"""
+    return
+
 
 ###################################################################################################
 def convert_gray_background(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):

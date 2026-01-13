@@ -194,7 +194,10 @@ def convert_txt_to_gbabin(txt_lines):
 
                         for iml in IMG_LIST:
                             if (Path(iml[1]) == Path(bg_path)):
-                                line_command  = ['!g', str(iml[0]),    str(command_cnt)]
+                                iml_0 = iml[0]
+                                if (iml_0 == 130):  # 130番は特殊扱い - 129と同じ画像なので129扱い
+                                    iml_0 = 129
+                                line_command  = ['!g', str(iml_0),    str(command_cnt)]
                                 line_command += ['#t', str(wait_time), str(command_cnt)]
 
                                 break
@@ -273,7 +276,7 @@ def convert_scenario(cfg: AppConfig) -> None:
         '000': ['0', '0000', '!t', '起動', '0000', '#W', '200', '0000', '#t', '10', '0000', 
                 '!g', '0', '0000', '#t', '6', '0000', '!g', '1', '0000', '#t', '6', '0000', '!j', '1', '0000', ';;', ''],
         '003': ['0', '0000', '#W',  '0', '0000', '#t',  '1', '0000', '#W', '1', '0000'],
-        '006': ['0', '0000', '!t', 'Ｐｒｏｄｕｃｔ',   '0000', '#W', '0', '0000'],
+        '006': ['0', '0000', '!t', 'プロダクト',   '0000', '#W', '0', '0000'],
     }
 
     nsdat_data = open(cfg.nsdat_path, 'rb').read()
@@ -327,7 +330,7 @@ def convert_scenario(cfg: AppConfig) -> None:
 
     # Ｐｒｏｄｕｃｔシナリオ - 後で変換作る
     # scn_list['006'] += (convert_txtprod_to_gbabin(lines[xxxxx:xxxxx]))
-    scn_list['006'] += (['!g', '2', '0000', '#t', '2', '0000', '_r', 'プロダクト仮', '0000', '_r', 'あとで実装します', '0000'])
+    scn_list['006'] += (['!g', '3', '0000', '#t', '2', '0000', '_r', 'プロダクト仮', '0000', '_r', 'あとで実装します', '0000'])
     scn_list['006'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
 
     for scn_key, scn_val in scn_list.items():
