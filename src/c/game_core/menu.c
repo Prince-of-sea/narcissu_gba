@@ -201,7 +201,7 @@ void MenuExecSystem(u16 trg)
 		SeStop();
 		BgmStop();
 		
-		ImgLoadFade();
+		// ImgLoadFade();
 		
 		LogInit();
 		TxtClear();
