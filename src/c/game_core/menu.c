@@ -47,10 +47,15 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 	"",
 
 	// 21
+	/*
 	"",
-	"　Ｓｔａｒｔ",		/* ソース改変ここ 元: 最初から始める */
-	"　　Ｌｏａｄ",		/* ソース改変ここ 元: 　ロードする*/
-
+	"　最初から始める",
+	"　ロードする",
+	*/
+	"　　Ｓｔａｒｔ",		/* ソース改変ここ 元: 最初から始める */
+	"　　　Ｌｏａｄ",		/* ソース改変ここ 元: 　ロードする*/
+	"Ｐｒｏｄｕｃｔ",
+	
 	// 24
 	/* ソース改変ここから */
 	"使わないので仮の値で埋め中",
@@ -623,6 +628,21 @@ void MenuExecTitle(u16 trg)
 	case 1:
 		MenuSetLoad(MENU_RET_TITLE);
 		break;
+	
+	// プロダクト - ここ編集
+	case 2:
+		ImgLoadFade();
+
+		LogInit();
+		TxtClear();
+
+		NvInitVar();
+		NvSetScn(6);
+
+		NvSetAct(NV_ACT_PARSE);
+		ManageSetAct(MANAGE_ACT_NV);
+		break;
+
 	}
 }
 //---------------------------------------------------------------------------
@@ -683,7 +703,9 @@ void MenuSetNone(s32 ret)
 //---------------------------------------------------------------------------
 void MenuSetTitle(s32 sel)
 {
-	MenuSetInit(MENU_TYPE_TITLE, MENU_RET_NONE, sel, 21, 2, MenuExecTitle, true);
+	/* ソース改変ここ */
+	// MenuSetInit(MENU_TYPE_TITLE, MENU_RET_NONE, sel, 21, 2, MenuExecTitle, true);
+	MenuSetInit(MENU_TYPE_TITLE, MENU_RET_NONE, sel, 20, 3, MenuExecTitle, true);
 }
 //---------------------------------------------------------------------------
 void MenuSetDebug(s32 ret)
