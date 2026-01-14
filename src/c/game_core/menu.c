@@ -23,8 +23,8 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 	"　　文字を消す",
 	"　　メッセージ履歴",
 	"　　オプション",
-	"　　プロダクト", /* ソース改変ここ 元: "　　デバッグ", */
-	"　　ゲーム終了",
+	"　　ゲーム終了", /* ソース改変ここ 元: "　　デバッグ", */
+	"", /* ソース改変ここ 元: "　　ゲーム終了", */
 
 	// 9
 	"　オプション",
@@ -200,28 +200,9 @@ void MenuExecSystem(u16 trg)
 	// デバッグ
 	case 6:
 		/* ソース編集ここから */
+		// ゲーム終了に変更
 		// MenuSetDebug(MENU_DEBUG_VAR_1);
 		
-		// 乗っ取ってプロダクトモード遷移に使う
-		SeStop();
-		BgmStop();
-		
-		// ImgLoadFade();
-		
-		LogInit();
-		TxtClear();
-
-		NvInitVar();
-		NvSetScn(6);
-
-		NvSetAct(NV_ACT_PARSE);
-		ManageSetAct(MANAGE_ACT_NV);
-		
-		/* ソース編集ここまで */
-		break;
-
-	// ゲーム終了
-	case 7:
 		LogInit();
 		TxtClear();
 
@@ -231,18 +212,31 @@ void MenuExecSystem(u16 trg)
 
 		MenuSetTitle(MENU_TITLE_SEL_LOAD);
 		
-		/* ソース編集ここから */
-		
-		// タイトル前演出使わないので
-		// ImgSetEff(IMG_EFFECT_TITL);
-		// ImgSetExec();
-		
-		// 追加部分 画像選択表示部分からコピってきた
+		// 画像選択表示部分からコピってきた
 		ImgSetBg(1);// タイトル画像 SCN000の最終表示画像と同じにしておくこと
 		ImgSetEff(IMG_EFFECT_FADE);
 		ImgSetExec();
-		/* ソース編集ここまで */
 		
+		/* ソース編集ここまで */
+		break;
+
+	// ゲーム終了
+	case 7:
+		/* ソース編集ここから */
+		// 一旦全部消す なんか思いついたら追加予定
+		// LogInit();
+		// TxtClear();
+        // 
+		// SeStop();
+		// BgmStop();
+		// BgmPlay(0);
+        // 
+		// MenuSetTitle(MENU_TITLE_SEL_LOAD);
+        // 
+		// ImgSetEff(IMG_EFFECT_TITL);
+		// ImgSetExec();
+		/* ソース編集ここまで */
+		break;
 	}
 }
 //---------------------------------------------------------------------------
@@ -675,7 +669,9 @@ void MenuSetInit(s32 type, s32 ret, s32 sel, s32 msg, s32 reg, void* pFunc, bool
 //---------------------------------------------------------------------------
 void MenuSetSystem(s32 sel)
 {
-	MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 8, MenuExecSystem, true);
+	// ここ編集
+	// MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 8, MenuExecSystem, true);
+	MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 7, MenuExecSystem, true);
 }
 //---------------------------------------------------------------------------
 void MenuSetOption(s32 sel)
