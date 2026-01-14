@@ -330,7 +330,7 @@ def convert_scenario(cfg: AppConfig) -> None:
 
     # Ｐｒｏｄｕｃｔシナリオ - 後で変換作る
     # scn_list['006'] += (convert_txtprod_to_gbabin(lines[xxxxx:xxxxx]))
-    scn_list['006'] += (['!g', '2', '0000', '#t', '2', '0000', '_r', 'プロダクト仮', '0000', '_r', 'あとで実装します', '0000'])
+    scn_list['006'] += (['!g', '3', '0000', '#t', '2', '0000', '_r', 'プロダクト仮', '0000', '_r', 'あとで実装します', '0000'])
     scn_list['006'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
 
     for scn_key, scn_val in scn_list.items():
