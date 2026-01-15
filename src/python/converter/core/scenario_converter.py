@@ -294,6 +294,19 @@ def convert_txt_to_gbabin(txt_lines: list[str], is_product: bool = False) -> lis
     return scn_list
 
 
+def create_savid(cfg: AppConfig) -> None:
+    """savid 作成関数化"""
+    # savid作成(用途不明、元々あるのでつけた)
+    # 将来的にはこれも関数化する
+
+    # byte列として変数に格納
+    savid_hex = bytes.fromhex('53 52 41 4D 5F 56 6E 6E 6E 00 00 00 00 00 00 00')
+
+    # ファイル「savid.bin」として保存
+    with open(cfg.convert_dir / 'savid.bin', 'wb') as f:
+        f.write(savid_hex)
+
+
 def convert_scenario(cfg: AppConfig) -> None:
     """シナリオ変換の全処理"""
 
@@ -378,16 +391,7 @@ def convert_scenario(cfg: AppConfig) -> None:
             with open(output_txt_path, "w", encoding="cp932") as f:
                 f.write(debug_txt)
     
-    ################################
-    # savid作成(用途不明、元々あるのでつけた)
-    # 将来的にはこれも関数化する
-
-    # byte列として変数に格納
-    savid = bytes.fromhex('53 52 41 4D 5F 56 6E 6E 6E 00 00 00 00 00 00 00')
-
-    # ファイル「savid.bin」として保存
-    with open(cfg.convert_dir / 'savid.bin', 'wb') as f:
-        f.write(savid)
-    ####################################
+    # savid作成
+    create_savid(cfg)
         
-    pass
+    return
