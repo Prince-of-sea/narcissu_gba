@@ -295,10 +295,8 @@ def convert_txt_to_gbabin(txt_lines: list[str], is_product: bool = False) -> lis
 
 
 def create_savid(cfg: AppConfig) -> None:
-    """savid 作成関数化"""
-    # savid作成(用途不明、元々あるのでつけた)
-    # 将来的にはこれも関数化する
-
+    """savid 作成"""
+    
     # byte列として変数に格納
     savid_hex = bytes.fromhex('53 52 41 4D 5F 56 6E 6E 6E 00 00 00 00 00 00 00')
 
