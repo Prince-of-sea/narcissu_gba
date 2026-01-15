@@ -625,4 +625,7 @@ IMG_LIST = [
 	[141,'yobi/car_byoin_chusyajo_yu.bmp',     'fit_frame'],
 	[142,'yobi/cat03.bmp',                     'gray_background'],
 	[143,'yobi/cat09.bmp',                     'fit_frame'],
+    
+	[144,'tui/na01.bmp',                       ''],
+	[145,'tui/na02.bmp',                       ''],
 ]
