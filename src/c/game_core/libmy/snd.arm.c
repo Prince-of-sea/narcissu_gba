@@ -43,10 +43,11 @@ IWRAM_CODE void SndPlay(s32 no, u8* pSnd, s32 size, s32 adjust, bool isLoop)
 {
 	Snd[no].pSnd   = pSnd;
 	Snd[no].isLoop = isLoop;
-	/* ソース改変ここから */
+	///// ソース改変ここから /////
+	// おまじない これつけると適当なビットレートの音源でもバグりにくくなる？
 	Snd[no].size   = (size * SND_FPS) / SND_AUDIO_RATE;
 	Snd[no].size &= ~3;
-	/* ソース改変ここまで */
+	///// ソース改変ここまで /////
 	Snd[no].act    = SND_ACT_START;
 }
 //---------------------------------------------------------------------------

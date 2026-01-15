@@ -22,9 +22,16 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 	"　　文字送り",
 	"　　文字を消す",
 	"　　メッセージ履歴",
+	///// ソース改変ここから /////
+	/*
 	"　　オプション",
-	"　　ゲーム終了", /* ソース改変ここ 元: "　　デバッグ", */
-	"", /* ソース改変ここ 元: "　　ゲーム終了", */
+	"　　デバッグ",
+	"　　ゲーム終了",
+	*/
+	"　　オプション",
+	"　　ゲーム終了",
+	"",
+	///// ソース改変ここまで /////
 
 	// 9
 	"　オプション",
@@ -47,25 +54,28 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 	"",
 
 	// 21
+	///// ソース改変ここから /////
 	/*
 	"",
 	"　最初から始める",
 	"　ロードする",
 	*/
-	"　　Ｓｔａｒｔ",		/* ソース改変ここ 元: 最初から始める */
-	"　　　Ｌｏａｄ",		/* ソース改変ここ 元: 　ロードする*/
+	"　　Ｓｔａｒｔ",
+	"　　　Ｌｏａｄ",
 	"Ｐｒｏｄｕｃｔ",
+	///// ソース改変ここまで /////
 	
 	// 24
-	/* ソース改変ここから */
+	///// ソース改変ここから /////
+	// この辺結局デバッグメニューごと潰したからそもそも不要かも？
 	"使わないので仮の値で埋め中",
 	"Ｒ４　　１６：０　２８：０",
 	"ＴＴ　　２１：０　２９：０",
 	"Ｍ３　　２２：０　３０：０",
 	"Ａｃｅ　２０：０　３１：０",
 	"ＥＺＦ　２６：０　３２：０",
-	"ＳＣ　　２７：０　３３：０", // ここ結局デバッグメニューごと潰したからそもそも不要かも？
-	/* ソース改変ここまで */
+	"ＳＣ　　２７：０　３３：０", 
+	///// ソース改変ここまで /////
 };
 
 ROM_DATA char MenuColStr[][4+1] = {
@@ -199,7 +209,7 @@ void MenuExecSystem(u16 trg)
 
 	// デバッグ
 	case 6:
-		/* ソース編集ここから */
+		///// ソース改変ここから /////
 		// ゲーム終了に変更
 		// MenuSetDebug(MENU_DEBUG_VAR_1);
 		
@@ -217,25 +227,27 @@ void MenuExecSystem(u16 trg)
 		ImgSetEff(IMG_EFFECT_FADE);
 		ImgSetExec();
 		
-		/* ソース編集ここまで */
+		///// ソース改変ここまで /////
 		break;
 
 	// ゲーム終了
 	case 7:
-		/* ソース編集ここから */
+		///// ソース改変ここから /////
 		// 一旦全部消す なんか思いついたら追加予定
-		// LogInit();
-		// TxtClear();
-        // 
-		// SeStop();
-		// BgmStop();
-		// BgmPlay(0);
-        // 
-		// MenuSetTitle(MENU_TITLE_SEL_LOAD);
-        // 
-		// ImgSetEff(IMG_EFFECT_TITL);
-		// ImgSetExec();
-		/* ソース編集ここまで */
+		/*
+		LogInit();
+		TxtClear();
+        
+		SeStop();
+		BgmStop();
+		BgmPlay(0);
+        
+		MenuSetTitle(MENU_TITLE_SEL_LOAD);
+        
+		ImgSetEff(IMG_EFFECT_TITL);
+		ImgSetExec();
+		*/
+		///// ソース改変ここまで /////
 		break;
 	}
 }
@@ -623,7 +635,8 @@ void MenuExecTitle(u16 trg)
 		MenuSetLoad(MENU_RET_TITLE);
 		break;
 	
-	// プロダクト - ここ編集
+	///// ソース改変ここから /////
+	// プロダクト - 新規作成
 	case 2:
 		ImgLoadFade();
 
@@ -636,7 +649,7 @@ void MenuExecTitle(u16 trg)
 		NvSetAct(NV_ACT_PARSE);
 		ManageSetAct(MANAGE_ACT_NV);
 		break;
-
+	///// ソース改変ここまで /////
 	}
 }
 //---------------------------------------------------------------------------
@@ -669,9 +682,12 @@ void MenuSetInit(s32 type, s32 ret, s32 sel, s32 msg, s32 reg, void* pFunc, bool
 //---------------------------------------------------------------------------
 void MenuSetSystem(s32 sel)
 {
-	// ここ編集
-	// MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 8, MenuExecSystem, true);
+	///// ソース改変ここから /////
+	/*
+	MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 8, MenuExecSystem, true);
+	*/
 	MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 7, MenuExecSystem, true);
+	///// ソース改変ここまで /////
 }
 //---------------------------------------------------------------------------
 void MenuSetOption(s32 sel)
@@ -699,9 +715,12 @@ void MenuSetNone(s32 ret)
 //---------------------------------------------------------------------------
 void MenuSetTitle(s32 sel)
 {
-	/* ソース改変ここ */
-	// MenuSetInit(MENU_TYPE_TITLE, MENU_RET_NONE, sel, 21, 2, MenuExecTitle, true);
+	///// ソース改変ここから /////
+	/*
+	MenuSetInit(MENU_TYPE_TITLE, MENU_RET_NONE, sel, 21, 2, MenuExecTitle, true);
+	*/
 	MenuSetInit(MENU_TYPE_TITLE, MENU_RET_NONE, sel, 20, 3, MenuExecTitle, true);
+	///// ソース改変ここまで /////
 }
 //---------------------------------------------------------------------------
 void MenuSetDebug(s32 ret)

@@ -127,10 +127,18 @@ void NvExecParse1T(void)
 
 	TRACE("%s\n", s);
 
+	///// ソース改変ここから /////
+	/*
 	TxtSetMsg(s);
 	TxtSetExec();
-	CurSetPage();	/* ソース改変ここ 元: CurSetLf(); */
+	CurSetLf();
 	CurSetExec();
+	*/
+	TxtSetMsg(s);
+	TxtSetExec();
+	CurSetPage();
+	CurSetExec();
+	///// ソース改変ここまで /////
 
 	Nv.isPage = false;
 	Nv.isLoop = false;
@@ -189,7 +197,7 @@ void NvExecParse2E(void)
 
 //	TRACE("%d\n", no);
 
-	/* ソース改変ここから */
+	///// ソース改変ここから /////
 	/*
 	// スキップ中、学校のベルは騒音なので無効
 	if(Nv.isSkip == true && no == 0)
@@ -197,7 +205,7 @@ void NvExecParse2E(void)
 		return;
 	}
 	*/
-	/* ソース改変ここまで */
+	///// ソース改変ここまで /////
 
 	SePlay(no);
 }
@@ -210,7 +218,7 @@ void NvExecParse2X(void)
 
 //	TRACE("%d %d\n", no, is);
 
-	/* ソース改変ここから */
+	///// ソース改変ここから /////
 	/*
 	if(is == 1)
 	{
@@ -221,7 +229,7 @@ void NvExecParse2X(void)
 		ImgClrChr(no);
 	}
 	*/
-	/* ソース改変ここまで */
+	///// ソース改変ここまで /////
 
 	Nv.isEffect = true;
 }
@@ -252,7 +260,7 @@ void NvExecParse2J(void)
 	NvSetRead(Nv.idx, Nv.bit);
 	Nv.isSkip = false;
 	
-	/* ソース改変ここから */
+	///// ソース改変ここから /////
 	/*
 	Nv.eff = IMG_EFFECT_TITL;
 	Nv.isEffect = true;
@@ -260,7 +268,7 @@ void NvExecParse2J(void)
 	
 	BgmPlay(2);// /* 元:0 */
 	
-	/* ソース改変ここまで */
+	///// ソース改変ここまで /////
 
 	MenuSetTitle(MENU_TITLE_SEL_LOAD);
 	ManageSetAct(MANAGE_ACT_MENU);
@@ -388,7 +396,7 @@ void NvExecParse3T(void)
 
 	TRACE("%d\n", w);
 
-	/* ソース改変ここから */
+	///// ソース改変ここから /////
 	/*
 	// ゲーム終了「良い終末を」のタイミング
 	if(w == 50 && Nv.no == 84)
@@ -401,7 +409,7 @@ void NvExecParse3T(void)
 		return;
 	}
 	*/
-	/* ソース改変ここまで */
+	///// ソース改変ここまで /////
 
 	Nv.wait = w * 2;
 	Nv.isLoop = false;
