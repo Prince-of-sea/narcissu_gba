@@ -209,6 +209,9 @@ def convert_txt_to_gbabin(txt_lines: list[str], is_product: bool = False) -> lis
                                 wait_time = 5
                             case _:
                                 wait_time = 1
+                        
+                        # 原作のエンジンは指定値より若干遅くなるっぽいので補正
+                        wait_time += 3
 
                         for iml in IMG_LIST:
                             if (Path(iml[1]) == Path(bg_path)):
