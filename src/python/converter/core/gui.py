@@ -7,7 +7,7 @@ def gui_main() -> dict:
     '''gui本処理'''
 
     ### 言うまでもなく仮 後で全部書き直す ###
-    print(' +++ narcissu_gba alpha版 +++ ')
+    print(' +++ narcissu_gba beta版 +++ ')
 
     gui_cfg = {
         'input_dir': None,
