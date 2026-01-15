@@ -9,9 +9,14 @@ extern "C" {
 
 //---------------------------------------------------------------------------
 #define IMG_MAX_CHR_CNT			3
-#define IMG_DEF_FADE_CNT		0	/* ソース改変ここ 元:6 */
+///// ソース改変ここから /////
+/*
+#define IMG_DEF_FADE_CNT		6
+*/
+#define IMG_DEF_FADE_CNT		0
+///// ソース改変ここまで /////
 
-enum {
+	enum {
 	IMG_EFFECT_CLS00 = 0,		// αフェード（200に変更）
 	IMG_EFFECT_CLS01,			// カーテン
 	IMG_EFFECT_CLS02,			// 中央じわじわ

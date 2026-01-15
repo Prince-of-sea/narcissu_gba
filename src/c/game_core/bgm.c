@@ -26,10 +26,7 @@ void BgmPlay(s32 no)
 		return;
 	}
 
-	/* „ÇΩ„Éº„ÇπÊîπÂ§â„Åì„Åì„Åã„Çâ */
-	
-	BgmPlayRaw(no);
-	
+	///// É\Å[ÉXâ¸ïœÇ±Ç±Ç©ÇÁ /////
 	/*
 	if(no == 3 || no == 11)
 	{
@@ -40,8 +37,8 @@ void BgmPlay(s32 no)
 		BgmPlayVgm(no);
 	}
 	*/
-	
-	/* „ÇΩ„Éº„ÇπÊîπÂ§â„Åì„Åì„Åæ„Åß */
+	BgmPlayRaw(no);
+	///// É\Å[ÉXâ¸ïœÇ±Ç±Ç‹Ç≈ /////
 }
 //---------------------------------------------------------------------------
 void BgmPlayRaw(s32 no)
@@ -51,7 +48,12 @@ void BgmPlayRaw(s32 no)
 	u8* p = FileGetBgm(no);
 	s32 size = FileGetSize();
 
-	SndPlay(SND_ID_BGM, p, size, 2, true);/* „ÇΩ„Éº„ÇπÊîπÂ§â„Åì„Åì ÂÖÉ: ,false); */
+	///// É\Å[ÉXâ¸ïœÇ±Ç±Ç©ÇÁ /////
+	/*
+	SndPlay(SND_ID_BGM, p, size, 2, false);
+	*/
+	SndPlay(SND_ID_BGM, p, size, 2, true);
+	///// É\Å[ÉXâ¸ïœÇ±Ç±Ç‹Ç≈ /////
 }
 //---------------------------------------------------------------------------
 void BgmPlayVgm(s32 no)

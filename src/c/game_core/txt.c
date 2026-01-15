@@ -196,8 +196,14 @@ void TxtExecMenu(void)
 	// 選択肢
 	if(type == MENU_TYPE_TITLE)
 	{
-		x = 10;/* ソース改変ここ 元:5 */
-		y = 7;/* ソース改変ここ 元:6 */
+		///// ソース改変ここから /////
+		/*
+		x = 5;
+		y = 6;
+		*/
+		x = 10;
+		y = 7;
+		///// ソース改変ここまで /////
 	}
 	else if(type == MENU_TYPE_DEBUG)
 	{
@@ -389,8 +395,14 @@ void TxtClear(void)
 {
 //	TRACE("[TxtClear]\n");
 
+	///// ソース改変ここから /////
+	/*
 	Txt.x = 0;
-	Txt.y = 6;	/* ソース改変ここ 元:4 */
+	Txt.y = 4;
+	*/
+	Txt.x = 0;
+	Txt.y = 6;
+	///// ソース改変ここまで /////
 
 	SprClearDat();
 	MemClear(Txt.buf, sizeof(Txt.buf));

@@ -73,8 +73,16 @@ def decrypt_0x84(data: bytes) -> bytes:
 #     pass
 
 
+def extract_concept(text):
+    # 文字列を抽出する正規表現 - "（"以降は除外
+    match = re.search(r'(csel )?"　■　(.+?)(（.+)?",\*ns[0-9]{2},', text)
+    if match:
+        return match.group(2)
+    return None
+
+
 ########## 仮関数 とりあえず適当に動くだけ あとで処理分け&クリーンアップする ###########
-def convert_txt_to_gbabin(txt_lines):
+def convert_txt_to_gbabin(txt_lines: list[str], is_product: bool = False) -> list[str]:
 
     # パターン定義
     # 上から順で読み取らせるので基準が緩いものほど下に
@@ -127,6 +135,16 @@ def convert_txt_to_gbabin(txt_lines):
 
         # 行頭/行末空白削除
         line = line.strip()
+
+        # Productシナリオの場合の正規表現を使った個別修正
+        if is_product:
+
+            # そのままだと不具合や不都合の原因になるので
+            line = line.replace('"bgm\\e01.mp3"', '"tui2\\e01.mp3"')
+            line = line.replace('こんな↑感じ', 'こんな感じ')
+            line = line.replace('れませんが、', 'れませんが、\\')
+            line = line.replace('なってしまいました。', 'なってしまいました。\\')
+            line = line.replace('したら、', 'したら、\\')
 
         # 行がある(=空白ではない)場合
         if line:
@@ -191,6 +209,9 @@ def convert_txt_to_gbabin(txt_lines):
                                 wait_time = 5
                             case _:
                                 wait_time = 1
+                        
+                        # 原作のエンジンは指定値より若干遅くなるっぽいので補正
+                        wait_time += 3
 
                         for iml in IMG_LIST:
                             if (Path(iml[1]) == Path(bg_path)):
@@ -223,7 +244,14 @@ def convert_txt_to_gbabin(txt_lines):
 
                             # 改行文章or表示途中(元々改行だった文章であり、GBA表示時に改行するわけではない)
                             if (ptkey == LINE_TEXT_PATTERN) or (i != ls_last_index):
-                                line_command += ['_t', ls, str(command_cnt)]
+
+                                #通常時
+                                if (not is_product):
+                                    line_command += ['_t', ls, str(command_cnt)]
+
+                                # Productシナリオ時 - 改ページ扱いに変更
+                                else:
+                                    line_command += ['_r', ls, str(command_cnt)]
                             
                             # 改ページ文章
                             elif (ptkey == PAGE_TEXT_PATTERN):
@@ -269,6 +297,17 @@ def convert_txt_to_gbabin(txt_lines):
     return scn_list
 
 
+def create_savid(cfg: AppConfig) -> None:
+    """savid 作成"""
+    
+    # byte列として変数に格納
+    savid_hex = bytes.fromhex('53 52 41 4D 5F 56 6E 6E 6E 00 00 00 00 00 00 00')
+
+    # ファイル「savid.bin」として保存
+    with open(cfg.convert_dir / 'savid.bin', 'wb') as f:
+        f.write(savid_hex)
+
+
 def convert_scenario(cfg: AppConfig) -> None:
     """シナリオ変換の全処理"""
 
@@ -282,57 +321,61 @@ def convert_scenario(cfg: AppConfig) -> None:
     nsdat_data = open(cfg.nsdat_path, 'rb').read()
     lines = decrypt_0x84(nsdat_data).splitlines()
 
-    # 0.txtを読み取り
-    # with open(input_path, 'r', encoding='cp932') as file:
-    #     lines = file.readlines()
-
     # 改行文字を削除
     lines = [line.strip() for line in lines]
 
     # 結果を表示
     if (not cfg.include_voice):
-        scn_list['003'] += convert_txt_to_gbabin(lines[639:1101])# *image	    "プロローグ"
-        scn_list['003'] += convert_txt_to_gbabin(lines[1105:2184])# *honpen2	"７階"
+        scn_list['003'] += convert_txt_to_gbabin(lines[639:1101])
+        scn_list['003'] += convert_txt_to_gbabin(lines[1105:2184])
         scn_list['003'] += (['!g', '3', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[2188:3690])# *honpen3	"銀のクーペ"
+        scn_list['003'] += convert_txt_to_gbabin(lines[2188:3690])
         scn_list['003'] += (['!g', '4', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[3693:4945])# *honpen4	"地図"
+        scn_list['003'] += convert_txt_to_gbabin(lines[3693:4945])
         scn_list['003'] += (['!g', '5', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[4948:5926])# *honpen5	"エメラルドの海"
+        scn_list['003'] += convert_txt_to_gbabin(lines[4948:5926])
         scn_list['003'] += (['!g', '6', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[5930:7258])# *honpen6	"一号線"
+        scn_list['003'] += convert_txt_to_gbabin(lines[5930:7258])
         scn_list['003'] += (['!g', '7', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[7263:8255])# *honpen7	"エコー"
+        scn_list['003'] += convert_txt_to_gbabin(lines[7263:8255])
         scn_list['003'] += (['!g', '8', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[8257:9471])# *honpen8	"ナルキッソス"
+        scn_list['003'] += convert_txt_to_gbabin(lines[8257:9471])
         scn_list['003'] += (['!g', '9', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[9474:10120])# *honpen9	"白石工務店"
+        scn_list['003'] += convert_txt_to_gbabin(lines[9474:10120])
         scn_list['003'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
 
     else:
-        scn_list['003'] += (convert_txt_to_gbabin(lines[10126:10598]))# *image_voice	"プロローグ　ボイスＶｅｒ  "		10126	10598
-        scn_list['003'] += (convert_txt_to_gbabin(lines[10622:11709]))# *honpen2_voice	"７階　ボイスＶｅｒ"			10622	11709
+        scn_list['003'] += (convert_txt_to_gbabin(lines[10126:10598]))
+        scn_list['003'] += (convert_txt_to_gbabin(lines[10622:11709]))
         scn_list['003'] += (['!g', '3', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[11717:13244]))# *honpen3_voice	"銀のクーペ　ボイスＶｅｒ"		11717	13244
+        scn_list['003'] += (convert_txt_to_gbabin(lines[11717:13244]))
         scn_list['003'] += (['!g', '4', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[13247:14528]))# *honpen4_voice	"地図　ボイスＶｅｒ"			13247	14528
+        scn_list['003'] += (convert_txt_to_gbabin(lines[13247:14528]))
         scn_list['003'] += (['!g', '5', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[14531:15539]))# *honpen5_voice	"エメラルドの海　ボイスＶｅｒ"	14531	15539
+        scn_list['003'] += (convert_txt_to_gbabin(lines[14531:15539]))
         scn_list['003'] += (['!g', '6', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[15543:16884]))# *honpen6_voice	"一号線　ボイスＶｅｒ"			15543	16884
+        scn_list['003'] += (convert_txt_to_gbabin(lines[15543:16884]))
         scn_list['003'] += (['!g', '7', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[16889:17897]))# *honpen7_voice	"エコー　ボイスＶｅｒ"			16889	17897
+        scn_list['003'] += (convert_txt_to_gbabin(lines[16889:17897]))
         scn_list['003'] += (['!g', '8', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[17899:19128]))# *honpen8_voice	"ナルキッソス　ボイスＶｅｒ"	17899	19128
+        scn_list['003'] += (convert_txt_to_gbabin(lines[17899:19128]))
         scn_list['003'] += (['!g', '9', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[19131:19758]))# *honpen9_voice	"白石工務店　ボイスＶｅｒ"		19131	19758
+        scn_list['003'] += (convert_txt_to_gbabin(lines[19131:19758]))
         scn_list['003'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
 
-    # Ｐｒｏｄｕｃｔシナリオ - 後で変換作る
-    # scn_list['006'] += (convert_txtprod_to_gbabin(lines[xxxxx:xxxxx]))
-    scn_list['006'] += (['!g', '3', '0000', '#t', '2', '0000', '_r', 'プロダクト仮', '0000', '_r', 'あとで実装します', '0000'])
+    # Ｐｒｏｄｕｃｔシナリオ
+    scn_list['006'] += (convert_txt_to_gbabin(lines[298:319], True))
+    scn_list['006'] += (['!t', extract_concept(lines[321]), '0014'])
+    scn_list['006'] += (convert_txt_to_gbabin(lines[327:375], True))
+    scn_list['006'] += (['!t', extract_concept(lines[322]), '0014'])
+    scn_list['006'] += (convert_txt_to_gbabin(lines[378:481], True))
+    scn_list['006'] += (['!t', extract_concept(lines[323]), '0014'])
+    scn_list['006'] += (convert_txt_to_gbabin(lines[485:525], True))
+    scn_list['006'] += (['!t', extract_concept(lines[324]), '0014'])
+    scn_list['006'] += (convert_txt_to_gbabin(lines[528:570], True))
     scn_list['006'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
 
+    # シナリオ書き出し
     for scn_key, scn_val in scn_list.items():
 
         output_bin_path = cfg.convert_dir / f'SCN{scn_key}.bin'
@@ -349,16 +392,7 @@ def convert_scenario(cfg: AppConfig) -> None:
             with open(output_txt_path, "w", encoding="cp932") as f:
                 f.write(debug_txt)
     
-    ################################
-    # savid作成(用途不明、元々あるのでつけた)
-    # 将来的にはこれも関数化する
-
-    # byte列として変数に格納
-    savid = bytes.fromhex('53 52 41 4D 5F 56 6E 6E 6E 00 00 00 00 00 00 00')
-
-    # ファイル「savid.bin」として保存
-    with open(cfg.convert_dir / 'savid.bin', 'wb') as f:
-        f.write(savid)
-    ####################################
+    # savid作成
+    create_savid(cfg)
         
-    pass
+    return
