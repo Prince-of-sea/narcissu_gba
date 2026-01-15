@@ -233,7 +233,6 @@ void MenuExecSystem(u16 trg)
 	// ゲーム終了
 	case 7:
 		///// ソース改変ここから /////
-		// 一旦全部消す なんか思いついたら追加予定
 		/*
 		LogInit();
 		TxtClear();
