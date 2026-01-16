@@ -1,8 +1,5 @@
 #include "menu.h"
 #include "libbios/swi.h"
-///// ソース改変ここから /////
-#include "libmy/return_to_shell.h"
-///// ソース改変ここまで /////
 #include "libmy/key.h"
 #include "libmy/vgm.arm.h"
 #include "bgm.h"
@@ -249,7 +246,6 @@ void MenuExecSystem(u16 trg)
 		ImgSetEff(IMG_EFFECT_TITL);
 		ImgSetExec();
 		*/
-		return_to_shell();
 		///// ソース改変ここまで /////
 		break;
 	}
@@ -689,8 +685,7 @@ void MenuSetSystem(s32 sel)
 	/*
 	MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 8, MenuExecSystem, true);
 	*/
-	// 一時的に同じにしてる 後で変わる予定
-	MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 8, MenuExecSystem, true);
+	MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 7, MenuExecSystem, true);
 	///// ソース改変ここまで /////
 }
 //---------------------------------------------------------------------------
