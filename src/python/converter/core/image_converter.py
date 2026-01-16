@@ -8,6 +8,13 @@ from PIL import Image
 from core.config import AppConfig
 from .image_special import convert_IMG000
 from .image_special import convert_IMG001
+from .image_special import convert_IMG003
+from .image_special import convert_IMG004
+from .image_special import convert_IMG005
+from .image_special import convert_IMG006
+from .image_special import convert_IMG007
+from .image_special import convert_IMG008
+from .image_special import convert_IMG009
 from .image_special import convert_IMG015
 from .image_special import convert_IMG018_023
 from .image_special import convert_IMG067
@@ -75,6 +82,20 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
             convert_IMG000(nsa_extract_path, temppng_path, cfg)
         case 'special_001':
             convert_IMG001(nsa_extract_path, temppng_path, cfg)
+        case 'special_003':
+            convert_IMG003(nsa_extract_path, temppng_path, cfg)
+        case 'special_004':
+            convert_IMG004(nsa_extract_path, temppng_path, cfg)
+        case 'special_005':
+            convert_IMG005(nsa_extract_path, temppng_path, cfg)
+        case 'special_006':
+            convert_IMG006(nsa_extract_path, temppng_path, cfg)
+        case 'special_007':
+            convert_IMG007(nsa_extract_path, temppng_path, cfg)
+        case 'special_008':
+            convert_IMG008(nsa_extract_path, temppng_path, cfg)
+        case 'special_009':
+            convert_IMG009(nsa_extract_path, temppng_path, cfg)
         case 'special_015':
             convert_IMG015(nsa_extract_path, temppng_path, cfg)
         case 'special_018_023':
@@ -135,5 +156,9 @@ def convert_images(cfg: AppConfig) -> None:
         
         # gui対応時にはプログレスバー用に改良予定
         concurrent.futures.as_completed(futures)
+
+    # 直列ファイル変換 (デバッグ用)
+    # for img_info in IMG_LIST:
+    #     convert_image_parallel(cfg, img_info)
 
     return
