@@ -3,7 +3,10 @@ name: release用
 on:
     release:
         types: [published]
+
+
 permissions:
+    # https://github.com/softprops/action-gh-release/issues/572
     contents: write
 
 jobs:
