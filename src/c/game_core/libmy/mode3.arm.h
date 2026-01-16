@@ -8,7 +8,12 @@ extern "C" {
 #include "../libgba/gba.h"
 
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+/*
+#define MODE3_MAX_SCN_SIZE			(212 * SCREEN_CY)
+*/
 #define MODE3_MAX_SCN_SIZE			(240 * SCREEN_CY)
+///// ソース改変ここまで /////
 #define MODE3_MAX_CPY_SIZE			(SCREEN_CX * SCREEN_CY)
 
 

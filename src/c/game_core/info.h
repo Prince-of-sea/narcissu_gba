@@ -9,6 +9,11 @@ extern "C" {
 
 //---------------------------------------------------------------------------
 ///// É\Å[ÉXâ¸ïœÇ±Ç±Ç©ÇÁ /////
+/*
+#define INFO_MAX_IMG_CNT			(100-13)
+#define INFO_MAX_BGM_CNT			18
+#define INFO_MAX_FMX_CNT			12
+*/
 #define INFO_MAX_IMG_CNT			94
 #define INFO_MAX_BGM_CNT			12
 #define INFO_MAX_FMX_CNT			38

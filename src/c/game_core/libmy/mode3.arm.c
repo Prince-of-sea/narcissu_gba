@@ -18,12 +18,23 @@ IWRAM_CODE void Mode3DrawBg(u16* pImg)
 {
 	u16* pDst = Mode3.buf + Mode3.idx * MODE3_MAX_SCN_SIZE;
 
+	///// ソース改変ここから /////
+	// 横解像度を4:3相当(212)から最大値(240)へ変更 以下改変部分も同様
+	/*
+	MemIncFast(pImg, pDst, 212*160*2);
+	*/
 	MemIncFast(pImg, pDst, 240*160*2);
+	///// ソース改変ここまで /////
 }
 //---------------------------------------------------------------------------
 IWRAM_CODE void Mode3DrawChr(s32 sx, s32 sy, s32 cx, s32 cy, u16* pImg, u8* pMsk)
 {
+	///// ソース改変ここから /////
+	/*
+	u16* pDst = Mode3.buf + Mode3.idx * MODE3_MAX_SCN_SIZE + sy * 212 + sx;
+	*/
 	u16* pDst = Mode3.buf + Mode3.idx * MODE3_MAX_SCN_SIZE + sy * 240 + sx;
+	///// ソース改変ここまで /////
 	s32  x, y;
 
 	for(y=0; y<cy; y++)
@@ -61,7 +72,12 @@ IWRAM_CODE void Mode3DrawChr(s32 sx, s32 sy, s32 cx, s32 cy, u16* pImg, u8* pMsk
 
 		pImg += cx;
 		pMsk += cx;
+		///// ソース改変ここから /////
+	    /*
+		pDst += 212;
+	    */
 		pDst += 240;
+		///// ソース改変ここまで /////
 	}
 }
 //---------------------------------------------------------------------------
@@ -69,9 +85,19 @@ IWRAM_CODE void Mode3VramEffCls(s32 cnt, u8* pEff)
 {
 	u16* pSrc = Mode3.buf + (Mode3.idx ^ 1) * MODE3_MAX_SCN_SIZE;
 	u16* pDst = Mode3.buf + (Mode3.idx    ) * MODE3_MAX_SCN_SIZE;
+	///// ソース改変ここから /////
+	/*
+	u16* pVrm = ((u16*)VRAM) + ((240 - 212) / 2);
+	*/
 	u16* pVrm = ((u16*)VRAM);
+	///// ソース改変ここまで /////
 
+	///// ソース改変ここから /////
+	/*
+	pEff += 212 * 160 * cnt;
+	*/
 	pEff += 240 * 160 * cnt;
+	///// ソース改変ここまで /////
 
 	s32 x, y;
 	s32 i;
@@ -81,7 +107,12 @@ IWRAM_CODE void Mode3VramEffCls(s32 cnt, u8* pEff)
 	for(y=0; y<160; y++)
 	{
 // type1
+		///// ソース改変ここから /////
+		/*
+		for(x=0; x<212; x+=4)
+		*/
 		for(x=0; x<240; x+=4)
+		///// ソース改変ここまで /////
 		{
 			for(i=0; i<4; i++)
 			{
@@ -112,16 +143,24 @@ IWRAM_CODE void Mode3VramEffCls(s32 cnt, u8* pEff)
 				}
 			}
 		}
+		///// ソース改変ここから /////
+		/*
+		pSrc += 212;
+		pDst += 212;
+		pVrm += 240;
+		pEff += 212;
+		*/
 		pSrc += 240;
 		pDst += 240;
 		pVrm += 240;
 		pEff += 240;
+		///// ソース改変ここまで /////
 	}
 // type1 ここまで
 
 /*
 // type2
-		for(x=0; x<240; x++)
+		for(x=0; x<212; x++)
 		{
 			u32 eff = pEff[x];
 
@@ -150,10 +189,10 @@ IWRAM_CODE void Mode3VramEffCls(s32 cnt, u8* pEff)
 			}
 		}
 
-		pSrc += 240;
-		pDst += 240;
+		pSrc += 212;
+		pDst += 212;
 		pVrm += 240;
-		pEff += 240;
+		pEff += 212;
 	}
 // type2 ここまで
 */
@@ -163,7 +202,12 @@ IWRAM_CODE void Mode3VramEffAlpha(s32 cnt)
 {
 	u16* pSrc = Mode3.buf + (Mode3.idx ^ 1) * MODE3_MAX_SCN_SIZE;
 	u16* pDst = Mode3.buf + (Mode3.idx    ) * MODE3_MAX_SCN_SIZE;
+	///// ソース改変ここから /////
+	/*
+	u16* pVrm = ((u16*)VRAM) + ((240 - 212) / 2);
+	*/
 	u16* pVrm = ((u16*)VRAM);
+	///// ソース改変ここまで /////
 	u32  msk  = 31 - cnt;
 
 	s32 x, y;
@@ -172,7 +216,12 @@ IWRAM_CODE void Mode3VramEffAlpha(s32 cnt)
 	// 4ピクセル単位アンローリング
 	for(y=0; y<160; y++)
 	{
+		///// ソース改変ここから /////
+		/*
+		for(x=0; x<212; x+=4)
+		*/
 		for(x=0; x<240; x+=4)
+		///// ソース改変ここまで /////
 		{
 			for(i=0; i<4; i++)
 			{
@@ -191,24 +240,44 @@ IWRAM_CODE void Mode3VramEffAlpha(s32 cnt)
 			}
 		}
 
+		///// ソース改変ここから /////
+		/*
+		pSrc += 212;
+		pDst += 212;
+		pVrm += 240;
+		*/
 		pSrc += 240;
 		pDst += 240;
 		pVrm += 240;
+		///// ソース改変ここまで /////
 	}
 }
 //---------------------------------------------------------------------------
 IWRAM_CODE void Mode3VramCpyStep1(void)
 {
 	u16* pSrc = (Mode3.buf + (Mode3.idx) * MODE3_MAX_SCN_SIZE);
+	///// ソース改変ここから /////
+	/*
+	u16* pCpy = (Mode3.cpy + (240 - 212) / 2);
+	*/
 	u16* pCpy = (Mode3.cpy);
+	///// ソース改変ここまで /////
 	s32  y;
 
 	for(y=0; y<160; y++)
 	{
+		///// ソース改変ここから /////
+		/*
+		MemInc(pSrc, pCpy, 212*2);
+
+		pSrc += 212;
+		pCpy += 240;
+		*/
 		MemInc(pSrc, pCpy, 240*2);
 
 		pSrc += 240;
 		pCpy += 240;
+		///// ソース改変ここまで /////
 	}
 }
 //---------------------------------------------------------------------------
@@ -219,21 +288,39 @@ IWRAM_CODE void Mode3VramCpyStep2(void)
 //---------------------------------------------------------------------------
 IWRAM_CODE void Mode3VramImg(u16* pImg)
 {
+	///// ソース改変ここから /////
+	/*
+	u16* pVrm = ((u16*)VRAM) + ((240 - 212) / 2);
+	*/
 	u16* pVrm = ((u16*)VRAM);
+	///// ソース改変ここまで /////
 	s32  y;
 
 	for(y=0; y<160; y++)
 	{
+		///// ソース改変ここから /////
+		/*
+		MemInc(pImg, pVrm, 212*2);
+
+		pImg += 212;
+		pVrm += 240;
+		*/
 		MemInc(pImg, pVrm, 240*2);
 
 		pImg += 240;
 		pVrm += 240;
+		///// ソース改変ここまで /////
 	}
 }
 //---------------------------------------------------------------------------
 IWRAM_CODE void Mode3ScrollX(s32 cnt)
 {
+	///// ソース改変ここから /////
+	/*
+	REG_BG2X = (-212 + cnt) << 8;
+	*/
 	REG_BG2X = (-240 + cnt) << 8;
+	///// ソース改変ここまで /////
 }
 //---------------------------------------------------------------------------
 IWRAM_CODE void Mode3FlipBuf(void)

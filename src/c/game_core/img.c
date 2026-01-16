@@ -126,7 +126,7 @@ void ImgExecTitl(void)
 		Img.step++;
 		return;
 	}
-	
+
 	// 黒背景
 	if(Img.step == 1)
 	{
@@ -136,7 +136,6 @@ void ImgExecTitl(void)
 		Img.step++;
 		return;
 	}
-	
 
 	// 右→左タイトルをバッファに描画＋横スクロール範囲外
 	if(Img.step == 2)
@@ -226,6 +225,7 @@ void ImgExecTitl(void)
 		Img.step++;
 		return;
 	}
+
 	// 上側タイトルアルファブレンド
 	if(Img.step == 8)
 	{
@@ -240,11 +240,8 @@ void ImgExecTitl(void)
 		return;
 	}
 	*/
-
-	//ImgSetBg(1);
-	//ImgDrawBg();
 	///// ソース改変ここまで /////
-	
+
 	Mode3FlipBuf();
 	Img.isExec = false;
 }
@@ -430,7 +427,22 @@ void ImgSetEff(s32 no)
 	TRACE("[ImgSetEff %d]\n", no);
 
 	///// ソース改変ここから /////
-	
+	// 特殊フェード命令が呼ばれた場合通常フェードへリダイレクト
+	/*
+	Img.eff = no;
+
+	if(no >= IMG_EFFECT_FADE)
+	{
+		return;
+	}
+
+	ST_FILE_EFF_HEADER* h = (ST_FILE_EFF_HEADER*)FileGetEff(no);
+
+	Img.cx   = h->cx;
+	Img.cy   = h->cy;
+	Img.max  = h->max;
+	Img.pEff = (u8*)(h + 1);
+	*/
 	if(no >= IMG_EFFECT_FADE)
 	{
 		Img.eff = no;
@@ -439,25 +451,7 @@ void ImgSetEff(s32 no)
 	{
 		Img.eff = IMG_EFFECT_FADE;
 	}
-	
 	return;
-
-	/*
-	Img.eff = no;
-	
-	if(no >= IMG_EFFECT_FADE)
-	{
-		return;
-	}
-	
-	ST_FILE_EFF_HEADER* h = (ST_FILE_EFF_HEADER*)FileGetEff(no);
-
-	Img.cx   = h->cx;
-	Img.cy   = h->cy;
-	Img.max  = h->max;
-	Img.pEff = (u8*)(h + 1);
-	*/
-	
 	///// ソース改変ここまで /////
 }
 //---------------------------------------------------------------------------

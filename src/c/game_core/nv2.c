@@ -259,15 +259,15 @@ void NvExecParse2J(void)
 	// オープニング処理
 	NvSetRead(Nv.idx, Nv.bit);
 	Nv.isSkip = false;
-	
+
 	///// ソース改変ここから /////
 	/*
 	Nv.eff = IMG_EFFECT_TITL;
 	Nv.isEffect = true;
+
+	BgmPlay(0);
 	*/
-	
-	BgmPlay(2);// /* 元:0 */
-	
+	BgmPlay(2);
 	///// ソース改変ここまで /////
 
 	MenuSetTitle(MENU_TITLE_SEL_LOAD);
