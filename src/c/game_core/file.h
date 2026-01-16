@@ -38,8 +38,12 @@ void FileInit(void);
 
 u8*  FileGetScn(s32 no);
 u8*  FileGetImg(s32 no);
+///// ソース改変ここから /////
+/*
 u8*  FileGetMsk(s32 no);
 u8*  FileGetEff(s32 no);
+*/
+///// ソース改変ここまで /////
 u8*  FileGetBgm(s32 no);
 u8*  FileGetFmx(s32 no);
 s32  FileGetSize(void);

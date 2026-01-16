@@ -18,19 +18,31 @@ ST_NV_PARSE_TBL NvParseTbl[NV_MAX_PARSE_CNT] = {
 	{ "!g", 1, (void*)NvExecParse2G  },	// 背景
 	{ "!b", 1, (void*)NvExecParse2B  },	// 音楽
 	{ "!e", 1, (void*)NvExecParse2E  },	// 効果音
+	///// ソース改変ここから /////
+	/*
 	{ "!x", 2, (void*)NvExecParse2X  },	// 立ち絵
+	*/
+	///// ソース改変ここまで /////
 	{ "!j", 1, (void*)NvExecParse2J  },	// スクリプトジャンプ
 	{ "!t", 1, (void*)NvExecParse2T  },	// タイトル
 	{ "!s", 2, (void*)NvExecParse2S  },	// 既読
+	///// ソース改変ここから /////
+	/*
 	{ "#g", 1, (void*)NvExecParse3G  },	// CALL
 	{ "#r", 0, (void*)NvExecParse3R  },	// RET
 	{ "#l", 0, (void*)NvExecParse3L  },	// ELSE
 	{ "#n", 0, (void*)NvExecParse3N  },	// ENDIF
 	{ "#i", 3, (void*)NvExecParse3I  },	// IF
+	*/
+	///// ソース改変ここまで /////
 	{ "#W", 1, (void*)NvExecParse3W  },	// エフェクト
 	{ "#t", 1, (void*)NvExecParse3T  },	// ウェイト
 	{ ";;", 0, (void*)NvExecParseSel },	// 選択肢
+	///// ソース改変ここから /////
+	/*
 	{ "[]", 3, (void*)NvExecParseCal },	// 計算式
+	*/
+	///// ソース改変ここまで /////
 };
 
 
@@ -93,6 +105,8 @@ void NvExecParseSub(void)
 	_ASSERT(i < NV_MAX_PARSE_CNT);
 
 
+	///// ソース改変ここから /////
+	/*
 	if(NvIsExecParseCmd(pC) == true)
 	{
 		NvParseTbl[i].pExec();
@@ -101,6 +115,10 @@ void NvExecParseSub(void)
 	{
 		NvCurSkip(NvParseTbl[i].argv);
 	}
+	*/
+	NvParseTbl[i].pExec();
+	///// ソース改変ここまで /////
+
 }
 //---------------------------------------------------------------------------
 // キー入力＋改ページ（紙アイコン）
@@ -174,7 +192,11 @@ void NvExecParse2G(void)
 
 //	TRACE("%d\n", no);
 
+	///// ソース改変ここから /////
+	/*
 	ImgClrChrAll();
+	*/
+	///// ソース改変ここまで /////
 	ImgSetBg(no);
 
 	Nv.isEffect = true;
@@ -210,6 +232,9 @@ void NvExecParse2E(void)
 	SePlay(no);
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 // 立ち絵
 void NvExecParse2X(void)
 {
@@ -218,8 +243,6 @@ void NvExecParse2X(void)
 
 //	TRACE("%d %d\n", no, is);
 
-	///// ソース改変ここから /////
-	/*
 	if(is == 1)
 	{
 		ImgSetChr(no);
@@ -228,11 +251,11 @@ void NvExecParse2X(void)
 	{
 		ImgClrChr(no);
 	}
-	*/
-	///// ソース改変ここまで /////
 
 	Nv.isEffect = true;
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 // スクリプトジャンプ
 void NvExecParse2J(void)
@@ -259,15 +282,15 @@ void NvExecParse2J(void)
 	// オープニング処理
 	NvSetRead(Nv.idx, Nv.bit);
 	Nv.isSkip = false;
-	
+
 	///// ソース改変ここから /////
 	/*
 	Nv.eff = IMG_EFFECT_TITL;
 	Nv.isEffect = true;
+
+	BgmPlay(0);
 	*/
-	
-	BgmPlay(2);// /* 元:0 */
-	
+	BgmPlay(2);
 	///// ソース改変ここまで /////
 
 	MenuSetTitle(MENU_TITLE_SEL_LOAD);
@@ -309,6 +332,9 @@ void NvExecParse2S(void)
 	}
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 // CALL
 void NvExecParse3G(void)
 {
@@ -328,7 +354,12 @@ void NvExecParse3G(void)
 	Nv.call.pCur  = pTmp;
 	Nv.call.isUse = true;
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 // RET
 void NvExecParse3R(void)
 {
@@ -338,19 +369,34 @@ void NvExecParse3R(void)
 
 	Nv.pCur = Nv.call.pCur;
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 // ELSE
 void NvExecParse3L(void)
 {
 	NvExprFlip();
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 // ENDIF
 void NvExecParse3N(void)
 {
 	NvExprPop();
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 // IF
 void NvExecParse3I(void)
 {
@@ -378,6 +424,8 @@ void NvExecParse3I(void)
 		break;
 	}
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 // エフェクト
 void NvExecParse3W(void)
@@ -426,6 +474,9 @@ void NvExecParseSel(void)
 	Nv.isLoop = false;
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 // 計算式
 void NvExecParseCal(void)
 {
@@ -450,8 +501,13 @@ void NvExecParseCal(void)
 		break;
 	}
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 // スクリプトコマンドの実行有無
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 bool NvIsExecParseCmd(char* p)
 {
 	// IF命令のネスト真偽（expr）を確認
@@ -474,3 +530,5 @@ bool NvIsExecParseCmd(char* p)
 
 	return false;
 }
+*/
+///// ソース改変ここまで /////

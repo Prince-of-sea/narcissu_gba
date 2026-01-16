@@ -18,11 +18,10 @@ def main():
     with tempfile.TemporaryDirectory() as temp_dir:
 
         gui_cfg = gui_main()
-
         cfg = create_config(temp_dir, gui_cfg)
-
+        
+        extract_resources(cfg)
         if check_files(cfg):
-            extract_resources(cfg)
             convert_scenario(cfg)
             convert_images(cfg)
             convert_audio(cfg)

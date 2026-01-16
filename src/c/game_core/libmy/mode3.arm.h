@@ -8,7 +8,12 @@ extern "C" {
 #include "../libgba/gba.h"
 
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+/*
+#define MODE3_MAX_SCN_SIZE			(212 * SCREEN_CY)
+*/
 #define MODE3_MAX_SCN_SIZE			(240 * SCREEN_CY)
+///// ソース改変ここまで /////
 #define MODE3_MAX_CPY_SIZE			(SCREEN_CX * SCREEN_CY)
 
 
@@ -26,7 +31,11 @@ typedef struct {
 void Mode3Init(void);
 
 IWRAM_CODE void Mode3DrawBg(u16* pImg);
+///// ソース改変ここから /////
+/*
 IWRAM_CODE void Mode3DrawChr(s32 sx, s32 sy, s32 cx, s32 cy, u16* pImg, u8* pMsk);
+*/
+///// ソース改変ここまで /////
 
 IWRAM_CODE void Mode3VramEffCls(s32 cnt, u8* pEff);
 IWRAM_CODE void Mode3VramEffAlpha(s32 cnt);

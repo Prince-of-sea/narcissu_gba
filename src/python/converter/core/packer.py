@@ -31,8 +31,15 @@ def run_gbfs(cfg: AppConfig) -> None:
     """gbfs.exe を使ってパックする"""
 
     cmd = [cfg.gbfs_exe, cfg.gbfs_path, f'{cfg.convert_dir}/*.*']
-    subprocess.run(cmd, cwd = cfg.convert_dir)
-    pass
+    result = subprocess.run(cmd, cwd = cfg.convert_dir, stdout=subprocess.PIPE, text=True)
+
+    # デバッグモード時はログを保存
+    if cfg.debug_mode:
+        log_path = cfg.debug_dir / "gbfs_log.txt"
+        with log_path.open('w', encoding='utf-8') as log_file:
+            log_file.write(result.stdout)
+    
+    return
 
 
 def pack_resources(cfg: AppConfig) -> None:
@@ -43,11 +50,9 @@ def pack_resources(cfg: AppConfig) -> None:
     # デバッグモード時はdebug_dir内の中間生成物を保存
     if (cfg.debug_mode):
         # debug_dirをoutput_dir以下にコピー
-        debug_output_dir = cfg.output_dir / "NarcissuGBA_debug"
-        
-        if debug_output_dir.exists():
-            shutil.rmtree(debug_output_dir)
+        if cfg.output_debug_dir.exists():
+            shutil.rmtree(cfg.output_debug_dir)
 
-        shutil.copytree(cfg.debug_dir, debug_output_dir)
+        shutil.copytree(cfg.debug_dir, cfg.output_debug_dir)
 
     return

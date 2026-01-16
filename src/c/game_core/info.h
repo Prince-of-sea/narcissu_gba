@@ -9,7 +9,12 @@ extern "C" {
 
 //---------------------------------------------------------------------------
 ///// ソース改変ここから /////
-#define INFO_MAX_IMG_CNT			94
+/*
+#define INFO_MAX_IMG_CNT			(100-13)
+#define INFO_MAX_BGM_CNT			18
+#define INFO_MAX_FMX_CNT			12
+*/
+#define INFO_MAX_IMG_CNT			90
 #define INFO_MAX_BGM_CNT			12
 #define INFO_MAX_FMX_CNT			38
 ///// ソース改変ここまで /////

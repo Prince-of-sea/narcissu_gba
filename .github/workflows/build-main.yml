@@ -52,10 +52,9 @@ jobs:
 
             - name: 必要なファイルを移動
               run: |
-                  mkdir ./dist/main/core_gba
-                  mv ./*.gba ./dist/main/core_gba/
                   mv ./src/python/converter/tools ./dist/main/
-                  mv ./src/python/converter/res ./dist/main/
+                  mv ./src/python/converter/resources ./dist/main/
+                  mv ./*.gba ./dist/main/resources/base_gba
 
             - name: upload artifact
               uses: actions/upload-artifact@v6

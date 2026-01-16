@@ -8,16 +8,14 @@ extern "C" {
 
 //---------------------------------------------------------------------------
 #define SND_CPU_CLOCK			(16 * 1024 * 1024)
-
-#ifndef SND_AUDIO_RATE
 ///// ソース改変ここから /////
 /*
 #define SND_AUDIO_RATE			21024
 */
+#ifndef SND_AUDIO_RATE
 #define SND_AUDIO_RATE			6241
-///// ソース改変ここまで /////
 #endif
-
+///// ソース改変ここまで /////
 #define SND_FPS					60
 
 enum {

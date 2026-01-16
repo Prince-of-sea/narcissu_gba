@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter, ImageOps
 
 from core.config import AppConfig
 
@@ -12,7 +12,7 @@ def convert_IMG000(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """e/title_off2.jpg 変換"""
 
     # フィルター画像のパス
-    filter_image_path = cfg.res_dir / Path('filter_000_1.bin')
+    filter_image_path = cfg.image_filter_dir / Path('filter_000_1.bin')
 
     # 画像を読み込み
     with Image.open(nsa_extract_path) as img:
@@ -43,7 +43,7 @@ def convert_IMG001(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """tui/title_off.bmp 変換"""
 
     # フィルター画像のパス
-    filter_image_path = cfg.res_dir / Path('filter_001_1.bin')
+    filter_image_path = cfg.image_filter_dir / Path('filter_001_1.bin')
 
     # 画像を読み込み
     with Image.open(nsa_extract_path) as img:
@@ -66,6 +66,404 @@ def convert_IMG001(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         # PNGで保存
         img.save(temppng_path, "PNG")
 
+    return
+
+
+###################################################################################################
+def convert_IMG003(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """sys/mini_title.bmp 変換(2章)"""
+
+    # 拡大率
+    SUBTITLE_SCALE = 0.66
+
+    # 字幕用の画像パス
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter02.png')
+
+    # 元画像を読み込み
+    with Image.open(nsa_extract_path) as img:
+        img = img.convert("RGB")
+        
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        bg_color = img.getpixel((0, 0))
+        img_new = Image.new("RGB", (240, 160), bg_color)
+        
+        # 元画像の(0,145)から(800,349)を切り出し
+        img_cropped = img.crop((0, 145, 800, 349))
+        
+        # 240x61に縮小
+        img_resized = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
+        
+        # 新画像の(0,32)にはりつけ
+        img_new.paste(img_resized, (0, 32))
+        
+        # シャープネスを少し上げる
+        img_new = img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
+
+        # 字幕用の画像を読み込んで処理
+        with Image.open(subtitle_image_path) as img_subtitle:
+
+            # 3枚目（本体）と4枚目（マスク）を直値で切り出し
+            img_subtitle_body = img_subtitle.crop((498, 0, 747, 23)).convert("RGBA")
+            img_subtitle_mask = img_subtitle.crop((747, 0, 996, 23)).convert("L")
+
+            # マスクの白黒を反転させる
+            img_subtitle_mask = ImageOps.invert(img_subtitle_mask)
+
+            # マスクを適用
+            img_subtitle_body.putalpha(img_subtitle_mask)
+
+            # その場のサイズ（.width / .height）にSUBTITLE_SCALEを掛けてリサイズ
+            subtitle_new_size = (int(img_subtitle_body.width * SUBTITLE_SCALE), int(img_subtitle_body.height * SUBTITLE_SCALE))
+            img_subtitle_resized = img_subtitle_body.resize(subtitle_new_size, Image.Resampling.LANCZOS)
+
+            # img_newの(75, 55)に貼り付け
+            # 第3引数に自身を指定して透過を有効にする
+            img_new.paste(img_subtitle_resized, (75, 55), img_subtitle_resized)
+
+        # 保存
+        img_new.save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG004(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """sys/mini_title.bmp 変換(3章)"""
+
+    # 拡大率
+    SUBTITLE_SCALE = 0.66
+
+    # 字幕用の画像パス
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter03.png')
+
+    # 元画像を読み込み
+    with Image.open(nsa_extract_path) as img:
+        img = img.convert("RGB")
+        
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        bg_color = img.getpixel((0, 0))
+        img_new = Image.new("RGB", (240, 160), bg_color)
+        
+        # 元画像の(0,145)から(800,349)を切り出し
+        img_cropped = img.crop((0, 145, 800, 349))
+        
+        # 240x61に縮小
+        img_resized = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
+        
+        # 新画像の(0,32)にはりつけ
+        img_new.paste(img_resized, (0, 32))
+        
+        # シャープネスを少し上げる
+        img_new = img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
+
+        # 字幕用の画像を読み込んで処理
+        with Image.open(subtitle_image_path) as img_subtitle:
+
+            # 3枚目（本体）と4枚目（マスク）を直値で切り出し
+            img_subtitle_body = img_subtitle.crop((498, 0, 747, 23)).convert("RGBA")
+            img_subtitle_mask = img_subtitle.crop((747, 0, 996, 23)).convert("L")
+
+            # マスクの白黒を反転させる
+            img_subtitle_mask = ImageOps.invert(img_subtitle_mask)
+
+            # マスクを適用
+            img_subtitle_body.putalpha(img_subtitle_mask)
+
+            # その場のサイズ（.width / .height）にSUBTITLE_SCALEを掛けてリサイズ
+            subtitle_new_size = (int(img_subtitle_body.width * SUBTITLE_SCALE), int(img_subtitle_body.height * SUBTITLE_SCALE))
+            img_subtitle_resized = img_subtitle_body.resize(subtitle_new_size, Image.Resampling.LANCZOS)
+
+            # img_newの(75, 55)に貼り付け
+            # 第3引数に自身を指定して透過を有効にする
+            img_new.paste(img_subtitle_resized, (75, 55), img_subtitle_resized)
+
+        # 保存
+        img_new.save(temppng_path, "PNG")
+    
+    return
+
+###################################################################################################
+def convert_IMG005(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """sys/mini_title.bmp 変換(4章)"""
+
+    # 拡大率
+    SUBTITLE_SCALE = 0.66
+
+    # 字幕用の画像パス
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter04.png')
+
+    # 元画像を読み込み
+    with Image.open(nsa_extract_path) as img:
+        img = img.convert("RGB")
+        
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        bg_color = img.getpixel((0, 0))
+        img_new = Image.new("RGB", (240, 160), bg_color)
+        
+        # 元画像の(0,145)から(800,349)を切り出し
+        img_cropped = img.crop((0, 145, 800, 349))
+        
+        # 240x61に縮小
+        img_resized = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
+        
+        # 新画像の(0,32)にはりつけ
+        img_new.paste(img_resized, (0, 32))
+        
+        # シャープネスを少し上げる
+        img_new = img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
+
+        # 字幕用の画像を読み込んで処理
+        with Image.open(subtitle_image_path) as img_subtitle:
+
+            # 3枚目（本体）と4枚目（マスク）を直値で切り出し
+            img_subtitle_body = img_subtitle.crop((498, 0, 747, 23)).convert("RGBA")
+            img_subtitle_mask = img_subtitle.crop((747, 0, 996, 23)).convert("L")
+
+            # マスクの白黒を反転させる
+            img_subtitle_mask = ImageOps.invert(img_subtitle_mask)
+
+            # マスクを適用
+            img_subtitle_body.putalpha(img_subtitle_mask)
+
+            # その場のサイズ（.width / .height）にSUBTITLE_SCALEを掛けてリサイズ
+            subtitle_new_size = (int(img_subtitle_body.width * SUBTITLE_SCALE), int(img_subtitle_body.height * SUBTITLE_SCALE))
+            img_subtitle_resized = img_subtitle_body.resize(subtitle_new_size, Image.Resampling.LANCZOS)
+
+            # img_newの(75, 55)に貼り付け
+            # 第3引数に自身を指定して透過を有効にする
+            img_new.paste(img_subtitle_resized, (75, 55), img_subtitle_resized)
+
+        # 保存
+        img_new.save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG006(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """sys/mini_title.bmp 変換(5章)"""
+
+    # 拡大率
+    SUBTITLE_SCALE = 0.66
+
+    # 字幕用の画像パス
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter05.png')
+
+    # 元画像を読み込み
+    with Image.open(nsa_extract_path) as img:
+        img = img.convert("RGB")
+        
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        bg_color = img.getpixel((0, 0))
+        img_new = Image.new("RGB", (240, 160), bg_color)
+        
+        # 元画像の(0,145)から(800,349)を切り出し
+        img_cropped = img.crop((0, 145, 800, 349))
+        
+        # 240x61に縮小
+        img_resized = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
+        
+        # 新画像の(0,32)にはりつけ
+        img_new.paste(img_resized, (0, 32))
+        
+        # シャープネスを少し上げる
+        img_new = img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
+
+        # 字幕用の画像を読み込んで処理
+        with Image.open(subtitle_image_path) as img_subtitle:
+
+            # 3枚目（本体）と4枚目（マスク）を直値で切り出し
+            img_subtitle_body = img_subtitle.crop((498, 0, 747, 23)).convert("RGBA")
+            img_subtitle_mask = img_subtitle.crop((747, 0, 996, 23)).convert("L")
+
+            # マスクの白黒を反転させる
+            img_subtitle_mask = ImageOps.invert(img_subtitle_mask)
+
+            # マスクを適用
+            img_subtitle_body.putalpha(img_subtitle_mask)
+
+            # その場のサイズ（.width / .height）にSUBTITLE_SCALEを掛けてリサイズ
+            subtitle_new_size = (int(img_subtitle_body.width * SUBTITLE_SCALE), int(img_subtitle_body.height * SUBTITLE_SCALE))
+            img_subtitle_resized = img_subtitle_body.resize(subtitle_new_size, Image.Resampling.LANCZOS)
+
+            # img_newの(75, 55)に貼り付け
+            # 第3引数に自身を指定して透過を有効にする
+            img_new.paste(img_subtitle_resized, (75, 55), img_subtitle_resized)
+
+        # 保存
+        img_new.save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG007(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """sys/mini_title.bmp 変換(6章)"""
+
+    # 拡大率
+    SUBTITLE_SCALE = 0.66
+
+    # 字幕用の画像パス
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter06.png')
+
+    # 元画像を読み込み
+    with Image.open(nsa_extract_path) as img:
+        img = img.convert("RGB")
+        
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        bg_color = img.getpixel((0, 0))
+        img_new = Image.new("RGB", (240, 160), bg_color)
+        
+        # 元画像の(0,145)から(800,349)を切り出し
+        img_cropped = img.crop((0, 145, 800, 349))
+        
+        # 240x61に縮小
+        img_resized = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
+        
+        # 新画像の(0,32)にはりつけ
+        img_new.paste(img_resized, (0, 32))
+        
+        # シャープネスを少し上げる
+        img_new = img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
+
+        # 字幕用の画像を読み込んで処理
+        with Image.open(subtitle_image_path) as img_subtitle:
+
+            # 3枚目（本体）と4枚目（マスク）を直値で切り出し
+            img_subtitle_body = img_subtitle.crop((498, 0, 747, 23)).convert("RGBA")
+            img_subtitle_mask = img_subtitle.crop((747, 0, 996, 23)).convert("L")
+
+            # マスクの白黒を反転させる
+            img_subtitle_mask = ImageOps.invert(img_subtitle_mask)
+
+            # マスクを適用
+            img_subtitle_body.putalpha(img_subtitle_mask)
+
+            # その場のサイズ（.width / .height）にSUBTITLE_SCALEを掛けてリサイズ
+            subtitle_new_size = (int(img_subtitle_body.width * SUBTITLE_SCALE), int(img_subtitle_body.height * SUBTITLE_SCALE))
+            img_subtitle_resized = img_subtitle_body.resize(subtitle_new_size, Image.Resampling.LANCZOS)
+
+            # img_newの(75, 55)に貼り付け
+            # 第3引数に自身を指定して透過を有効にする
+            img_new.paste(img_subtitle_resized, (75, 55), img_subtitle_resized)
+
+        # 保存
+        img_new.save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG008(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """sys/mini_title.bmp 変換(7章)"""
+
+    # 拡大率
+    SUBTITLE_SCALE = 0.66
+
+    # 字幕用の画像パス
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter07.png')
+
+    # 元画像を読み込み
+    with Image.open(nsa_extract_path) as img:
+        img = img.convert("RGB")
+        
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        bg_color = img.getpixel((0, 0))
+        img_new = Image.new("RGB", (240, 160), bg_color)
+        
+        # 元画像の(0,145)から(800,349)を切り出し
+        img_cropped = img.crop((0, 145, 800, 349))
+        
+        # 240x61に縮小
+        img_resized = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
+        
+        # 新画像の(0,32)にはりつけ
+        img_new.paste(img_resized, (0, 32))
+        
+        # シャープネスを少し上げる
+        img_new = img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
+
+        # 字幕用の画像を読み込んで処理
+        with Image.open(subtitle_image_path) as img_subtitle:
+
+            # 3枚目（本体）と4枚目（マスク）を直値で切り出し
+            img_subtitle_body = img_subtitle.crop((498, 0, 747, 23)).convert("RGBA")
+            img_subtitle_mask = img_subtitle.crop((747, 0, 996, 23)).convert("L")
+
+            # マスクの白黒を反転させる
+            img_subtitle_mask = ImageOps.invert(img_subtitle_mask)
+
+            # マスクを適用
+            img_subtitle_body.putalpha(img_subtitle_mask)
+
+            # その場のサイズ（.width / .height）にSUBTITLE_SCALEを掛けてリサイズ
+            subtitle_new_size = (int(img_subtitle_body.width * SUBTITLE_SCALE), int(img_subtitle_body.height * SUBTITLE_SCALE))
+            img_subtitle_resized = img_subtitle_body.resize(subtitle_new_size, Image.Resampling.LANCZOS)
+
+            # img_newの(75, 55)に貼り付け
+            # 第3引数に自身を指定して透過を有効にする
+            img_new.paste(img_subtitle_resized, (75, 55), img_subtitle_resized)
+
+        # 保存
+        img_new.save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG009(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """sys/mini_title.bmp 変換(8章)"""
+
+    # 拡大率
+    SUBTITLE_SCALE = 0.66
+
+    # 字幕用の画像パス
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter08.png')
+
+    # 元画像を読み込み
+    with Image.open(nsa_extract_path) as img:
+        img = img.convert("RGB")
+        
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        bg_color = img.getpixel((0, 0))
+        img_new = Image.new("RGB", (240, 160), bg_color)
+        
+        # 元画像の(0,145)から(800,349)を切り出し
+        img_cropped = img.crop((0, 145, 800, 349))
+        
+        # 240x61に縮小
+        img_resized = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
+        
+        # 新画像の(0,32)にはりつけ
+        img_new.paste(img_resized, (0, 32))
+        
+        # シャープネスを少し上げる
+        img_new = img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
+
+        # 字幕用の画像を読み込んで処理
+        with Image.open(subtitle_image_path) as img_subtitle:
+
+            # 3枚目（本体）と4枚目（マスク）を直値で切り出し
+            img_subtitle_body = img_subtitle.crop((498, 0, 747, 23)).convert("RGBA")
+            img_subtitle_mask = img_subtitle.crop((747, 0, 996, 23)).convert("L")
+
+            # マスクの白黒を反転させる
+            img_subtitle_mask = ImageOps.invert(img_subtitle_mask)
+
+            # マスクを適用
+            img_subtitle_body.putalpha(img_subtitle_mask)
+
+            # その場のサイズ（.width / .height）にSUBTITLE_SCALEを掛けてリサイズ
+            subtitle_new_size = (int(img_subtitle_body.width * SUBTITLE_SCALE), int(img_subtitle_body.height * SUBTITLE_SCALE))
+            img_subtitle_resized = img_subtitle_body.resize(subtitle_new_size, Image.Resampling.LANCZOS)
+
+            # img_newの(75, 55)に貼り付け
+            # 第3引数に自身を指定して透過を有効にする
+            img_new.paste(img_subtitle_resized, (75, 55), img_subtitle_resized)
+
+        # 保存
+        img_new.save(temppng_path, "PNG")
+    
     return
 
 
@@ -205,7 +603,7 @@ def convert_IMG139(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """tui/imege98.bmp 変換"""
 
     # フィルター画像のパス
-    filter_image_path = cfg.res_dir / Path('filter_139_1.bin')
+    filter_image_path = cfg.image_filter_dir / Path('filter_139_1.bin')
 
     # 画像を読み込み
     with Image.open(nsa_extract_path) as img:

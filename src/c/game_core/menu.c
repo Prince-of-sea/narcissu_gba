@@ -34,7 +34,12 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 	///// ソース改変ここまで /////
 
 	// 9
+	///// ソース改変ここから /////
+	/*
 	"　オプション",
+	*/
+	"　環境設定",
+	///// ソース改変ここまで /////
 	"　背景輝度　　００",
 	"　音楽音量　　００",
 	"　画像　　　　００",
@@ -57,17 +62,26 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 	///// ソース改変ここから /////
 	/*
 	"",
-	"　最初から始める",
+	"最初から始める",
 	"　ロードする",
 	*/
 	"　　Ｓｔａｒｔ",
 	"　　　Ｌｏａｄ",
 	"Ｐｒｏｄｕｃｔ",
 	///// ソース改変ここまで /////
-	
+
 	// 24
 	///// ソース改変ここから /////
 	// この辺結局デバッグメニューごと潰したからそもそも不要かも？
+	/*
+	"好感度、告白フラグ",
+	"香織　　１６：０　２８：０",
+	"緑　　　２１：０　２９：０",
+	"いろは　２２：０　３０：０",
+	"歌奈　　２０：０　３１：０",
+	"千絵子　２６：０　３２：０",
+	"留希　　２７：０　３３：０",
+	*/
 	"使わないので仮の値で埋め中",
 	"Ｒ４　　１６：０　２８：０",
 	"ＴＴ　　２１：０　２９：０",
@@ -211,8 +225,9 @@ void MenuExecSystem(u16 trg)
 	case 6:
 		///// ソース改変ここから /////
 		// ゲーム終了に変更
-		// MenuSetDebug(MENU_DEBUG_VAR_1);
-		
+		/*
+		MenuSetDebug(MENU_DEBUG_VAR_1);
+		*/
 		LogInit();
 		TxtClear();
 
@@ -222,32 +237,32 @@ void MenuExecSystem(u16 trg)
 
 		MenuSetTitle(MENU_TITLE_SEL_LOAD);
 		
-		// 画像選択表示部分からコピってきた
-		ImgSetBg(1);// タイトル画像 SCN000の最終表示画像と同じにしておくこと
+		// タイトル画像 SCN000の最終表示画像と同じにしておくこと
+		ImgSetBg(1);
 		ImgSetEff(IMG_EFFECT_FADE);
 		ImgSetExec();
 		
 		///// ソース改変ここまで /////
 		break;
 
+	///// ソース改変ここから /////
+	/*
 	// ゲーム終了
 	case 7:
-		///// ソース改変ここから /////
-		/*
 		LogInit();
 		TxtClear();
-        
+
 		SeStop();
 		BgmStop();
 		BgmPlay(0);
-        
+
 		MenuSetTitle(MENU_TITLE_SEL_LOAD);
-        
+
 		ImgSetEff(IMG_EFFECT_TITL);
 		ImgSetExec();
-		*/
-		///// ソース改変ここまで /////
 		break;
+	*/
+	///// ソース改変ここまで /////
 	}
 }
 //---------------------------------------------------------------------------
@@ -349,7 +364,11 @@ void MenuExecOption(u16 trg)
 			s32 no = InfoGetImg(Menu.img);
 
 			ImgSetBg(no);
+			///// ソース改変ここから /////
+			/*
 			ImgClrChrAll();
+			*/
+			///// ソース改変ここまで /////
 			ImgSetEff(IMG_EFFECT_COPY);
 			ImgSetExec();
 		}

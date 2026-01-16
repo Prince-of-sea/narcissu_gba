@@ -16,7 +16,7 @@ extern "C" {
 #define IMG_DEF_FADE_CNT		0
 ///// ソース改変ここまで /////
 
-	enum {
+enum {
 	IMG_EFFECT_CLS00 = 0,		// αフェード（200に変更）
 	IMG_EFFECT_CLS01,			// カーテン
 	IMG_EFFECT_CLS02,			// 中央じわじわ
@@ -93,14 +93,26 @@ void ImgExecFadeOut(void);
 void ImgExecFadeIn(void);
 
 void ImgDrawBg(void);
+///// ソース改変ここから /////
+/*
 void ImgDrawChr(void);
+*/
+///// ソース改変ここまで /////
 
 void ImgClrBg(void);
+///// ソース改変ここから /////
+/*
 void ImgClrChr(s32 no);
 void ImgClrChrAll(void);
+*/
+///// ソース改変ここまで /////
 
 void ImgSetBg(s32 no);
+///// ソース改変ここから /////
+/*
 void ImgSetChr(s32 no);
+*/
+///// ソース改変ここまで /////
 void ImgSetEff(s32 no);
 void ImgSetExec(void);
 void ImgSetFade(s32 num);

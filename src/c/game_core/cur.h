@@ -26,7 +26,11 @@ typedef struct {
 void CurInit(void);
 void CurExec(void);
 
+///// ソース改変ここから /////
+/*
 void CurSetLf(void);
+*/
+///// ソース改変ここまで /////
 void CurSetPage(void);
 void CurSetExec(void);
 

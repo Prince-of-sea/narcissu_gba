@@ -88,6 +88,17 @@ void ManageExecInit(void)
 	// DEBUG
 //	ImgLoadFade();
 //	NvSetScn(3);
+//	NvSetScn(8);
+//	NvSetScn(12);
+//	NvSetScn(20);
+//	NvSetScn(73);
+//	NvSetScn(75);
+//	NvSetScn(84);
+
+//	NvSetVar(28, 1);	// çÅêD
+//	NvSetVar(29, 1);	// óŒ
+//	NvSetVar(30, 1);	// Ç¢ÇÎÇÕ
+//	NvSetVar(31, 1);	// âÃìﬁ
 
 	NvSetScn(0);
 	ManageSetAct(MANAGE_ACT_NV);
