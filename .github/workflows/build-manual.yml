@@ -1,66 +1,23 @@
-name: build
+name: 手動ビルド
 
 on:
     workflow_dispatch:
 
 jobs:
-    build-gba:
+    call-build-main:
+        uses: ./.github/workflows/build-main.yml
+        secrets: inherit
+
+
+    upload-artifact:
         runs-on: ubuntu-latest
-        container:
-            image: devkitpro/devkitarm:latest
+        needs: [call-build-main]
         steps:
-            - uses: actions/checkout@v6
-            - name: run .build.sh
-              run: |
-                  chmod +x ./build.sh
-                  ./build.sh
-                  mv ./src/c/game_core/*.gba ./
-
-            - name: upload artifact
-              uses: actions/upload-artifact@v6
-              with:
-                  name: build-gba
-                  path: |
-                    ./*.gba
-
-    build-exe:
-        runs-on: windows-latest
-        needs: [build-gba]
-        steps:
-            - uses: actions/checkout@v6
-
-            - name: download artifact
-              uses: actions/download-artifact@v7
-              with:
-                  name: build-gba
-                  path: ./
-
-            - name: setup Python
-              uses: actions/setup-python@v6
-              with:
-                  python-version: "3.13"
-            
-            - name: install dependencies
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install pyinstaller
-                  pip install -r ./src/python/converter/requirements.txt
-
-            - name: build exe
-              run: |
-                ls ./src/python/converter/
-                pyinstaller ./src/python/converter/main.py
-
-            - name: 必要なファイルを移動
-              run: |
-                mkdir ./dist/main/core_gba
-                mv ./*.gba ./dist/main/core_gba/
-                mv ./src/python/converter/tools ./dist/main/
-                mv ./src/python/converter/res ./dist/main/
-
-            - name: upload artifact
-              uses: actions/upload-artifact@v6
-              with:
-                  name: build-exe
-                  path: |
-                    ./dist/main
+        # - name: upload artifact
+        #   uses: actions/upload-artifact@v6
+        #   with:
+        #       name: build-exe
+        #       path: |
+        #         ./dist/main
+        - name: skip
+          run: echo ""
