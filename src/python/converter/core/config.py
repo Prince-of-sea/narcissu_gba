@@ -84,6 +84,9 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
     cfg.convert_dir.mkdir(parents=True, exist_ok=True)
 
     if (cfg.debug_mode):
-        cfg.debug_dir.mkdir(parents=True, exist_ok=True)
+        Path(cfg.debug_dir / 'img').mkdir(parents=True, exist_ok=True)
+        Path(cfg.debug_dir / 'bgm').mkdir(parents=True, exist_ok=True)
+        Path(cfg.debug_dir / 'fmx').mkdir(parents=True, exist_ok=True)
+        Path(cfg.debug_dir / 'scn').mkdir(parents=True, exist_ok=True)
 
     return cfg

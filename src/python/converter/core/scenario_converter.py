@@ -324,7 +324,7 @@ def create_scenario_files(scn_list: dict, cfg: AppConfig) -> None:
 
         # デバッグ用テキスト出力
         if (cfg.debug_mode):
-            output_txt_path = cfg.debug_dir / f'SCN{scn_key}.txt'
+            output_txt_path = Path(cfg.debug_dir / 'scn' / f'SCN{scn_key}.txt')
             debug_txt = "\n".join(scn_val)
             
             with open(output_txt_path, "w", encoding="cp932") as f:

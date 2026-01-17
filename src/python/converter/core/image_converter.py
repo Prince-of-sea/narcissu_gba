@@ -126,7 +126,7 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
 
     if (cfg.debug_mode):
         # デバッグ用に中間pngファイルをdebug_dirにコピー
-        debug_png_path = cfg.debug_dir / f'img{p_index}.png'
+        debug_png_path = Path(cfg.debug_dir / 'img' / f'img{p_index}.png')
         temppng_path.replace(debug_png_path)
     else:
         # 変換し終わったpngファイルを削除
