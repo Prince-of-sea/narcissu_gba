@@ -5,7 +5,7 @@ NAME       = NarcissuGBA
 GAMECODE   = NARC
 PREFIX     = arm-none-eabi-
 
-RATES := 6241 9118
+RATES := 5734 9118
 
 AS         = $(PREFIX)as
 CC         = $(PREFIX)gcc

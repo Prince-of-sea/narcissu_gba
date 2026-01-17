@@ -20,7 +20,7 @@ def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) 
                'silence', '1', '0.1', '1%', 'reverse', 'silence', '1', '0.1', '1%', 'reverse']
     else:
         cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_path, 'gain', '-l', '6',
-               'silence', '1', '0.1', '1%', 'reverse', 'silence', '1', '0.1', '1%', 'reverse']
+               'silence', '1', '0.1', '0.5%', 'reverse', 'silence', '1', '0.1', '0.5%', 'reverse']
 
     # メイン処理 - コマンド実行
     subprocess.run(cmd, cwd = cfg.convert_dir)
@@ -37,7 +37,7 @@ def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) 
                     'silence', '1', '0.1', '1%', 'reverse', 'silence', '1', '0.1', '1%', 'reverse']
         else:
             cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-b8', tempwav_path, 'gain', '-l', '6',
-                    'silence', '1', '0.1', '1%', 'reverse', 'silence', '1', '0.1', '1%', 'reverse']
+                    'silence', '1', '0.1', '0.5%', 'reverse', 'silence', '1', '0.1', '0.5%', 'reverse']
 
         # テスト用処理 - コマンド実行
         subprocess.run(cmd, cwd = cfg.convert_dir)

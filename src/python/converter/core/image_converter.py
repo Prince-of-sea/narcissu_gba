@@ -8,18 +8,16 @@ from PIL import Image
 from core.config import AppConfig
 from .image_special import convert_IMG000
 from .image_special import convert_IMG001
-from .image_special import convert_IMG003
-from .image_special import convert_IMG004
-from .image_special import convert_IMG005
-from .image_special import convert_IMG006
-from .image_special import convert_IMG007
-from .image_special import convert_IMG008
-from .image_special import convert_IMG009
+from .image_special import convert_IMG003_009
 from .image_special import convert_IMG015
 from .image_special import convert_IMG018_023
 from .image_special import convert_IMG067
 from .image_special import convert_IMG068_069
 from .image_special import convert_IMG082_084
+from .image_special import convert_IMG114
+from .image_special import convert_IMG115
+from .image_special import convert_IMG116
+from .image_special import convert_IMG117
 from .image_special import convert_IMG139
 from .image_special import convert_none_background
 from .image_special import convert_gray_background
@@ -82,20 +80,8 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
             convert_IMG000(nsa_extract_path, temppng_path, cfg)
         case 'special_001':
             convert_IMG001(nsa_extract_path, temppng_path, cfg)
-        case 'special_003':
-            convert_IMG003(nsa_extract_path, temppng_path, cfg)
-        case 'special_004':
-            convert_IMG004(nsa_extract_path, temppng_path, cfg)
-        case 'special_005':
-            convert_IMG005(nsa_extract_path, temppng_path, cfg)
-        case 'special_006':
-            convert_IMG006(nsa_extract_path, temppng_path, cfg)
-        case 'special_007':
-            convert_IMG007(nsa_extract_path, temppng_path, cfg)
-        case 'special_008':
-            convert_IMG008(nsa_extract_path, temppng_path, cfg)
-        case 'special_009':
-            convert_IMG009(nsa_extract_path, temppng_path, cfg)
+        case 'special_003_009':
+            convert_IMG003_009(nsa_extract_path, temppng_path, cfg)
         case 'special_015':
             convert_IMG015(nsa_extract_path, temppng_path, cfg)
         case 'special_018_023':
@@ -106,6 +92,14 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
             convert_IMG068_069(nsa_extract_path, temppng_path, cfg)
         case 'special_082_084':
             convert_IMG082_084(nsa_extract_path, temppng_path, cfg)
+        case 'special_114':
+            convert_IMG114(nsa_extract_path, temppng_path, cfg)
+        case 'special_115':
+            convert_IMG115(nsa_extract_path, temppng_path, cfg)
+        case 'special_116':
+            convert_IMG116(nsa_extract_path, temppng_path, cfg)
+        case 'special_117':
+            convert_IMG117(nsa_extract_path, temppng_path, cfg)
         case 'special_139':
             convert_IMG139(nsa_extract_path, temppng_path, cfg)
         case 'gray_background':
