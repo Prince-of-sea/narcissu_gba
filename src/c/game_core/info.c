@@ -161,9 +161,6 @@ ROM_DATA s32 InfoImg[] = {
 	 79,		// e/naname_michi.jpg
 	 80,		// e/naname_michi_yoru.jpg
 	 81,		// e/naname_yuki.jpg
-	 82,		// e/nar01.jpg
-	 83,		// e/nar01c.jpg
-	 84,		// e/nar01d.jpg
 	 85,		// e/narcissu_b.jpg
 	 86,		// e/narcissu_yoru_ame.jpg
 	 87,		// e/pachi.jpg
@@ -194,7 +191,6 @@ ROM_DATA s32 InfoImg[] = {
 	112,		// e/soukou_yoru.jpg
 	119,		// e/tv_hana.jpg
 	120,		// e/umibe_yoru.jpg
-	121,		// e/w.jpg
 	122,		// e/yakkyoku.jpg
 	123,		// e/yuki_kohan.jpg
 	124,		// e/yukizora.jpg

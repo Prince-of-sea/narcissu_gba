@@ -14,7 +14,7 @@ extern "C" {
 #define INFO_MAX_BGM_CNT			18
 #define INFO_MAX_FMX_CNT			12
 */
-#define INFO_MAX_IMG_CNT			94
+#define INFO_MAX_IMG_CNT			90
 #define INFO_MAX_BGM_CNT			12
 #define INFO_MAX_FMX_CNT			38
 ///// É\Å[ÉXâ¸ïœÇ±Ç±Ç‹Ç≈ /////
