@@ -34,19 +34,34 @@ def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) 
         # テスト用処理 - コマンド組み立て
         if is_bgm:
             cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-b8', tempwav_path, 
-                   'gain', '-l', '6', 'silence', '1', '0.1', '1%', 'reverse', 'silence', '1', '0.1', '1%', 'reverse']
+                    'silence', '1', '0.1', '1%', 'reverse', 'silence', '1', '0.1', '1%', 'reverse']
         else:
             cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-b8', tempwav_path, 'gain', '-l', '6',
-                   'gain', '-l', '6', 'silence', '1', '0.1', '1%', 'reverse', 'silence', '1', '0.1', '1%', 'reverse']
+                    'silence', '1', '0.1', '1%', 'reverse', 'silence', '1', '0.1', '1%', 'reverse']
 
         # テスト用処理 - コマンド実行
         subprocess.run(cmd, cwd = cfg.convert_dir)
+    
+    # 無音ファイルコピー
+    shutil.copyfile(
+        Path(cfg.convert_dir / 'dummy.raw'),
+        Path(cfg.convert_dir / f'{tempraw_path.stem}_'),
+    )
+
+    return
+
+
+def run_sox_dummy(cfg: AppConfig, dummyraw_path: Path) -> None:
+    """sox.exeを使って無音ファイルを作成"""
+
+    # 音質設定
+    rate = cfg.sound_quality
 
     # 無音ファイル作成(音声再生後に、「データ上で次にあるファイル」の先頭が一瞬流れるバグがあるのでその解消用)
     # 次が流れてもそれが無音なら気づかれなくて済む、実害無い、とかいう雑な回避策
-    tempraw_none_path = tempraw_path.with_stem(f"{tempraw_path.stem}_")
-    cmd = [cfg.sox_exe, '-n', '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_none_path, 'trim', '0', '0.7']
+    cmd = [cfg.sox_exe, '-n', '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', dummyraw_path, 'trim', '0', '0.7']
 
+    # メイン処理 - コマンド実行
     subprocess.run(cmd, cwd = cfg.convert_dir)
 
     return
@@ -98,6 +113,12 @@ def convert_audio_parallel(cfg: AppConfig, img_info: list[int, str], is_bgm: boo
 def convert_audio(cfg: AppConfig) -> None:
     """音源の全変換処理"""
 
+    # 無音ファイルパス
+    dummyraw_path = Path(cfg.convert_dir / f'dummy.raw')
+
+    # 無音ファイル作成
+    run_sox_dummy(cfg, dummyraw_path)
+
     # 並列ファイル変換
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = []
@@ -119,5 +140,8 @@ def convert_audio(cfg: AppConfig) -> None:
 
         # gui対応時にはプログレスバー用に改良予定
         concurrent.futures.as_completed(futures)
+    
+    # 無音ファイル削除
+    dummyraw_path.unlink()
 
     return
