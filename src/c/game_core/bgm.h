@@ -24,7 +24,11 @@ void BgmInit(void);
 
 void BgmPlay(s32 no);
 void BgmPlayRaw(s32 no);
+///// ソース改変ここから /////
+/*
 void BgmPlayVgm(s32 no);
+*/
+///// ソース改変ここまで /////
 
 void BgmSetVol(s32 vol);
 s32  BgmGetVol(void);

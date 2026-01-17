@@ -93,14 +93,26 @@ void ImgExecFadeOut(void);
 void ImgExecFadeIn(void);
 
 void ImgDrawBg(void);
+///// ソース改変ここから /////
+/*
 void ImgDrawChr(void);
+*/
+///// ソース改変ここまで /////
 
 void ImgClrBg(void);
+///// ソース改変ここから /////
+/*
 void ImgClrChr(s32 no);
 void ImgClrChrAll(void);
+*/
+///// ソース改変ここまで /////
 
 void ImgSetBg(s32 no);
+///// ソース改変ここから /////
+/*
 void ImgSetChr(s32 no);
+*/
+///// ソース改変ここまで /////
 void ImgSetEff(s32 no);
 void ImgSetExec(void);
 void ImgSetFade(s32 num);

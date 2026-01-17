@@ -364,7 +364,11 @@ void MenuExecOption(u16 trg)
 			s32 no = InfoGetImg(Menu.img);
 
 			ImgSetBg(no);
+			///// ソース改変ここから /////
+			/*
 			ImgClrChrAll();
+			*/
+			///// ソース改変ここまで /////
 			ImgSetEff(IMG_EFFECT_COPY);
 			ImgSetExec();
 		}

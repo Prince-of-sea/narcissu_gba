@@ -27,14 +27,12 @@ IWRAM_CODE void Mode3DrawBg(u16* pImg)
 	///// ソース改変ここまで /////
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 IWRAM_CODE void Mode3DrawChr(s32 sx, s32 sy, s32 cx, s32 cy, u16* pImg, u8* pMsk)
 {
-	///// ソース改変ここから /////
-	/*
 	u16* pDst = Mode3.buf + Mode3.idx * MODE3_MAX_SCN_SIZE + sy * 212 + sx;
-	*/
-	u16* pDst = Mode3.buf + Mode3.idx * MODE3_MAX_SCN_SIZE + sy * 240 + sx;
-	///// ソース改変ここまで /////
 	s32  x, y;
 
 	for(y=0; y<cy; y++)
@@ -72,14 +70,11 @@ IWRAM_CODE void Mode3DrawChr(s32 sx, s32 sy, s32 cx, s32 cy, u16* pImg, u8* pMsk
 
 		pImg += cx;
 		pMsk += cx;
-		///// ソース改変ここから /////
-	    /*
 		pDst += 212;
-	    */
-		pDst += 240;
-		///// ソース改変ここまで /////
 	}
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 IWRAM_CODE void Mode3VramEffCls(s32 cnt, u8* pEff)
 {

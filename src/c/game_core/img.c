@@ -50,7 +50,11 @@ void ImgExecCls(void)
 	if(Img.step == 0)
 	{
 		ImgDrawBg();
+		///// ソース改変ここから /////
+		/*
 		ImgDrawChr();
+		*/
+		///// ソース改変ここまで /////
 
 		Img.step++;
 		return;
@@ -73,7 +77,11 @@ void ImgExecFade(void)
 	if(Img.step == 0)
 	{
 		ImgDrawBg();
+		///// ソース改変ここから /////
+		/*
 		ImgDrawChr();
+		*/
+		///// ソース改変ここまで /////
 
 		Img.step = 6;
 		return;
@@ -96,7 +104,11 @@ void ImgExecCopy(void)
 	if(Img.step == 0)
 	{
 		ImgDrawBg();
+		///// ソース改変ここから /////
+		/*
 		ImgDrawChr();
+		*/
+		///// ソース改変ここまで /////
 
 		Mode3VramCpyStep1();
 
@@ -252,7 +264,11 @@ void ImgExecFadeOut(void)
 	if(Img.step == 0)
 	{
 		ImgDrawBg();
+		///// ソース改変ここから /////
+		/*
 		ImgDrawChr();
+		*/
+		///// ソース改変ここまで /////
 
 		Mode3VramCpyStep1();
 
@@ -293,7 +309,11 @@ void ImgExecFadeIn(void)
 	if(Img.step == 0)
 	{
 		ImgDrawBg();
+		///// ソース改変ここから /////
+		/*
 		ImgDrawChr();
+		*/
+		///// ソース改変ここまで /////
 
 		Mode3VramCpyStep1();
 
@@ -334,6 +354,9 @@ void ImgDrawBg(void)
 	Mode3DrawBg(Img.bg.pDat);
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 void ImgDrawChr(void)
 {
 	s32 i;
@@ -348,12 +371,17 @@ void ImgDrawChr(void)
 		Mode3DrawChr(Img.chr[i].sx, Img.chr[i].sy, Img.chr[i].cx, Img.chr[i].cy, Img.chr[i].pDat, Img.chr[i].pMsk);
 	}
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 void ImgClrBg(void)
 {
 	Img.bg.pDat = NULL;
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 void ImgClrChr(s32 no)
 {
 	s32 i;
@@ -371,7 +399,12 @@ void ImgClrChr(s32 no)
 	// オプションの画像操作に影響するため無効化（ゲーム内の不具合は正規表現で修正済
 	// SystemError("[Err] ImgClrChr %d\n", no);
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 void ImgClrChrAll(void)
 {
 	s32 i;
@@ -381,6 +414,8 @@ void ImgClrChrAll(void)
 		Img.chr[i].pDat = NULL;
 	}
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 void ImgSetBg(s32 no)
 {
@@ -394,6 +429,9 @@ void ImgSetBg(s32 no)
 	TRACE("[ImgSetBg %d %d %d]\n", no, Img.bg.cx, Img.bg.cy);
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 使わなくなったため削除
+/*
 void ImgSetChr(s32 no)
 {
 	s32 i;
@@ -421,6 +459,8 @@ void ImgSetChr(s32 no)
 
 	TRACE("[ImgSetChr %d %d %d %d %d %d]\n", i, no, Img.chr[i].sx, Img.chr[i].sy, Img.chr[i].cx, Img.chr[i].cy);
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 void ImgSetEff(s32 no)
 {

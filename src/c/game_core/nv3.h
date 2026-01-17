@@ -15,10 +15,14 @@ extern "C" {
 
 
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+/*
 void NvExprPush(bool is);
 void NvExprPop(void);
 void NvExprFlip(void);
 bool NvIsExpr(void);
+*/
+///// ソース改変ここまで /////
 
 
 #ifdef __cplusplus
