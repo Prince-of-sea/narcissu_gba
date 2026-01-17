@@ -50,11 +50,9 @@ def pack_resources(cfg: AppConfig) -> None:
     # デバッグモード時はdebug_dir内の中間生成物を保存
     if (cfg.debug_mode):
         # debug_dirをoutput_dir以下にコピー
-        debug_output_dir = cfg.output_dir / f"{cfg.result_gba.stem}_debug"
-        
-        if debug_output_dir.exists():
-            shutil.rmtree(debug_output_dir)
+        if cfg.output_debug_dir.exists():
+            shutil.rmtree(cfg.output_debug_dir)
 
-        shutil.copytree(cfg.debug_dir, debug_output_dir)
+        shutil.copytree(cfg.debug_dir, cfg.output_debug_dir)
 
     return

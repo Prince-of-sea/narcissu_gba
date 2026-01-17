@@ -8,11 +8,11 @@ from core.config import AppConfig
 def check_files(cfg: AppConfig) -> None:
     """チェックを行う"""
 
-    # 仮 最低限
+    # 仮 最低限...の予定だったけどexe内蔵するならこの出来で良いかも
     r = True
 
     for f_info in FILE_CRC32_LIST:
-        f_path = cfg.input_dir / Path(f_info[2])
+        f_path = cfg.exe_extract_dir / Path(f_info[2])
         if not f_path.exists():
             r = False
             print(f'必要なファイルが存在しません: {f_path}')
