@@ -75,7 +75,7 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
         gbfs_path        = Path(temp_dir / "convert" / "data.gbfs"),
 
         result_gba       = Path(output_dir_cfg / "NarcissuGBA.gba"),
-        base_gba         = Path(cwd / "core_gba" / f"base_{sound_quality_cfg}.gba"),
+        base_gba         = Path(cwd / "resources" / "base_gba" / f"base_{sound_quality_cfg}.gba"),
 
         debug_mode       = bool(Path(cwd / ".debug").exists()),
     )
