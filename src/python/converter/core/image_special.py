@@ -12,7 +12,7 @@ def convert_IMG000(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """e/title_off2.jpg 変換"""
 
     # フィルター画像のパス
-    filter_image_path = cfg.res_dir / Path('filter_000_1.bin')
+    filter_image_path = cfg.image_filter_dir / Path('filter_000_1.bin')
 
     # 画像を読み込み
     with Image.open(nsa_extract_path) as img:
@@ -43,7 +43,7 @@ def convert_IMG001(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """tui/title_off.bmp 変換"""
 
     # フィルター画像のパス
-    filter_image_path = cfg.res_dir / Path('filter_001_1.bin')
+    filter_image_path = cfg.image_filter_dir / Path('filter_001_1.bin')
 
     # 画像を読み込み
     with Image.open(nsa_extract_path) as img:
@@ -603,7 +603,7 @@ def convert_IMG139(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """tui/imege98.bmp 変換"""
 
     # フィルター画像のパス
-    filter_image_path = cfg.res_dir / Path('filter_139_1.bin')
+    filter_image_path = cfg.image_filter_dir / Path('filter_139_1.bin')
 
     # 画像を読み込み
     with Image.open(nsa_extract_path) as img:

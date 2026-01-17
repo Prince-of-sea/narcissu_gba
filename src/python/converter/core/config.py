@@ -13,7 +13,7 @@ class AppConfig:
     sound_quality: int
 
     # ===== 外部リソース =====
-    res_dir: Path
+    image_filter_dir: Path
 
     # ===== 外部ツール（exe）=====
     arc_unpacker_exe: Path
@@ -58,7 +58,7 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
         include_voice    = bool(include_voice_cfg),
         sound_quality    = int(sound_quality_cfg),
 
-        res_dir          = Path(cwd / "res"),
+        image_filter_dir = Path(cwd / "resources" / "image_filters"),
 
         arc_unpacker_exe = Path(cwd / "tools" / "arc_unpacker" / "arc_unpacker.exe"),
         gbfs_exe         = Path(cwd / "tools" / "gbfs" / "gbfs.exe"),
