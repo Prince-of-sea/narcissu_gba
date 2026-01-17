@@ -7,30 +7,6 @@ from core.config import AppConfig
 from .paths import IMG_LIST, BGM_LIST, SE_LIST, VOICE_LIST
 
 
-'''
-"_r", 1,// キー入力＋改ページ（紙アイコン）
-"_t", 1,// キー入力＋改行（指アイコン）
-"_m", 1,// テキスト表示
-"_n", 1,// 改行
-"!g", 1,// 背景
-"!b", 1,// 音楽
-"!e", 1,// 効果音
-"!x", 2,// 立ち絵
-"!j", 1,// スクリプトジャンプ
-"!t", 1,// タイトル
-"!s", 2,// 既読
-"#g", 1,// CALL
-"#r", 0,// RET
-"#l", 0,// ELSE
-"#n", 0,// ENDIF
-"#i", 3,// IF
-"#W", 1,// エフェクト
-"#t", 1,// ウェイト
-";;", 0,// 選択肢
-"[]", 3,// 計算式
-'''
-
-
 def decrypt_0x84(data: bytes) -> bytes:
     """0x84 複合化"""
     bin_list = []  # 復号したバイナリを格納する配列の作成
@@ -43,36 +19,6 @@ def decrypt_0x84(data: bytes) -> bytes:
     return decode_text
 
 
-# def split_scenario_into_chapters(data: bytes) -> dict:
-#     """章ごとに分割して辞書で返す"""
-#     pass
-
-
-# def convert_general_rules(text: str) -> str:
-#     """汎用変換処理"""
-#     pass
-
-
-# def convert_special_rules(text: str) -> str:
-#     """内部条件分岐を含む個別特殊変換"""
-#     pass
-
-
-# def join_scenario(chapters: dict) -> bytes:
-#     """シナリオを結合してバイナリ化"""
-#     pass
-
-
-# def export_scenario_bin(bin_data: bytes, out_path: str) -> None:
-#     """bin ファイル出力"""
-#     pass
-
-
-# def export_debug_text(bin_data: bytes, out_path: str) -> None:
-#     """デバッグ用にテキスト形式で出力"""
-#     pass
-
-
 def extract_concept(text):
     # 文字列を抽出する正規表現 - "（"以降は除外
     match = re.search(r'(csel )?"　■　(.+?)(（.+)?",\*ns[0-9]{2},', text)
@@ -81,8 +27,7 @@ def extract_concept(text):
     return None
 
 
-########## 仮関数 とりあえず適当に動くだけ あとで処理分け&クリーンアップする ###########
-def convert_txt_to_gbabin(txt_lines: list[str], is_product: bool = False) -> list[str]:
+def convert_txt_main(txt_lines: list[str], is_product: bool = False) -> list[str]:
 
     # パターン定義
     # 上から順で読み取らせるので基準が緩いものほど下に
@@ -297,10 +242,102 @@ def convert_txt_to_gbabin(txt_lines: list[str], is_product: bool = False) -> lis
     return scn_list
 
 
+def convert_txt(lines: list[str], cfg: AppConfig) -> dict:
+    """シナリオテキスト変換の全処理"""
+
+    # 必要な初期データ準備
+    scn_list = {
+        '000': ['0', '0000', '!t', '起動', '0000', '#W', '200', '0000', '#t', '10', '0000', 
+                '!g', '0', '0000', '#t', '6', '0000', '!g', '1', '0000', '#t', '6', '0000', '!j', '1', '0000', ';;', ''],
+        '003': ['0', '0000', '#W',  '0', '0000', '#t',  '1', '0000', '#W', '1', '0000'],
+        '006': ['0', '0000', '!t', 'プロダクト',   '0000', '#W', '0', '0000'],
+    }
+
+    # 本編シナリオ
+    if (not cfg.include_voice):
+        # ボイス無し版
+        scn_list['003'] += convert_txt_main(lines[639:1101])
+        scn_list['003'] += convert_txt_main(lines[1105:2184])
+        scn_list['003'] += (['!g', '3', '0000', '#t', '120', '0000'])
+        scn_list['003'] += convert_txt_main(lines[2188:3690])
+        scn_list['003'] += (['!g', '4', '0000', '#t', '120', '0000'])
+        scn_list['003'] += convert_txt_main(lines[3693:4945])
+        scn_list['003'] += (['!g', '5', '0000', '#t', '120', '0000'])
+        scn_list['003'] += convert_txt_main(lines[4948:5926])
+        scn_list['003'] += (['!g', '6', '0000', '#t', '120', '0000'])
+        scn_list['003'] += convert_txt_main(lines[5930:7258])
+        scn_list['003'] += (['!g', '7', '0000', '#t', '120', '0000'])
+        scn_list['003'] += convert_txt_main(lines[7263:8255])
+        scn_list['003'] += (['!g', '8', '0000', '#t', '120', '0000'])
+        scn_list['003'] += convert_txt_main(lines[8257:9471])
+        scn_list['003'] += (['!g', '9', '0000', '#t', '120', '0000'])
+        scn_list['003'] += convert_txt_main(lines[9474:10120])
+    else:
+        # ボイス有り版
+        scn_list['003'] += (convert_txt_main(lines[10126:10598]))
+        scn_list['003'] += (convert_txt_main(lines[10622:11709]))
+        scn_list['003'] += (['!g', '3', '0000', '#t', '120', '0000'])
+        scn_list['003'] += (convert_txt_main(lines[11717:13244]))
+        scn_list['003'] += (['!g', '4', '0000', '#t', '120', '0000'])
+        scn_list['003'] += (convert_txt_main(lines[13247:14528]))
+        scn_list['003'] += (['!g', '5', '0000', '#t', '120', '0000'])
+        scn_list['003'] += (convert_txt_main(lines[14531:15539]))
+        scn_list['003'] += (['!g', '6', '0000', '#t', '120', '0000'])
+        scn_list['003'] += (convert_txt_main(lines[15543:16884]))
+        scn_list['003'] += (['!g', '7', '0000', '#t', '120', '0000'])
+        scn_list['003'] += (convert_txt_main(lines[16889:17897]))
+        scn_list['003'] += (['!g', '8', '0000', '#t', '120', '0000'])
+        scn_list['003'] += (convert_txt_main(lines[17899:19128]))
+        scn_list['003'] += (['!g', '9', '0000', '#t', '120', '0000'])
+        scn_list['003'] += (convert_txt_main(lines[19131:19758]))
+
+    # 本編シナリオ末尾追加
+    scn_list['003'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
+
+    # Ｐｒｏｄｕｃｔシナリオ
+    scn_list['006'] += (convert_txt_main(lines[298:319], True))
+    scn_list['006'] += (['!t', extract_concept(lines[321]), '0014'])
+    scn_list['006'] += (convert_txt_main(lines[327:375], True))
+    scn_list['006'] += (['!t', extract_concept(lines[322]), '0014'])
+    scn_list['006'] += (convert_txt_main(lines[378:481], True))
+    scn_list['006'] += (['!t', extract_concept(lines[323]), '0014'])
+    scn_list['006'] += (convert_txt_main(lines[485:525], True))
+    scn_list['006'] += (['!t', extract_concept(lines[324]), '0014'])
+    scn_list['006'] += (convert_txt_main(lines[528:570], True))
+    scn_list['006'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
+
+    return scn_list
+
+
+def create_scenario_files(scn_list: dict, cfg: AppConfig) -> None:
+    """シナリオファイル作成"""
+
+    # シナリオごとにbinファイル作成
+    for scn_key, scn_val in scn_list.items():
+
+        output_bin_path = cfg.convert_dir / f'SCN{scn_key}.bin'
+        scn_temp = [s.encode('cp932') for s in scn_val]
+        scn_bin = b"\x00".join(scn_temp)
+        
+        with open(output_bin_path, "wb") as f:
+            f.write(scn_bin)
+
+        # デバッグ用テキスト出力
+        if (cfg.debug_mode):
+            output_txt_path = cfg.debug_dir / f'SCN{scn_key}.txt'
+            debug_txt = "\n".join(scn_val)
+            
+            with open(output_txt_path, "w", encoding="cp932") as f:
+                f.write(debug_txt)
+    
+    return
+
+
 def create_savid(cfg: AppConfig) -> None:
     """savid 作成"""
     
     # byte列として変数に格納
+    # 終末GBAと同一内容のものをもってきただけなので詳細不明
     savid_hex = bytes.fromhex('53 52 41 4D 5F 56 6E 6E 6E 00 00 00 00 00 00 00')
 
     # ファイル「savid.bin」として保存
@@ -311,86 +348,20 @@ def create_savid(cfg: AppConfig) -> None:
 def convert_scenario(cfg: AppConfig) -> None:
     """シナリオ変換の全処理"""
 
-    scn_list = {
-        '000': ['0', '0000', '!t', '起動', '0000', '#W', '200', '0000', '#t', '10', '0000', 
-                '!g', '0', '0000', '#t', '6', '0000', '!g', '1', '0000', '#t', '6', '0000', '!j', '1', '0000', ';;', ''],
-        '003': ['0', '0000', '#W',  '0', '0000', '#t',  '1', '0000', '#W', '1', '0000'],
-        '006': ['0', '0000', '!t', 'プロダクト',   '0000', '#W', '0', '0000'],
-    }
-
+    # nscript.dat 読み込み
     nsdat_data = open(cfg.nsdat_path, 'rb').read()
+
+    # 複合化
     lines = decrypt_0x84(nsdat_data).splitlines()
 
     # 改行文字を削除
     lines = [line.strip() for line in lines]
 
-    # 結果を表示
-    if (not cfg.include_voice):
-        scn_list['003'] += convert_txt_to_gbabin(lines[639:1101])
-        scn_list['003'] += convert_txt_to_gbabin(lines[1105:2184])
-        scn_list['003'] += (['!g', '3', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[2188:3690])
-        scn_list['003'] += (['!g', '4', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[3693:4945])
-        scn_list['003'] += (['!g', '5', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[4948:5926])
-        scn_list['003'] += (['!g', '6', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[5930:7258])
-        scn_list['003'] += (['!g', '7', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[7263:8255])
-        scn_list['003'] += (['!g', '8', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[8257:9471])
-        scn_list['003'] += (['!g', '9', '0000', '#t', '120', '0000'])
-        scn_list['003'] += convert_txt_to_gbabin(lines[9474:10120])
-        scn_list['003'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
-
-    else:
-        scn_list['003'] += (convert_txt_to_gbabin(lines[10126:10598]))
-        scn_list['003'] += (convert_txt_to_gbabin(lines[10622:11709]))
-        scn_list['003'] += (['!g', '3', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[11717:13244]))
-        scn_list['003'] += (['!g', '4', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[13247:14528]))
-        scn_list['003'] += (['!g', '5', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[14531:15539]))
-        scn_list['003'] += (['!g', '6', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[15543:16884]))
-        scn_list['003'] += (['!g', '7', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[16889:17897]))
-        scn_list['003'] += (['!g', '8', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[17899:19128]))
-        scn_list['003'] += (['!g', '9', '0000', '#t', '120', '0000'])
-        scn_list['003'] += (convert_txt_to_gbabin(lines[19131:19758]))
-        scn_list['003'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
-
-    # Ｐｒｏｄｕｃｔシナリオ
-    scn_list['006'] += (convert_txt_to_gbabin(lines[298:319], True))
-    scn_list['006'] += (['!t', extract_concept(lines[321]), '0014'])
-    scn_list['006'] += (convert_txt_to_gbabin(lines[327:375], True))
-    scn_list['006'] += (['!t', extract_concept(lines[322]), '0014'])
-    scn_list['006'] += (convert_txt_to_gbabin(lines[378:481], True))
-    scn_list['006'] += (['!t', extract_concept(lines[323]), '0014'])
-    scn_list['006'] += (convert_txt_to_gbabin(lines[485:525], True))
-    scn_list['006'] += (['!t', extract_concept(lines[324]), '0014'])
-    scn_list['006'] += (convert_txt_to_gbabin(lines[528:570], True))
-    scn_list['006'] += (['!g', '1', '0014', '#t', '1', '0014', '!j', '1', '0014', ';;', ''])
+    # シナリオ変換
+    scn_list = convert_txt(lines, cfg)
 
     # シナリオ書き出し
-    for scn_key, scn_val in scn_list.items():
-
-        output_bin_path = cfg.convert_dir / f'SCN{scn_key}.bin'
-        scn_temp = [s.encode('cp932') for s in scn_val]
-        scn_bin = b"\x00".join(scn_temp)
-        
-        with open(output_bin_path, "wb") as f:
-            f.write(scn_bin)
-        
-        if (cfg.debug_mode):
-            output_txt_path = cfg.debug_dir / f'SCN{scn_key}.txt'
-            debug_txt = "\n".join(scn_val)
-            
-            with open(output_txt_path, "w", encoding="cp932") as f:
-                f.write(debug_txt)
+    create_scenario_files(scn_list, cfg)
     
     # savid作成
     create_savid(cfg)
