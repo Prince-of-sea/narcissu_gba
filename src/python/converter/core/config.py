@@ -49,8 +49,17 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
     
     input_dir_cfg = gui_cfg['input_dir']
     output_dir_cfg = gui_cfg['output_dir']
-    include_voice_cfg = gui_cfg['include_voice']
-    sound_quality_cfg = gui_cfg['sound_quality']
+    conv_mode_cfg = gui_cfg['conv_mode']
+
+    if (conv_mode_cfg == 1):
+        include_voice_cfg = True
+        sound_quality_cfg = 6241
+        result_gba_name = "NarcissuGBA.gba"
+
+    elif (conv_mode_cfg == 2):
+        include_voice_cfg = False
+        sound_quality_cfg = 9118
+        result_gba_name = "NarcissuGBA (no voice).gba"
 
     cfg = AppConfig(
         input_dir        = Path(input_dir_cfg),
@@ -74,7 +83,7 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
         debug_dir        = Path(temp_dir / "debug"),
         gbfs_path        = Path(temp_dir / "convert" / "data.gbfs"),
 
-        result_gba       = Path(output_dir_cfg / "NarcissuGBA.gba"),
+        result_gba       = Path(output_dir_cfg / result_gba_name),
         base_gba         = Path(cwd / "resources" / "base_gba" / f"base_{sound_quality_cfg}.gba"),
 
         debug_mode       = bool(Path(cwd / ".debug").exists()),
