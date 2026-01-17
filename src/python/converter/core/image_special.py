@@ -77,7 +77,7 @@ def convert_IMG003(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     SUBTITLE_SCALE = 0.66
 
     # 字幕用の画像パス
-    subtitle_image_path = cfg.extract_dir / Path('arc~.nsa') / Path('yobi') / Path('system') / Path('chapter02.png')
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter02.png')
 
     # 元画像を読み込み
     with Image.open(nsa_extract_path) as img:
@@ -134,7 +134,7 @@ def convert_IMG004(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     SUBTITLE_SCALE = 0.66
 
     # 字幕用の画像パス
-    subtitle_image_path = cfg.extract_dir / Path('arc~.nsa') / Path('yobi') / Path('system') / Path('chapter03.png')
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter03.png')
 
     # 元画像を読み込み
     with Image.open(nsa_extract_path) as img:
@@ -190,7 +190,7 @@ def convert_IMG005(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     SUBTITLE_SCALE = 0.66
 
     # 字幕用の画像パス
-    subtitle_image_path = cfg.extract_dir / Path('arc~.nsa') / Path('yobi') / Path('system') / Path('chapter04.png')
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter04.png')
 
     # 元画像を読み込み
     with Image.open(nsa_extract_path) as img:
@@ -247,7 +247,7 @@ def convert_IMG006(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     SUBTITLE_SCALE = 0.66
 
     # 字幕用の画像パス
-    subtitle_image_path = cfg.extract_dir / Path('arc~.nsa') / Path('yobi') / Path('system') / Path('chapter05.png')
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter05.png')
 
     # 元画像を読み込み
     with Image.open(nsa_extract_path) as img:
@@ -304,7 +304,7 @@ def convert_IMG007(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     SUBTITLE_SCALE = 0.66
 
     # 字幕用の画像パス
-    subtitle_image_path = cfg.extract_dir / Path('arc~.nsa') / Path('yobi') / Path('system') / Path('chapter06.png')
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter06.png')
 
     # 元画像を読み込み
     with Image.open(nsa_extract_path) as img:
@@ -361,7 +361,7 @@ def convert_IMG008(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     SUBTITLE_SCALE = 0.66
 
     # 字幕用の画像パス
-    subtitle_image_path = cfg.extract_dir / Path('arc~.nsa') / Path('yobi') / Path('system') / Path('chapter07.png')
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter07.png')
 
     # 元画像を読み込み
     with Image.open(nsa_extract_path) as img:
@@ -418,7 +418,7 @@ def convert_IMG009(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     SUBTITLE_SCALE = 0.66
 
     # 字幕用の画像パス
-    subtitle_image_path = cfg.extract_dir / Path('arc~.nsa') / Path('yobi') / Path('system') / Path('chapter08.png')
+    subtitle_image_path = cfg.nsa_extract_dir / Path('yobi') / Path('system') / Path('chapter08.png')
 
     # 元画像を読み込み
     with Image.open(nsa_extract_path) as img:
