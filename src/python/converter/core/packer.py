@@ -33,11 +33,20 @@ def run_gbfs(cfg: AppConfig) -> None:
     cmd = [cfg.gbfs_exe, cfg.gbfs_path, f'{cfg.convert_dir}/*.*']
     result = subprocess.run(cmd, cwd = cfg.convert_dir, stdout=subprocess.PIPE, text=True)
 
-    # デバッグモード時はログを保存
+    # デバッグモード時
     if cfg.debug_mode:
-        log_path = cfg.debug_dir / "gbfs_log.txt"
+
+        # ログを保存
+        log_path = Path(cfg.debug_dir / "gbfs_log.txt")
         with log_path.open('w', encoding='utf-8') as log_file:
             log_file.write(result.stdout)
+
+        # _binフォルダに中間生成物を保存
+        debug_bin_dir = Path(cfg.debug_dir / '_bin')
+        debug_bin_dir.mkdir(exist_ok=True)
+        for p in cfg.convert_dir.glob('*'):
+            if (p.is_file() and cfg.gbfs_path.name not in p.name):
+                p.replace(debug_bin_dir / p.name)
     
     return
 
