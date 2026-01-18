@@ -81,7 +81,7 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
         debug_dir        = Path(temp_dir / "debug"),
         gbfs_path        = Path(temp_dir / "convert" / "data.gbfs"),
 
-        output_debug_dir = Path(cwd / f"{result_gba_name}_debug"),
+        output_debug_dir = Path(cwd / f"debug_{result_gba_name}"),
         result_gba       = Path(cwd / result_gba_name),
         base_gba         = Path(cwd / "resources" / "base_gba" / f"base_{sound_quality_cfg}.gba"),
 
