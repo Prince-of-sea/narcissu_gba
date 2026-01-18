@@ -25,6 +25,32 @@ class CommandCnt:
         """3. 0初期化"""
         self._value = 0
 
+# !s命令用カウンタ管理クラス
+class StepCnt:
+    def __init__(self):
+        self.count_a = 0
+        self.count_b = 0
+
+    def call(self, val_x):
+        """
+        引数を受け取り、カウントアップして [A, B, X] を返す
+        """
+        self.count_b += 1
+        
+        # 8進法のように、8に達した瞬間に繰り上げ
+        if self.count_b >= 8:
+            self.count_b = 0
+            self.count_a += 1
+            
+        return [str(val_x), '!s', str(self.count_a), str(self.count_b)]
+
+    def reset(self):
+        """
+        カウントを初期化する
+        """
+        self.count_a = 0
+        self.count_b = 0
+
 
 def decrypt_0x84(data: bytes) -> bytes:
     """0x84 複合化(nscript.dat用)"""
@@ -51,7 +77,7 @@ def extract_concept(text):
     return None
 
 
-def convert_txt_main(cmd_cnt: CommandCnt, txt_lines: list[str], is_product: bool = False) -> list[str]:
+def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], is_product: bool = False) -> list[str]:
 
     # パターン定義
     # 上から順で読み取らせるので基準が緩いものほど下に
@@ -134,7 +160,9 @@ def convert_txt_main(cmd_cnt: CommandCnt, txt_lines: list[str], is_product: bool
 
                         for iml in BGM_LIST:
                             if (Path(iml[1]) == Path(bgm_path)):
+                                cmd_cnt.add(20)
                                 line_command = [cmd_cnt.get_str(), '!b', str(iml[0])]
+                                line_command += s_cnt.call(cmd_cnt.get_str())
                                 break
 
                     # 効果音・ボイス
@@ -186,8 +214,11 @@ def convert_txt_main(cmd_cnt: CommandCnt, txt_lines: list[str], is_product: bool
                                 iml_0 = iml[0]
                                 if (iml_0 == 130):  # 130番は特殊扱い - 129と同じ画像なので129扱い
                                     iml_0 = 129
+                                cmd_cnt.add(20)
                                 line_command  = [cmd_cnt.get_str(), '!g', str(iml_0)]
+                                cmd_cnt.add(20)
                                 line_command += [cmd_cnt.get_str(), '#t', str(wait_time)]
+                                line_command += s_cnt.call(cmd_cnt.get_str())
 
                                 break
 
@@ -235,8 +266,10 @@ def convert_txt_main(cmd_cnt: CommandCnt, txt_lines: list[str], is_product: bool
                         midasi = matched_data.group('arg2')
 
                         if (val_name.lower() == 'sys_midasi'):
+                            cmd_cnt.add(20)
                             midasi = midasi.replace(r'　ボイスＶｅｒ', r'')
                             line_command = [cmd_cnt.get_str(), '!t', midasi]
+                            line_command += s_cnt.call(cmd_cnt.get_str())
                         else:
                             print(f'unknown val_name: {line}')
 
@@ -247,8 +280,10 @@ def convert_txt_main(cmd_cnt: CommandCnt, txt_lines: list[str], is_product: bool
 
                         if (wait_time < 1):
                             wait_time = 1
-
+                        
+                        cmd_cnt.add(20)
                         line_command = [cmd_cnt.get_str(), '#t', str(wait_time)]
+                        line_command += s_cnt.call(cmd_cnt.get_str())
 
                     if line_command:
                         line_command_list.append(line_command)
@@ -278,58 +313,64 @@ def convert_txt(lines: list[str], cfg: AppConfig) -> dict:
     # 謎コマンドカウンタ管理クラス初期化
     cmd_cnt  = CommandCnt()
 
+    # !s命令用カウンタ管理クラス初期化
+    s_cnt = StepCnt()
+
     # 本編シナリオ
+    cmd_cnt.add(20)
     if (not cfg.include_voice):
         # ボイス無し版
-        scn_list['003'] += convert_txt_main(cmd_cnt, lines[639:1101])
-        scn_list['003'] += convert_txt_main(cmd_cnt, lines[1105:2184])
+        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[639:1101])
+        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[1105:2184])
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '3', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, lines[2188:3690])
+        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[2188:3690])
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '4', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, lines[3693:4945])
+        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[3693:4945])
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '5', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, lines[4948:5926])
+        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[4948:5926])
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '6', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, lines[5930:7258])
+        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[5930:7258])
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '7', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, lines[7263:8255])
+        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[7263:8255])
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '8', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, lines[8257:9471])
+        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[8257:9471])
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '9', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, lines[9474:10120])
+        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[9474:10120])
     else:
         # ボイス有り版
-        scn_list['003'] += (convert_txt_main(cmd_cnt, lines[10126:10598]))
-        scn_list['003'] += (convert_txt_main(cmd_cnt, lines[10622:11709]))
+        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[10126:10598]))
+        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[10622:11709]))
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '3', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, lines[11717:13244]))
+        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[11717:13244]))
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '4', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, lines[13247:14528]))
+        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[13247:14528]))
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '5', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, lines[14531:15539]))
+        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[14531:15539]))
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '6', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, lines[15543:16884]))
+        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[15543:16884]))
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '7', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, lines[16889:17897]))
+        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[16889:17897]))
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '8', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, lines[17899:19128]))
+        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[17899:19128]))
         scn_list['003'] += ([cmd_cnt.get_str(), '!g', '9', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, lines[19131:19758]))
+        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[19131:19758]))
 
     # 本編シナリオ末尾追加
     scn_list['003'] += ([cmd_cnt.get_str(), '!g', '1', cmd_cnt.get_str(), '#t', '1', cmd_cnt.get_str(), '!j', '1', cmd_cnt.get_str(), ';;', ''])
 
     # Ｐｒｏｄｕｃｔシナリオ
     cmd_cnt.reset()
-    scn_list['006'] += (convert_txt_main(cmd_cnt, lines[298:319], True))
+    cmd_cnt.add(20)
+    s_cnt.reset()
+    scn_list['006'] += (convert_txt_main(cmd_cnt, s_cnt, lines[298:319], True))
     scn_list['006'] += ([cmd_cnt.get_str(), '!t', extract_concept(lines[321])])
-    scn_list['006'] += (convert_txt_main(cmd_cnt, lines[327:375], True))
+    scn_list['006'] += (convert_txt_main(cmd_cnt, s_cnt, lines[327:375], True))
     scn_list['006'] += ([cmd_cnt.get_str(), '!t', extract_concept(lines[322])])
-    scn_list['006'] += (convert_txt_main(cmd_cnt, lines[378:481], True))
+    scn_list['006'] += (convert_txt_main(cmd_cnt, s_cnt, lines[378:481], True))
     scn_list['006'] += ([cmd_cnt.get_str(), '!t', extract_concept(lines[323])])
-    scn_list['006'] += (convert_txt_main(cmd_cnt, lines[485:525], True))
+    scn_list['006'] += (convert_txt_main(cmd_cnt, s_cnt, lines[485:525], True))
     scn_list['006'] += ([cmd_cnt.get_str(), '!t', extract_concept(lines[324])])
-    scn_list['006'] += (convert_txt_main(cmd_cnt, lines[528:570], True))
+    scn_list['006'] += (convert_txt_main(cmd_cnt, s_cnt, lines[528:570], True))
     scn_list['006'] += ([cmd_cnt.get_str(), '!g', '1', cmd_cnt.get_str(), '#t', '1', cmd_cnt.get_str(), '!j', '1', cmd_cnt.get_str(), ';;', ''])
     return scn_list
 
