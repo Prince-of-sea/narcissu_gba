@@ -29,8 +29,8 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 	"　　ゲーム終了",
 	*/
 	"　　環境設定",
-	"　　タイトルに戻る",
-	"　　終了する",			// 未使用
+	"　　変換情報",
+	"　　終了する",
 	///// ソース改変ここまで /////
 
 	// 9
@@ -72,7 +72,6 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 
 	// 24
 	///// ソース改変ここから /////
-	// この辺結局デバッグメニューごと潰したからそもそも不要かも？
 	/*
 	"好感度、告白フラグ",
 	"香織　　１６：０　２８：０",
@@ -82,13 +81,6 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 	"千絵子　２６：０　３２：０",
 	"留希　　２７：０　３３：０",
 	*/
-	"使わないので仮の値で埋め中",
-	"Ｒ４　　１６：０　２８：０",
-	"ＴＴ　　２１：０　２９：０",
-	"Ｍ３　　２２：０　３０：０",
-	"Ａｃｅ　２０：０　３１：０",
-	"ＥＺＦ　２６：０　３２：０",
-	"ＳＣ　　２７：０　３３：０", 
 	///// ソース改変ここまで /////
 };
 
@@ -224,34 +216,23 @@ void MenuExecSystem(u16 trg)
 	// デバッグ
 	case 6:
 		///// ソース改変ここから /////
-		// ゲーム終了に変更
 		/*
 		MenuSetDebug(MENU_DEBUG_VAR_1);
 		*/
-		LogInit();
-		TxtClear();
-
-		SeStop();
-		BgmStop();
-		BgmPlay(2);
-
-		MenuSetTitle(MENU_TITLE_SEL_LOAD);
-		
-		// タイトル画像 SCN000の最終表示画像と同じにしておくこと
-		ImgSetBg(1);
-		ImgSetEff(IMG_EFFECT_FADE);
+		ImgSetBg(999);					// 専用画像
+		ImgSetEff(IMG_EFFECT_COPY);
 		ImgSetExec();
-		
+		MenuSetNone(MENU_RET_SYSTEM);	// 文字を消す流用
 		///// ソース改変ここまで /////
 		break;
 
-	///// ソース改変ここから /////
-	/*
 	// ゲーム終了
 	case 7:
 		LogInit();
 		TxtClear();
 
+		///// ソース改変ここから /////
+		/*
 		SeStop();
 		BgmStop();
 		BgmPlay(0);
@@ -260,9 +241,18 @@ void MenuExecSystem(u16 trg)
 
 		ImgSetEff(IMG_EFFECT_TITL);
 		ImgSetExec();
+		*/
+		SeStop();
+		BgmStop();
+		BgmPlay(2);
+
+		MenuSetTitle(MENU_TITLE_SEL_LOAD);
+
+		ImgSetBg(1);					// タイトル画像 SCN000の最終表示画像と同じにしておくこと
+		ImgSetEff(IMG_EFFECT_FADE);
+		ImgSetExec();
+		///// ソース改変ここまで /////
 		break;
-	*/
-	///// ソース改変ここまで /////
 	}
 }
 //---------------------------------------------------------------------------
@@ -671,6 +661,8 @@ void MenuExecTitle(u16 trg)
 	}
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+/*
 void MenuExecDebug(u16 trg)
 {
 	if(trg & KEY_B)
@@ -680,6 +672,8 @@ void MenuExecDebug(u16 trg)
 		return;
 	}
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 void MenuSetInit(s32 type, s32 ret, s32 sel, s32 msg, s32 reg, void* pFunc, bool isDraw)
 {
@@ -700,12 +694,7 @@ void MenuSetInit(s32 type, s32 ret, s32 sel, s32 msg, s32 reg, void* pFunc, bool
 //---------------------------------------------------------------------------
 void MenuSetSystem(s32 sel)
 {
-	///// ソース改変ここから /////
-	/*
 	MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 8, MenuExecSystem, true);
-	*/
-	MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 7, MenuExecSystem, true);
-	///// ソース改変ここまで /////
 }
 //---------------------------------------------------------------------------
 void MenuSetOption(s32 sel)
@@ -741,10 +730,14 @@ void MenuSetTitle(s32 sel)
 	///// ソース改変ここまで /////
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+/*
 void MenuSetDebug(s32 ret)
 {
 	MenuSetInit(MENU_TYPE_DEBUG, MENU_RET_SYSTEM, ret, 24, 6, MenuExecDebug, true);
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 char* MenuGetStrTitle(void)
 {
@@ -762,8 +755,12 @@ char* MenuGetStrSel(s32 sel)
 	case MENU_TYPE_OPTION:
 		return MenuGetStrSelOpt(sel);
 
+	///// ソース改変ここから /////
+	/*
 	case MENU_TYPE_DEBUG:
 		return MenuGetStrSelDbg(sel);
+	*/
+	///// ソース改変ここまで /////
 	}
 
 	return (char*)MenuSelectStr[Menu.msg + 1 + sel];
@@ -828,6 +825,8 @@ char* MenuGetStrSelOpt(s32 sel)
 	return Menu.buf;
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+/*
 char* MenuGetStrSelDbg(s32 sel)
 {
 	_Strncpy(Menu.buf, (char*)MenuSelectStr[Menu.msg + 1 + sel], MENU_BUF_SIZE);
@@ -878,6 +877,8 @@ char* MenuGetStrSelDbg(s32 sel)
 
 	return Menu.buf;
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 s32 MenuGetSel(void)
 {
