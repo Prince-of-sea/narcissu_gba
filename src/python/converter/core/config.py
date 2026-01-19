@@ -56,7 +56,7 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
 
     elif (conv_mode_cfg == 2):
         include_voice_cfg = False
-        sound_quality_cfg = 9118
+        sound_quality_cfg = 8738
         result_gba_name = "NarcissuGBA (no voice).gba"
 
     cfg = AppConfig(
