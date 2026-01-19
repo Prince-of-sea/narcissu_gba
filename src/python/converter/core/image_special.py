@@ -516,10 +516,19 @@ def convert_IMG139(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 ###################################################################################################
 def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """変換環境表示(仮) 変換"""
+    
+    # QRコード画像のパス
+    filter_image_path = cfg.image_filter_dir / Path('filter_999_1.bin')
 
     # 濃いグレーの240x160画像を作成
     gray_color = (64, 64, 64)  # 濃いグレー
     img = Image.new("RGB", (240, 160), gray_color)
+
+    # QRコード画像を読み込み
+    with Image.open(filter_image_path) as filter_img:
+        filter_img = filter_img.convert('RGB')
+        # 画像にQRコードを貼り付け
+        img.paste(filter_img, (157, 77))
 
     # PNGで保存
     img.save(temppng_path, "PNG")
