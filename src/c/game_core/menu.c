@@ -29,8 +29,8 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 	"　　ゲーム終了",
 	*/
 	"　　環境設定",
-	"　　タイトルに戻る",
-	"　　終了する",			// 未使用
+	"　　デバッグ",
+	"　　終了する",
 	///// ソース改変ここまで /////
 
 	// 9
@@ -223,35 +223,16 @@ void MenuExecSystem(u16 trg)
 
 	// デバッグ
 	case 6:
-		///// ソース改変ここから /////
-		// ゲーム終了に変更
-		/*
 		MenuSetDebug(MENU_DEBUG_VAR_1);
-		*/
-		LogInit();
-		TxtClear();
-
-		SeStop();
-		BgmStop();
-		BgmPlay(2);
-
-		MenuSetTitle(MENU_TITLE_SEL_LOAD);
-		
-		// タイトル画像 SCN000の最終表示画像と同じにしておくこと
-		ImgSetBg(1);
-		ImgSetEff(IMG_EFFECT_FADE);
-		ImgSetExec();
-		
-		///// ソース改変ここまで /////
 		break;
 
-	///// ソース改変ここから /////
-	/*
 	// ゲーム終了
 	case 7:
 		LogInit();
 		TxtClear();
 
+		///// ソース改変ここから /////
+		/*
 		SeStop();
 		BgmStop();
 		BgmPlay(0);
@@ -260,9 +241,18 @@ void MenuExecSystem(u16 trg)
 
 		ImgSetEff(IMG_EFFECT_TITL);
 		ImgSetExec();
+		*/
+		SeStop();
+		BgmStop();
+		BgmPlay(2);
+
+		MenuSetTitle(MENU_TITLE_SEL_LOAD);
+
+		ImgSetBg(1);					// タイトル画像 SCN000の最終表示画像と同じにしておくこと
+		ImgSetEff(IMG_EFFECT_FADE);
+		ImgSetExec();
+		///// ソース改変ここまで /////
 		break;
-	*/
-	///// ソース改変ここまで /////
 	}
 }
 //---------------------------------------------------------------------------
@@ -700,12 +690,7 @@ void MenuSetInit(s32 type, s32 ret, s32 sel, s32 msg, s32 reg, void* pFunc, bool
 //---------------------------------------------------------------------------
 void MenuSetSystem(s32 sel)
 {
-	///// ソース改変ここから /////
-	/*
 	MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 8, MenuExecSystem, true);
-	*/
-	MenuSetInit(MENU_TYPE_SYSTEM, MENU_RET_NONE, sel, 0, 7, MenuExecSystem, true);
-	///// ソース改変ここまで /////
 }
 //---------------------------------------------------------------------------
 void MenuSetOption(s32 sel)
