@@ -512,6 +512,21 @@ def convert_IMG139(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
     return
 
+
+###################################################################################################
+def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """変換環境表示(仮) 変換"""
+
+    # 濃いグレーの240x160画像を作成
+    gray_color = (64, 64, 64)  # 濃いグレー
+    img = Image.new("RGB", (240, 160), gray_color)
+
+    # PNGで保存
+    img.save(temppng_path, "PNG")
+
+    return
+
+
 ###################################################################################################
 def convert_none_background(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """何もしない背景CG変換(汎用)"""

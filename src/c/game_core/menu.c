@@ -29,7 +29,7 @@ ROM_DATA char MenuSelectStr[][26+1] = {
 	"　　ゲーム終了",
 	*/
 	"　　環境設定",
-	"　　デバッグ",
+	"　　変換情報",
 	"　　終了する",
 	///// ソース改変ここまで /////
 
@@ -223,7 +223,15 @@ void MenuExecSystem(u16 trg)
 
 	// デバッグ
 	case 6:
+		///// ソース改変ここから /////
+		/*
 		MenuSetDebug(MENU_DEBUG_VAR_1);
+		*/
+		ImgSetBg(999);					// 専用画像
+		ImgSetEff(IMG_EFFECT_COPY);
+		ImgSetExec();
+		MenuSetNone(MENU_RET_SYSTEM);	// 文字を消す流用
+		///// ソース改変ここまで /////
 		break;
 
 	// ゲーム終了
@@ -661,6 +669,8 @@ void MenuExecTitle(u16 trg)
 	}
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+/*
 void MenuExecDebug(u16 trg)
 {
 	if(trg & KEY_B)
@@ -670,6 +680,8 @@ void MenuExecDebug(u16 trg)
 		return;
 	}
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 void MenuSetInit(s32 type, s32 ret, s32 sel, s32 msg, s32 reg, void* pFunc, bool isDraw)
 {
@@ -726,10 +738,14 @@ void MenuSetTitle(s32 sel)
 	///// ソース改変ここまで /////
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+/*
 void MenuSetDebug(s32 ret)
 {
 	MenuSetInit(MENU_TYPE_DEBUG, MENU_RET_SYSTEM, ret, 24, 6, MenuExecDebug, true);
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 char* MenuGetStrTitle(void)
 {
@@ -747,8 +763,12 @@ char* MenuGetStrSel(s32 sel)
 	case MENU_TYPE_OPTION:
 		return MenuGetStrSelOpt(sel);
 
+	///// ソース改変ここから /////
+	/*
 	case MENU_TYPE_DEBUG:
 		return MenuGetStrSelDbg(sel);
+	*/
+	///// ソース改変ここまで /////
 	}
 
 	return (char*)MenuSelectStr[Menu.msg + 1 + sel];
@@ -813,6 +833,8 @@ char* MenuGetStrSelOpt(s32 sel)
 	return Menu.buf;
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+/*
 char* MenuGetStrSelDbg(s32 sel)
 {
 	_Strncpy(Menu.buf, (char*)MenuSelectStr[Menu.msg + 1 + sel], MENU_BUF_SIZE);
@@ -863,6 +885,8 @@ char* MenuGetStrSelDbg(s32 sel)
 
 	return Menu.buf;
 }
+*/
+///// ソース改変ここまで /////
 //---------------------------------------------------------------------------
 s32 MenuGetSel(void)
 {
