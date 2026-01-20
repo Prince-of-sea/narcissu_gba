@@ -12,6 +12,7 @@ class AppConfig:
 
     # ===== 外部リソース =====
     image_filter_dir: Path
+    font_path: Path
 
     # ===== 外部ツール（exe）=====
     arc_unpacker_exe: Path
@@ -65,6 +66,7 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
         sound_quality    = int(sound_quality_cfg),
 
         image_filter_dir = Path(cwd / "resources" / "image_filters"),
+        font_path        = Path(cwd / "resources" / "fonts" / "misaki_gothic.ttf"),
 
         arc_unpacker_exe = Path(cwd / "tools" / "arc_unpacker" / "arc_unpacker.exe"),
         gbfs_exe         = Path(cwd / "tools" / "gbfs" / "gbfs.exe"),

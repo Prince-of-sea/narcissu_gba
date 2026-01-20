@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-from PIL import Image, ImageFilter, ImageOps
+from PIL import Image, ImageFilter, ImageOps, ImageDraw, ImageFont
 
 from core.config import AppConfig
 
@@ -173,6 +173,221 @@ def convert_IMG018_023(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfi
         # PNGで保存
         img_new.save(temppng_path, "PNG")
 
+    return
+
+
+###################################################################################################
+def convert_IMG017(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c00.jpg 変換"""
+
+    # 文字ついてない版の画像パス
+    sora01_path = nsa_extract_path.parent / Path('sora01.jpg')
+
+    image_msg = "―　２００４年　主人公　初夏　―"
+    line_s = 2  # 行間
+    edge_color = (128, 128, 128,  64)
+    main_color = (255, 255, 255, 255)
+
+    with Image.open(sora01_path) as img:
+        img = img.convert("RGB")
+        img_new = Image.new("RGB", (240, 160), img.getpixel((0, 0)))
+        
+        # 縮小画像(240x61)の作成
+        img_resized = img.crop((0, 145, 800, 349)).resize((240, 61), Image.Resampling.LANCZOS)
+
+        # 描画準備
+        tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(tmp)
+        font = ImageFont.truetype(cfg.font_path, 8)
+
+        # 1行目を基準とした中央座標計算
+        first_line = image_msg.split('\n')[0]
+        bbox = draw.textbbox((0, 0), first_line, font=font)
+        x, y = (img_resized.width - (bbox[2]-bbox[0])) // 2, (img_resized.height - (bbox[3]-bbox[1])) // 2
+
+        # 描画（縁4方向 + 本体
+        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            draw.multiline_text((x+ox, y+oy), image_msg, font=font, fill=edge_color, spacing=line_s, align="center")
+        draw.multiline_text((x, y), image_msg, font=font, fill=main_color, spacing=line_s, align="center")
+
+        img_resized.paste(tmp, (0, 0), tmp)
+        img_new.paste(img_resized, (0, 32))
+        
+        # 保存
+        img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3)).save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG024(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c005.jpg 変換"""
+
+    # 文字ついてない版の画像パス
+    chara_0013b_path = nsa_extract_path.parent / Path('chara_0013b.jpg')
+
+    image_msg = "stage-nana\n - vol.24 - "
+    line_s = 2  # 行間
+    edge_color = (255, 255, 255, 128)
+    main_color = (  0,   0,   0, 255)
+
+    with Image.open(chara_0013b_path) as img:
+        img = img.convert("RGB")
+        img_new = Image.new("RGB", (240, 160), img.getpixel((0, 0)))
+        
+        # 縮小画像(240x61)の作成
+        img_resized = img.crop((0, 145, 800, 349)).resize((240, 61), Image.Resampling.LANCZOS)
+
+        # 描画準備
+        tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(tmp)
+        font = ImageFont.truetype(cfg.font_path, 8)
+
+        # 1行目を基準とした中央座標計算
+        first_line = image_msg.split('\n')[0]
+        bbox = draw.textbbox((0, 0), first_line, font=font)
+        x, y = (img_resized.width - (bbox[2]-bbox[0])) // 2, (img_resized.height - (bbox[3]-bbox[1])) // 2
+
+        # 描画（縁4方向 + 本体
+        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            draw.multiline_text((x+ox, y+oy), image_msg, font=font, fill=edge_color, spacing=line_s, align="center")
+        draw.multiline_text((x, y), image_msg, font=font, fill=main_color, spacing=line_s, align="center")
+
+        img_resized.paste(tmp, (0, 0), tmp)
+        img_new.paste(img_resized, (0, 32))
+        
+        # 保存
+        img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3)).save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG025(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c0052.jpg 変換"""
+
+    # 文字ついてない版の画像パス
+    chara_0013_path = nsa_extract_path.parent / Path('chara_0013.jpg')
+
+    image_msg = "stage-nana\n - vol.24 - "
+    line_s = 2  # 行間
+    edge_color = (255, 255, 255, 128)
+    main_color = (  0,   0,   0, 255)
+
+    with Image.open(chara_0013_path) as img:
+        img = img.convert("RGB")
+        img_new = Image.new("RGB", (240, 160), img.getpixel((0, 0)))
+        
+        # 縮小画像(240x61)の作成
+        img_resized = img.crop((0, 145, 800, 349)).resize((240, 61), Image.Resampling.LANCZOS)
+
+        # 描画準備
+        tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(tmp)
+        font = ImageFont.truetype(cfg.font_path, 8)
+
+        # 1行目を基準とした中央座標計算
+        first_line = image_msg.split('\n')[0]
+        bbox = draw.textbbox((0, 0), first_line, font=font)
+        x, y = (img_resized.width - (bbox[2]-bbox[0])) // 2, (img_resized.height - (bbox[3]-bbox[1])) // 2
+
+        # 描画（縁4方向 + 本体
+        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            draw.multiline_text((x+ox, y+oy), image_msg, font=font, fill=edge_color, spacing=line_s, align="center")
+        draw.multiline_text((x, y), image_msg, font=font, fill=main_color, spacing=line_s, align="center")
+
+        img_resized.paste(tmp, (0, 0), tmp)
+        img_new.paste(img_resized, (0, 32))
+        
+        # 保存
+        img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3)).save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG026(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c02.jpg 変換"""
+
+    # 文字ついてない版の画像パス
+    sora_ame03_path = nsa_extract_path.parent / Path('sora_ame03.jpg')
+
+    image_msg = "―　１９９６年　春　セツミ　―"
+    line_s = 2  # 行間
+    edge_color = (128, 128, 128,  64)
+    main_color = (255, 255, 255, 255)
+
+    with Image.open(sora_ame03_path) as img:
+        img = img.convert("RGB")
+        img_new = Image.new("RGB", (240, 160), img.getpixel((0, 0)))
+        
+        # 縮小画像(240x61)の作成
+        img_resized = img.crop((0, 145, 800, 349)).resize((240, 61), Image.Resampling.LANCZOS)
+
+        # 描画準備
+        tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(tmp)
+        font = ImageFont.truetype(cfg.font_path, 8)
+
+        # 1行目を基準とした中央座標計算
+        first_line = image_msg.split('\n')[0]
+        bbox = draw.textbbox((0, 0), first_line, font=font)
+        x, y = (img_resized.width - (bbox[2]-bbox[0])) // 2, (img_resized.height - (bbox[3]-bbox[1])) // 2
+
+        # 描画（縁4方向 + 本体）
+        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            draw.multiline_text((x+ox, y+oy), image_msg, font=font, fill=edge_color, spacing=line_s, align="center")
+        draw.multiline_text((x, y), image_msg, font=font, fill=main_color, spacing=line_s, align="center")
+
+        img_resized.paste(tmp, (0, 0), tmp)
+        img_new.paste(img_resized, (0, 32))
+        
+        # 保存
+        img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3)).save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG027(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c03.jpg 変換"""
+
+    # 文字ついてない版の画像パス
+    sora07_path = nsa_extract_path.parent / Path('sora07.jpg')
+
+    image_msg = "―　主人公　２００４年　秋　―"
+    line_s = 2  # 行間
+    edge_color = (  0,   0,   0,  64)
+    main_color = (255, 255, 255, 255)
+
+    with Image.open(sora07_path) as img:
+        img = img.convert("RGB")
+        img_new = Image.new("RGB", (240, 160), img.getpixel((0, 0)))
+        
+        # 縮小画像(240x61)の作成
+        img_resized = img.crop((0, 145, 800, 349)).resize((240, 61), Image.Resampling.LANCZOS)
+
+        # 描画準備
+        tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(tmp)
+        font = ImageFont.truetype(cfg.font_path, 8)
+
+        # 1行目を基準とした中央座標計算
+        first_line = image_msg.split('\n')[0]
+        bbox = draw.textbbox((0, 0), first_line, font=font)
+        x, y = (img_resized.width - (bbox[2]-bbox[0])) // 2, (img_resized.height - (bbox[3]-bbox[1])) // 2
+
+        # 描画（縁4方向 + 本体）
+        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            draw.multiline_text((x+ox, y+oy), image_msg, font=font, fill=edge_color, spacing=line_s, align="center")
+        draw.multiline_text((x, y), image_msg, font=font, fill=main_color, spacing=line_s, align="center")
+
+        img_resized.paste(tmp, (0, 0), tmp)
+        img_new.paste(img_resized, (0, 32))
+        
+        # 保存
+        img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3)).save(temppng_path, "PNG")
+    
     return
 
 

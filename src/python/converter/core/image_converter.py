@@ -10,7 +10,12 @@ from .image_special import convert_IMG000
 from .image_special import convert_IMG001
 from .image_special import convert_IMG003_009
 from .image_special import convert_IMG015
+from .image_special import convert_IMG017
 from .image_special import convert_IMG018_023
+from .image_special import convert_IMG024
+from .image_special import convert_IMG025
+from .image_special import convert_IMG026
+from .image_special import convert_IMG027
 from .image_special import convert_IMG067
 from .image_special import convert_IMG068_069
 from .image_special import convert_IMG082_084
@@ -85,8 +90,18 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
             convert_IMG003_009(nsa_extract_path, temppng_path, cfg)
         case 'special_015':
             convert_IMG015(nsa_extract_path, temppng_path, cfg)
+        case 'special_017':
+            convert_IMG017(nsa_extract_path, temppng_path, cfg)
         case 'special_018_023':
             convert_IMG018_023(nsa_extract_path, temppng_path, cfg)
+        case 'special_024':
+            convert_IMG024(nsa_extract_path, temppng_path, cfg)
+        case 'special_025':
+            convert_IMG025(nsa_extract_path, temppng_path, cfg)
+        case 'special_026':
+            convert_IMG026(nsa_extract_path, temppng_path, cfg)
+        case 'special_027':
+            convert_IMG027(nsa_extract_path, temppng_path, cfg)
         case 'special_067':
             convert_IMG067(nsa_extract_path, temppng_path, cfg)
         case 'special_068_069':
@@ -143,19 +158,19 @@ def convert_images(cfg: AppConfig) -> None:
     """画像の全変換処理"""
 
     # 並列ファイル変換
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = []
+    # with concurrent.futures.ThreadPoolExecutor() as executor:
+    #     futures = []
 
-        for img_info in IMG_LIST:
-            # 画像の並列変換処理
-            futures.append(executor.submit(
-                convert_image_parallel, cfg, img_info))
+    #     for img_info in IMG_LIST:
+    #         # 画像の並列変換処理
+    #         futures.append(executor.submit(
+    #             convert_image_parallel, cfg, img_info))
         
-        # gui対応時にはプログレスバー用に改良予定
-        concurrent.futures.as_completed(futures)
+    #     # gui対応時にはプログレスバー用に改良予定
+    #     concurrent.futures.as_completed(futures)
 
     # 直列ファイル変換 (デバッグ用)
-    # for img_info in IMG_LIST:
-    #     convert_image_parallel(cfg, img_info)
+    for img_info in IMG_LIST:
+        convert_image_parallel(cfg, img_info)
 
     return
