@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from pathlib import Path
 from PIL import Image, ImageFilter, ImageOps, ImageDraw, ImageFont
+from datetime import datetime
+import os
 
 from core.config import AppConfig
 
@@ -731,24 +733,78 @@ def convert_IMG139(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 ###################################################################################################
 def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """変換環境表示(仮) 変換"""
+
+    # 変換モード文字列
+    if cfg.include_voice:
+        voice_mode = f"ボイス搭載モード(声アリ・{cfg.sound_quality}Hz)"
+    else:
+        voice_mode = f"高音質再生モード(声無し・{cfg.sound_quality}Hz)"
+
+    username = os.getlogin()
+
+    # メッセージ内容(仮) バージョンなどは後にクラス管理にする
+    msg = f"""バージョン
+　Narcissu GBA Converter Ver.0.X.0
+変換モード
+　{voice_mode}
+ユーザー名
+　{username}
+日時
+　{datetime.now().strftime('%Y/%m/%d %H:%M:%S')}
+
+
+
+本ソフトやコンバータに関する
+詳細な情報、利用方法はこちら→
+
+https://github.com
+/Prince-of-sea/narcissu_gba"""
     
-    # QRコード画像のパス
-    filter_image_path = cfg.image_filter_dir / Path('filter_999_1.bin')
+    line_s = 2  # 行間
+    edge_color = (128, 128, 128, 64)
+    main_color = (255, 255, 255, 255)
 
-    # 濃いグレーの240x160画像を作成
-    gray_color = (64, 64, 64)  # 濃いグレー
-    img = Image.new("RGB", (240, 160), gray_color)
+    # 背景CG画像のパス
+    na02_path = cfg.nsa_extract_dir / Path('tui') / Path('na02.png')
 
-    # QRコード画像を読み込み
-    with Image.open(filter_image_path) as filter_img:
-        filter_img = filter_img.convert('RGB')
-        # 画像にQRコードを貼り付け
-        img.paste(filter_img, (157, 77))
+    # 画像を読み込み
+    with Image.open(na02_path) as img:
 
-    # PNGで保存
-    img.save(temppng_path, "PNG")
+        # 240x180にリサイズ（縮小）
+        img = img.resize((240, 180), Image.LANCZOS)
+        
+        # 上下10pxを捨てる（240x160にクロップ）
+        img = img.crop((0, 10, 240, 170))
+
+        # シャープネスを少し上げる
+        img = img.filter(ImageFilter.UnsharpMask(radius=2, percent=30, threshold=3))
+
+        # QRコード画像のパス
+        filter_image_path = cfg.image_filter_dir / Path('filter_999_1.bin')
+
+        # QRコード画像を読み込み
+        with Image.open(filter_image_path) as filter_img:
+            img.paste(filter_img.convert('RGB'), (157, 77))
+
+        # メッセージ描画用の透明レイヤー
+        tmp = Image.new('RGBA', img.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(tmp)
+        font = ImageFont.truetype(cfg.font_path, 8)
+
+        # 文字貼り付け開始位置 (9, 9)
+        x, y = 9, 9
+
+        # 描画（縁4方向 + 本体）    
+        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            draw.multiline_text((x+ox, y+oy), msg, font=font, fill=edge_color, spacing=line_s, align="left")
+        draw.multiline_text((x, y), msg, font=font, fill=main_color, spacing=line_s, align="left")
+
+        # 合成して保存
+        img.paste(tmp, (0, 0), tmp)
+        img.save(temppng_path, "PNG")
 
     return
+
 
 
 ###################################################################################################
