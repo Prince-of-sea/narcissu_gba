@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from pathlib import Path
-from PIL import Image, ImageFilter, ImageOps
+from PIL import Image, ImageFilter, ImageOps, ImageDraw, ImageFont
+from datetime import datetime
+import os
 
 from core.config import AppConfig
 
@@ -18,7 +20,7 @@ def convert_IMG000(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
         
         # 上下10pxを捨てる（240x160にクロップ）
         img = img.crop((0, 10, 240, 170))
@@ -49,7 +51,7 @@ def convert_IMG001(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
         
         # 上下10pxを捨てる（240x160にクロップ）
         img = img.crop((0, 10, 240, 170))
@@ -134,7 +136,7 @@ def convert_IMG015(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
 
         # 上12px、下8pxを捨てる（240x160にクロップ）
         img = img.crop((0, 12, 240, 172))
@@ -165,7 +167,7 @@ def convert_IMG018_023(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfi
         img_cropped = img.crop((160, 196, 640, 322))
 
         # 240x61に縮小
-        img_cropped = img_cropped.resize((240, 61), Image.LANCZOS)
+        img_cropped = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
 
         # 新切り出し画像を新画像の(0, 32)にはりつけ
         img_new.paste(img_cropped, (0, 32))
@@ -173,6 +175,221 @@ def convert_IMG018_023(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfi
         # PNGで保存
         img_new.save(temppng_path, "PNG")
 
+    return
+
+
+###################################################################################################
+def convert_IMG017(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c00.jpg 変換"""
+
+    # 文字ついてない版の画像パス
+    sora01_path = nsa_extract_path.parent / Path('sora01.jpg')
+
+    image_msg = "―　２００４年　主人公　初夏　―"
+    line_s = 2  # 行間
+    edge_color = (128, 128, 128,  64)
+    main_color = (255, 255, 255, 255)
+
+    with Image.open(sora01_path) as img:
+        img = img.convert("RGB")
+        img_new = Image.new("RGB", (240, 160), img.getpixel((0, 0)))
+        
+        # 縮小画像(240x61)の作成
+        img_resized = img.crop((0, 145, 800, 349)).resize((240, 61), Image.Resampling.LANCZOS)
+
+        # 描画準備
+        tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(tmp)
+        font = ImageFont.truetype(cfg.font_path, 8)
+
+        # 1行目を基準とした中央座標計算
+        first_line = image_msg.split('\n')[0]
+        bbox = draw.textbbox((0, 0), first_line, font=font)
+        x, y = (img_resized.width - (bbox[2]-bbox[0])) // 2, (img_resized.height - (bbox[3]-bbox[1])) // 2
+
+        # 描画（縁4方向 + 本体
+        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            draw.multiline_text((x+ox, y+oy), image_msg, font=font, fill=edge_color, spacing=line_s, align="center")
+        draw.multiline_text((x, y), image_msg, font=font, fill=main_color, spacing=line_s, align="center")
+
+        img_resized.paste(tmp, (0, 0), tmp)
+        img_new.paste(img_resized, (0, 32))
+        
+        # 保存
+        img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3)).save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG024(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c005.jpg 変換"""
+
+    # 文字ついてない版の画像パス
+    chara_0013b_path = nsa_extract_path.parent / Path('chara_0013b.jpg')
+
+    image_msg = "stage-nana\n - vol.24 - "
+    line_s = 2  # 行間
+    edge_color = (255, 255, 255, 128)
+    main_color = (  0,   0,   0, 255)
+
+    with Image.open(chara_0013b_path) as img:
+        img = img.convert("RGB")
+        img_new = Image.new("RGB", (240, 160), img.getpixel((0, 0)))
+        
+        # 縮小画像(240x61)の作成
+        img_resized = img.crop((0, 145, 800, 349)).resize((240, 61), Image.Resampling.LANCZOS)
+
+        # 描画準備
+        tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(tmp)
+        font = ImageFont.truetype(cfg.font_path, 8)
+
+        # 1行目を基準とした中央座標計算
+        first_line = image_msg.split('\n')[0]
+        bbox = draw.textbbox((0, 0), first_line, font=font)
+        x, y = (img_resized.width - (bbox[2]-bbox[0])) // 2, (img_resized.height - (bbox[3]-bbox[1])) // 2
+
+        # 描画（縁4方向 + 本体
+        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            draw.multiline_text((x+ox, y+oy), image_msg, font=font, fill=edge_color, spacing=line_s, align="center")
+        draw.multiline_text((x, y), image_msg, font=font, fill=main_color, spacing=line_s, align="center")
+
+        img_resized.paste(tmp, (0, 0), tmp)
+        img_new.paste(img_resized, (0, 32))
+        
+        # 保存
+        img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3)).save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG025(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c0052.jpg 変換"""
+
+    # 文字ついてない版の画像パス
+    chara_0013_path = nsa_extract_path.parent / Path('chara_0013.jpg')
+
+    image_msg = "stage-nana\n - vol.24 - "
+    line_s = 2  # 行間
+    edge_color = (255, 255, 255, 128)
+    main_color = (  0,   0,   0, 255)
+
+    with Image.open(chara_0013_path) as img:
+        img = img.convert("RGB")
+        img_new = Image.new("RGB", (240, 160), img.getpixel((0, 0)))
+        
+        # 縮小画像(240x61)の作成
+        img_resized = img.crop((0, 145, 800, 349)).resize((240, 61), Image.Resampling.LANCZOS)
+
+        # 描画準備
+        tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(tmp)
+        font = ImageFont.truetype(cfg.font_path, 8)
+
+        # 1行目を基準とした中央座標計算
+        first_line = image_msg.split('\n')[0]
+        bbox = draw.textbbox((0, 0), first_line, font=font)
+        x, y = (img_resized.width - (bbox[2]-bbox[0])) // 2, (img_resized.height - (bbox[3]-bbox[1])) // 2
+
+        # 描画（縁4方向 + 本体
+        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            draw.multiline_text((x+ox, y+oy), image_msg, font=font, fill=edge_color, spacing=line_s, align="center")
+        draw.multiline_text((x, y), image_msg, font=font, fill=main_color, spacing=line_s, align="center")
+
+        img_resized.paste(tmp, (0, 0), tmp)
+        img_new.paste(img_resized, (0, 32))
+        
+        # 保存
+        img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3)).save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG026(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c02.jpg 変換"""
+
+    # 文字ついてない版の画像パス
+    sora_ame03_path = nsa_extract_path.parent / Path('sora_ame03.jpg')
+
+    image_msg = "―　１９９６年　春　セツミ　―"
+    line_s = 2  # 行間
+    edge_color = (128, 128, 128,  64)
+    main_color = (255, 255, 255, 255)
+
+    with Image.open(sora_ame03_path) as img:
+        img = img.convert("RGB")
+        img_new = Image.new("RGB", (240, 160), img.getpixel((0, 0)))
+        
+        # 縮小画像(240x61)の作成
+        img_resized = img.crop((0, 145, 800, 349)).resize((240, 61), Image.Resampling.LANCZOS)
+
+        # 描画準備
+        tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(tmp)
+        font = ImageFont.truetype(cfg.font_path, 8)
+
+        # 1行目を基準とした中央座標計算
+        first_line = image_msg.split('\n')[0]
+        bbox = draw.textbbox((0, 0), first_line, font=font)
+        x, y = (img_resized.width - (bbox[2]-bbox[0])) // 2, (img_resized.height - (bbox[3]-bbox[1])) // 2
+
+        # 描画（縁4方向 + 本体）
+        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            draw.multiline_text((x+ox, y+oy), image_msg, font=font, fill=edge_color, spacing=line_s, align="center")
+        draw.multiline_text((x, y), image_msg, font=font, fill=main_color, spacing=line_s, align="center")
+
+        img_resized.paste(tmp, (0, 0), tmp)
+        img_new.paste(img_resized, (0, 32))
+        
+        # 保存
+        img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3)).save(temppng_path, "PNG")
+    
+    return
+
+
+###################################################################################################
+def convert_IMG027(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c03.jpg 変換"""
+
+    # 文字ついてない版の画像パス
+    sora07_path = nsa_extract_path.parent / Path('sora07.jpg')
+
+    image_msg = "―　主人公　２００４年　秋　―"
+    line_s = 2  # 行間
+    edge_color = (  0,   0,   0,  64)
+    main_color = (255, 255, 255, 255)
+
+    with Image.open(sora07_path) as img:
+        img = img.convert("RGB")
+        img_new = Image.new("RGB", (240, 160), img.getpixel((0, 0)))
+        
+        # 縮小画像(240x61)の作成
+        img_resized = img.crop((0, 145, 800, 349)).resize((240, 61), Image.Resampling.LANCZOS)
+
+        # 描画準備
+        tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(tmp)
+        font = ImageFont.truetype(cfg.font_path, 8)
+
+        # 1行目を基準とした中央座標計算
+        first_line = image_msg.split('\n')[0]
+        bbox = draw.textbbox((0, 0), first_line, font=font)
+        x, y = (img_resized.width - (bbox[2]-bbox[0])) // 2, (img_resized.height - (bbox[3]-bbox[1])) // 2
+
+        # 描画（縁4方向 + 本体）
+        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            draw.multiline_text((x+ox, y+oy), image_msg, font=font, fill=edge_color, spacing=line_s, align="center")
+        draw.multiline_text((x, y), image_msg, font=font, fill=main_color, spacing=line_s, align="center")
+
+        img_resized.paste(tmp, (0, 0), tmp)
+        img_new.paste(img_resized, (0, 32))
+        
+        # 保存
+        img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3)).save(temppng_path, "PNG")
+    
     return
 
 
@@ -193,7 +410,7 @@ def convert_IMG067(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         with Image.open(img96_path) as img96:
 
             # 240x180にリサイズ（縮小）
-            img96 = img96.resize((240, 180), Image.LANCZOS)
+            img96 = img96.resize((240, 180), Image.Resampling.LANCZOS)
 
             # 切り出し部分のみ（240x61）にクロップ
             img96 = img96.crop((0, 42, 240, (42 + 61)))
@@ -215,7 +432,7 @@ def convert_IMG068_069(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfi
     with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
         
         # 上下10pxを捨てる（240x160）にクロップ
         img = img.crop((0, 10, 240, 170))
@@ -246,7 +463,7 @@ def convert_IMG082_084(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfi
         img_cropped = img.crop((188, 196, 588, 298))
 
         # 240x61に縮小
-        img_cropped = img_cropped.resize((240, 61), Image.LANCZOS)
+        img_cropped = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
 
         # 新切り出し画像を新画像の(0, 32)にはりつけ
         img_new.paste(img_cropped, (0, 32))
@@ -285,7 +502,7 @@ def convert_IMG114(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         crop_w_scaled = int(crop_w * 0.3 * scale)
         crop_h_scaled = int(crop_h * 0.3 * scale)
         img_cropped = img.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_h))
-        img_cropped = img_cropped.resize((crop_w_scaled, crop_h_scaled), Image.LANCZOS)
+        img_cropped = img_cropped.resize((crop_w_scaled, crop_h_scaled), Image.Resampling.LANCZOS)
 
         # 新背景画像を新画像の(0,32)にはりつけ
         img_new.paste(img_bgcolor, (0, 32))
@@ -331,15 +548,15 @@ def convert_IMG115(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
         # 元画像から一部を切り出し、縮小した新切り出し画像(img_cropped)を作成
         img_cropped1 = img.crop((crop1[0], crop1[1], crop1[0] + crop1[2], crop1[1] + crop1[3]))
-        img_cropped1 = img_cropped1.resize((int(crop1[2] * 0.3 * scale), int(crop1[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped1 = img_cropped1.resize((int(crop1[2] * 0.3 * scale), int(crop1[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped2 = img.crop((crop2[0], crop2[1], crop2[0] + crop2[2], crop2[1] + crop2[3]))
-        img_cropped2 = img_cropped2.resize((int(crop2[2] * 0.3 * scale), int(crop2[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped2 = img_cropped2.resize((int(crop2[2] * 0.3 * scale), int(crop2[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped3 = img.crop((crop3[0], crop3[1], crop3[0] + crop3[2], crop3[1] + crop3[3]))
-        img_cropped3 = img_cropped3.resize((int(crop3[2] * 0.3 * scale), int(crop3[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped3 = img_cropped3.resize((int(crop3[2] * 0.3 * scale), int(crop3[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped4 = img.crop((crop4[0], crop4[1], crop4[0] + crop4[2], crop4[1] + crop4[3]))
-        img_cropped4 = img_cropped4.resize((int(crop4[2] * 0.3 * scale), int(crop4[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped4 = img_cropped4.resize((int(crop4[2] * 0.3 * scale), int(crop4[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped5 = img.crop((crop5[0], crop5[1], crop5[0] + crop5[2], crop5[1] + crop5[3]))
-        img_cropped5 = img_cropped5.resize((int(crop5[2] * 0.3 * scale), int(crop5[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped5 = img_cropped5.resize((int(crop5[2] * 0.3 * scale), int(crop5[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
 
         # 新背景画像を新画像の(0,32)にはりつけ
         img_new.paste(img_bgcolor, (0, 32))
@@ -393,17 +610,17 @@ def convert_IMG116(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
         # 元画像から一部を切り出し、縮小した新切り出し画像(img_cropped)を作成
         img_cropped1 = img.crop((crop1[0], crop1[1], crop1[0] + crop1[2], crop1[1] + crop1[3]))
-        img_cropped1 = img_cropped1.resize((int(crop1[2] * 0.3 * scale), int(crop1[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped1 = img_cropped1.resize((int(crop1[2] * 0.3 * scale), int(crop1[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped2 = img.crop((crop2[0], crop2[1], crop2[0] + crop2[2], crop2[1] + crop2[3]))
-        img_cropped2 = img_cropped2.resize((int(crop2[2] * 0.3 * scale), int(crop2[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped2 = img_cropped2.resize((int(crop2[2] * 0.3 * scale), int(crop2[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped3 = img.crop((crop3[0], crop3[1], crop3[0] + crop3[2], crop3[1] + crop3[3]))
-        img_cropped3 = img_cropped3.resize((int(crop3[2] * 0.3 * scale), int(crop3[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped3 = img_cropped3.resize((int(crop3[2] * 0.3 * scale), int(crop3[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped4 = img.crop((crop4[0], crop4[1], crop4[0] + crop4[2], crop4[1] + crop4[3]))
-        img_cropped4 = img_cropped4.resize((int(crop4[2] * 0.3 * scale), int(crop4[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped4 = img_cropped4.resize((int(crop4[2] * 0.3 * scale), int(crop4[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped5 = img.crop((crop5[0], crop5[1], crop5[0] + crop5[2], crop5[1] + crop5[3]))
-        img_cropped5 = img_cropped5.resize((int(crop5[2] * 0.3 * scale), int(crop5[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped5 = img_cropped5.resize((int(crop5[2] * 0.3 * scale), int(crop5[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped6 = img.crop((crop6[0], crop6[1], crop6[0] + crop6[2], crop6[1] + crop6[3]))
-        img_cropped6 = img_cropped6.resize((int(crop6[2] * 0.3 * scale), int(crop6[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped6 = img_cropped6.resize((int(crop6[2] * 0.3 * scale), int(crop6[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
 
         # 新背景画像を新画像の(0,32)にはりつけ
         img_new.paste(img_bgcolor, (0, 32))
@@ -456,11 +673,11 @@ def convert_IMG117(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
         # 元画像から一部を切り出し、縮小した新切り出し画像(img_cropped)を作成
         img_cropped1 = img.crop((crop1[0], crop1[1], crop1[0] + crop1[2], crop1[1] + crop1[3]))
-        img_cropped1 = img_cropped1.resize((int(crop1[2] * 0.3 * scale), int(crop1[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped1 = img_cropped1.resize((int(crop1[2] * 0.3 * scale), int(crop1[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped2 = img.crop((crop2[0], crop2[1], crop2[0] + crop2[2], crop2[1] + crop2[3]))
-        img_cropped2 = img_cropped2.resize((int(crop2[2] * 0.3 * scale), int(crop2[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped2 = img_cropped2.resize((int(crop2[2] * 0.3 * scale), int(crop2[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped3 = img.crop((crop3[0], crop3[1], crop3[0] + crop3[2], crop3[1] + crop3[3]))
-        img_cropped3 = img_cropped3.resize((int(crop3[2] * 0.3 * scale), int(crop3[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped3 = img_cropped3.resize((int(crop3[2] * 0.3 * scale), int(crop3[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
 
         # 新背景画像を新画像の(0,32)にはりつけ
         img_new.paste(img_bgcolor, (0, 32))
@@ -493,7 +710,7 @@ def convert_IMG139(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
         
         # 上下10pxを捨てる（240x160にクロップ）
         img = img.crop((0, 10, 240, 170))
@@ -516,24 +733,78 @@ def convert_IMG139(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 ###################################################################################################
 def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """変換環境表示(仮) 変換"""
+
+    # 変換モード文字列
+    if cfg.include_voice:
+        voice_mode = f"ボイス搭載モード(声アリ・{cfg.sound_quality}Hz)"
+    else:
+        voice_mode = f"高音質再生モード(声無し・{cfg.sound_quality}Hz)"
+
+    username = os.getlogin()
+
+    # メッセージ内容(仮) バージョンなどは後にクラス管理にする
+    msg = f"""バージョン
+　Narcissu GBA Converter Ver.0.X.0
+変換モード
+　{voice_mode}
+ユーザー名
+　{username}
+日時
+　{datetime.now().strftime('%Y/%m/%d %H:%M:%S')}
+
+
+
+本ソフトやコンバータに関する
+詳細な情報、利用方法はこちら→
+
+https://github.com
+/Prince-of-sea/narcissu_gba"""
     
-    # QRコード画像のパス
-    filter_image_path = cfg.image_filter_dir / Path('filter_999_1.bin')
+    line_s = 2  # 行間
+    edge_color = (128, 128, 128, 64)
+    main_color = (255, 255, 255, 255)
 
-    # 濃いグレーの240x160画像を作成
-    gray_color = (64, 64, 64)  # 濃いグレー
-    img = Image.new("RGB", (240, 160), gray_color)
+    # 背景CG画像のパス
+    na02_path = cfg.nsa_extract_dir / Path('tui') / Path('na02.png')
 
-    # QRコード画像を読み込み
-    with Image.open(filter_image_path) as filter_img:
-        filter_img = filter_img.convert('RGB')
-        # 画像にQRコードを貼り付け
-        img.paste(filter_img, (157, 77))
+    # 画像を読み込み
+    with Image.open(na02_path) as img:
 
-    # PNGで保存
-    img.save(temppng_path, "PNG")
+        # 240x180にリサイズ（縮小）
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
+        
+        # 上下10pxを捨てる（240x160にクロップ）
+        img = img.crop((0, 10, 240, 170))
+
+        # シャープネスを少し上げる
+        img = img.filter(ImageFilter.UnsharpMask(radius=2, percent=30, threshold=3))
+
+        # QRコード画像のパス
+        filter_image_path = cfg.image_filter_dir / Path('filter_999_1.bin')
+
+        # QRコード画像を読み込み
+        with Image.open(filter_image_path) as filter_img:
+            img.paste(filter_img.convert('RGB'), (157, 77))
+
+        # メッセージ描画用の透明レイヤー
+        tmp = Image.new('RGBA', img.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(tmp)
+        font = ImageFont.truetype(cfg.font_path, 8)
+
+        # 文字貼り付け開始位置 (9, 9)
+        x, y = 9, 9
+
+        # 描画（縁4方向 + 本体）    
+        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            draw.multiline_text((x+ox, y+oy), msg, font=font, fill=edge_color, spacing=line_s, align="left")
+        draw.multiline_text((x, y), msg, font=font, fill=main_color, spacing=line_s, align="left")
+
+        # 合成して保存
+        img.paste(tmp, (0, 0), tmp)
+        img.save(temppng_path, "PNG")
 
     return
+
 
 
 ###################################################################################################
@@ -584,7 +855,7 @@ def convert_gray_background(nsa_extract_path: Path, temppng_path: Path, cfg: App
         crop_h_scaled = 9
         crop_w_scaled = int(crop_w * (crop_h_scaled / crop_h))
         img_cropped = img.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_h))
-        img_cropped = img_cropped.resize((crop_w_scaled, crop_h_scaled), Image.LANCZOS)
+        img_cropped = img_cropped.resize((crop_w_scaled, crop_h_scaled), Image.Resampling.LANCZOS)
 
         # 新背景画像を新画像の(0,32)にはりつけ
         img_new.paste(img_bgcolor, (0, 32))
@@ -641,7 +912,7 @@ def convert_default(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
         
         # 上下10pxを捨てる（240x160）にクロップ
         img = img.crop((0, 10, 240, 170))
