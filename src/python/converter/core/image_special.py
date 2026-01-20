@@ -20,7 +20,7 @@ def convert_IMG000(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
         
         # 上下10pxを捨てる（240x160にクロップ）
         img = img.crop((0, 10, 240, 170))
@@ -51,7 +51,7 @@ def convert_IMG001(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
         
         # 上下10pxを捨てる（240x160にクロップ）
         img = img.crop((0, 10, 240, 170))
@@ -136,7 +136,7 @@ def convert_IMG015(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
 
         # 上12px、下8pxを捨てる（240x160にクロップ）
         img = img.crop((0, 12, 240, 172))
@@ -167,7 +167,7 @@ def convert_IMG018_023(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfi
         img_cropped = img.crop((160, 196, 640, 322))
 
         # 240x61に縮小
-        img_cropped = img_cropped.resize((240, 61), Image.LANCZOS)
+        img_cropped = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
 
         # 新切り出し画像を新画像の(0, 32)にはりつけ
         img_new.paste(img_cropped, (0, 32))
@@ -410,7 +410,7 @@ def convert_IMG067(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         with Image.open(img96_path) as img96:
 
             # 240x180にリサイズ（縮小）
-            img96 = img96.resize((240, 180), Image.LANCZOS)
+            img96 = img96.resize((240, 180), Image.Resampling.LANCZOS)
 
             # 切り出し部分のみ（240x61）にクロップ
             img96 = img96.crop((0, 42, 240, (42 + 61)))
@@ -432,7 +432,7 @@ def convert_IMG068_069(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfi
     with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
         
         # 上下10pxを捨てる（240x160）にクロップ
         img = img.crop((0, 10, 240, 170))
@@ -463,7 +463,7 @@ def convert_IMG082_084(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfi
         img_cropped = img.crop((188, 196, 588, 298))
 
         # 240x61に縮小
-        img_cropped = img_cropped.resize((240, 61), Image.LANCZOS)
+        img_cropped = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
 
         # 新切り出し画像を新画像の(0, 32)にはりつけ
         img_new.paste(img_cropped, (0, 32))
@@ -502,7 +502,7 @@ def convert_IMG114(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         crop_w_scaled = int(crop_w * 0.3 * scale)
         crop_h_scaled = int(crop_h * 0.3 * scale)
         img_cropped = img.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_h))
-        img_cropped = img_cropped.resize((crop_w_scaled, crop_h_scaled), Image.LANCZOS)
+        img_cropped = img_cropped.resize((crop_w_scaled, crop_h_scaled), Image.Resampling.LANCZOS)
 
         # 新背景画像を新画像の(0,32)にはりつけ
         img_new.paste(img_bgcolor, (0, 32))
@@ -548,15 +548,15 @@ def convert_IMG115(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
         # 元画像から一部を切り出し、縮小した新切り出し画像(img_cropped)を作成
         img_cropped1 = img.crop((crop1[0], crop1[1], crop1[0] + crop1[2], crop1[1] + crop1[3]))
-        img_cropped1 = img_cropped1.resize((int(crop1[2] * 0.3 * scale), int(crop1[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped1 = img_cropped1.resize((int(crop1[2] * 0.3 * scale), int(crop1[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped2 = img.crop((crop2[0], crop2[1], crop2[0] + crop2[2], crop2[1] + crop2[3]))
-        img_cropped2 = img_cropped2.resize((int(crop2[2] * 0.3 * scale), int(crop2[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped2 = img_cropped2.resize((int(crop2[2] * 0.3 * scale), int(crop2[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped3 = img.crop((crop3[0], crop3[1], crop3[0] + crop3[2], crop3[1] + crop3[3]))
-        img_cropped3 = img_cropped3.resize((int(crop3[2] * 0.3 * scale), int(crop3[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped3 = img_cropped3.resize((int(crop3[2] * 0.3 * scale), int(crop3[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped4 = img.crop((crop4[0], crop4[1], crop4[0] + crop4[2], crop4[1] + crop4[3]))
-        img_cropped4 = img_cropped4.resize((int(crop4[2] * 0.3 * scale), int(crop4[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped4 = img_cropped4.resize((int(crop4[2] * 0.3 * scale), int(crop4[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped5 = img.crop((crop5[0], crop5[1], crop5[0] + crop5[2], crop5[1] + crop5[3]))
-        img_cropped5 = img_cropped5.resize((int(crop5[2] * 0.3 * scale), int(crop5[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped5 = img_cropped5.resize((int(crop5[2] * 0.3 * scale), int(crop5[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
 
         # 新背景画像を新画像の(0,32)にはりつけ
         img_new.paste(img_bgcolor, (0, 32))
@@ -610,17 +610,17 @@ def convert_IMG116(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
         # 元画像から一部を切り出し、縮小した新切り出し画像(img_cropped)を作成
         img_cropped1 = img.crop((crop1[0], crop1[1], crop1[0] + crop1[2], crop1[1] + crop1[3]))
-        img_cropped1 = img_cropped1.resize((int(crop1[2] * 0.3 * scale), int(crop1[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped1 = img_cropped1.resize((int(crop1[2] * 0.3 * scale), int(crop1[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped2 = img.crop((crop2[0], crop2[1], crop2[0] + crop2[2], crop2[1] + crop2[3]))
-        img_cropped2 = img_cropped2.resize((int(crop2[2] * 0.3 * scale), int(crop2[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped2 = img_cropped2.resize((int(crop2[2] * 0.3 * scale), int(crop2[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped3 = img.crop((crop3[0], crop3[1], crop3[0] + crop3[2], crop3[1] + crop3[3]))
-        img_cropped3 = img_cropped3.resize((int(crop3[2] * 0.3 * scale), int(crop3[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped3 = img_cropped3.resize((int(crop3[2] * 0.3 * scale), int(crop3[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped4 = img.crop((crop4[0], crop4[1], crop4[0] + crop4[2], crop4[1] + crop4[3]))
-        img_cropped4 = img_cropped4.resize((int(crop4[2] * 0.3 * scale), int(crop4[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped4 = img_cropped4.resize((int(crop4[2] * 0.3 * scale), int(crop4[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped5 = img.crop((crop5[0], crop5[1], crop5[0] + crop5[2], crop5[1] + crop5[3]))
-        img_cropped5 = img_cropped5.resize((int(crop5[2] * 0.3 * scale), int(crop5[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped5 = img_cropped5.resize((int(crop5[2] * 0.3 * scale), int(crop5[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped6 = img.crop((crop6[0], crop6[1], crop6[0] + crop6[2], crop6[1] + crop6[3]))
-        img_cropped6 = img_cropped6.resize((int(crop6[2] * 0.3 * scale), int(crop6[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped6 = img_cropped6.resize((int(crop6[2] * 0.3 * scale), int(crop6[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
 
         # 新背景画像を新画像の(0,32)にはりつけ
         img_new.paste(img_bgcolor, (0, 32))
@@ -673,11 +673,11 @@ def convert_IMG117(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
         # 元画像から一部を切り出し、縮小した新切り出し画像(img_cropped)を作成
         img_cropped1 = img.crop((crop1[0], crop1[1], crop1[0] + crop1[2], crop1[1] + crop1[3]))
-        img_cropped1 = img_cropped1.resize((int(crop1[2] * 0.3 * scale), int(crop1[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped1 = img_cropped1.resize((int(crop1[2] * 0.3 * scale), int(crop1[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped2 = img.crop((crop2[0], crop2[1], crop2[0] + crop2[2], crop2[1] + crop2[3]))
-        img_cropped2 = img_cropped2.resize((int(crop2[2] * 0.3 * scale), int(crop2[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped2 = img_cropped2.resize((int(crop2[2] * 0.3 * scale), int(crop2[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
         img_cropped3 = img.crop((crop3[0], crop3[1], crop3[0] + crop3[2], crop3[1] + crop3[3]))
-        img_cropped3 = img_cropped3.resize((int(crop3[2] * 0.3 * scale), int(crop3[3] * 0.3 * scale)), Image.LANCZOS)
+        img_cropped3 = img_cropped3.resize((int(crop3[2] * 0.3 * scale), int(crop3[3] * 0.3 * scale)), Image.Resampling.LANCZOS)
 
         # 新背景画像を新画像の(0,32)にはりつけ
         img_new.paste(img_bgcolor, (0, 32))
@@ -710,7 +710,7 @@ def convert_IMG139(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
         
         # 上下10pxを捨てる（240x160にクロップ）
         img = img.crop((0, 10, 240, 170))
@@ -771,7 +771,7 @@ https://github.com
     with Image.open(na02_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
         
         # 上下10pxを捨てる（240x160にクロップ）
         img = img.crop((0, 10, 240, 170))
@@ -855,7 +855,7 @@ def convert_gray_background(nsa_extract_path: Path, temppng_path: Path, cfg: App
         crop_h_scaled = 9
         crop_w_scaled = int(crop_w * (crop_h_scaled / crop_h))
         img_cropped = img.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_h))
-        img_cropped = img_cropped.resize((crop_w_scaled, crop_h_scaled), Image.LANCZOS)
+        img_cropped = img_cropped.resize((crop_w_scaled, crop_h_scaled), Image.Resampling.LANCZOS)
 
         # 新背景画像を新画像の(0,32)にはりつけ
         img_new.paste(img_bgcolor, (0, 32))
@@ -912,7 +912,7 @@ def convert_default(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
-        img = img.resize((240, 180), Image.LANCZOS)
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
         
         # 上下10pxを捨てる（240x160）にクロップ
         img = img.crop((0, 10, 240, 170))
