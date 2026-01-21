@@ -5,6 +5,10 @@ from pathlib import Path
 
 @dataclass
 class AppConfig:
+    # ===== ツールについて =====
+    app_name: str
+    app_version: str
+    
     # ===== 入出力 =====
     input_exe: Path
     include_voice: bool
@@ -74,6 +78,9 @@ def create_config(temp_dir: Path) -> AppConfig:
     cwd = Path.cwd()
 
     cfg = AppConfig(
+        app_name         = "Narcissu GBA Converter",
+        app_version      = "0.6.0",
+        
         input_exe        = Path(cwd / "resources" / "game_win" / "nana24.exe"),
         include_voice    = bool(),
         sound_quality    = int(),
