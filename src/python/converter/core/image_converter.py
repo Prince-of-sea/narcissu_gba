@@ -158,19 +158,19 @@ def convert_images(cfg: AppConfig) -> None:
     """画像の全変換処理"""
 
     # 並列ファイル変換
-    # with concurrent.futures.ThreadPoolExecutor() as executor:
-    #     futures = []
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = []
 
-    #     for img_info in IMG_LIST:
-    #         # 画像の並列変換処理
-    #         futures.append(executor.submit(
-    #             convert_image_parallel, cfg, img_info))
+        for img_info in IMG_LIST:
+            # 画像の並列変換処理
+            futures.append(executor.submit(
+                convert_image_parallel, cfg, img_info))
         
-    #     # gui対応時にはプログレスバー用に改良予定
-    #     concurrent.futures.as_completed(futures)
+        # gui対応時にはプログレスバー用に改良予定
+        concurrent.futures.as_completed(futures)
 
     # 直列ファイル変換 (デバッグ用)
-    for img_info in IMG_LIST:
-        convert_image_parallel(cfg, img_info)
+    # for img_info in IMG_LIST:
+    #     convert_image_parallel(cfg, img_info)
 
     return
