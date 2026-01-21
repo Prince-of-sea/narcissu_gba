@@ -6,10 +6,10 @@ from core.converter import convert_main
 from core.config import AppConfig
 
 def gui_main(cfg: AppConfig) -> None:
-    '''gui本処理'''
+    """gui本処理"""
 
     ### 言うまでもなく仮 後で全部書き直す ###
-    print(' +++ narcissu_gba beta版 +++ ')
+    print(f' +++ {cfg.app_name} Ver.{cfg.app_version} +++ ')
 
     gui_cfg = {}
     root = tkinter.Tk()

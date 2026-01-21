@@ -744,7 +744,7 @@ def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
     # メッセージ内容(仮) バージョンなどは後にクラス管理にする
     msg = f"""バージョン
-　Narcissu GBA Converter Ver.0.X.0
+　{cfg.app_name} Ver.{cfg.app_version}
 変換モード
 　{voice_mode}
 ユーザー名
