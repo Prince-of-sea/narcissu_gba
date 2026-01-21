@@ -185,7 +185,9 @@ def convert_IMG017(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     # 文字ついてない版の画像パス
     sora01_path = nsa_extract_path.parent / Path('sora01.jpg')
 
-    image_msg = "―　２００４年　主人公　初夏　―"
+    # 文面 直置きは気が引けるので申し訳程度のバイナリ表記
+    image_msg = b'\xe2\x80\x95\xe3\x80\x80\xef\xbc\x92\xef\xbc\x90\xef\xbc\x90\xef\xbc\x94\xe5\xb9\xb4\xe3\x80\x80\xe4\xb8\xbb\xe4\xba\xba\xe5\x85\xac\xe3\x80\x80\xe5\x88\x9d\xe5\xa4\x8f\xe3\x80\x80\xe2\x80\x95'.decode('utf-8')
+
     line_s = 2  # 行間
     edge_color = (128, 128, 128,  64)
     main_color = (255, 255, 255, 255)
@@ -228,7 +230,9 @@ def convert_IMG024(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     # 文字ついてない版の画像パス
     chara_0013b_path = nsa_extract_path.parent / Path('chara_0013b.jpg')
 
-    image_msg = "stage-nana\n - vol.24 - "
+    # 文面 直置きは気が引けるので申し訳程度のバイナリ表記
+    image_msg = b'\x73\x74\x61\x67\x65\x2d\x6e\x61\x6e\x61\x0a\x20\x2d\x20\x76\x6f\x6c\x2e\x32\x34\x20\x2d\x20'.decode('utf-8')
+
     line_s = 2  # 行間
     edge_color = (255, 255, 255, 128)
     main_color = (  0,   0,   0, 255)
@@ -271,7 +275,9 @@ def convert_IMG025(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     # 文字ついてない版の画像パス
     chara_0013_path = nsa_extract_path.parent / Path('chara_0013.jpg')
 
-    image_msg = "stage-nana\n - vol.24 - "
+    # 文面 直置きは気が引けるので申し訳程度のバイナリ表記
+    image_msg = b'\x73\x74\x61\x67\x65\x2d\x6e\x61\x6e\x61\x0a\x20\x2d\x20\x76\x6f\x6c\x2e\x32\x34\x20\x2d\x20'.decode('utf-8')
+
     line_s = 2  # 行間
     edge_color = (255, 255, 255, 128)
     main_color = (  0,   0,   0, 255)
@@ -314,7 +320,9 @@ def convert_IMG026(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     # 文字ついてない版の画像パス
     sora_ame03_path = nsa_extract_path.parent / Path('sora_ame03.jpg')
 
-    image_msg = "―　１９９６年　春　セツミ　―"
+    # 文面 直置きは気が引けるので申し訳程度のバイナリ表記
+    image_msg = b'\xe2\x80\x95\xe3\x80\x80\xef\xbc\x91\xef\xbc\x99\xef\xbc\x99\xef\xbc\x96\xe5\xb9\xb4\xe3\x80\x80\xe6\x98\xa5\xe3\x80\x80\xe3\x82\xbb\xe3\x83\x84\xe3\x83\x9f\xe3\x80\x80\xe2\x80\x95'.decode('utf-8')
+
     line_s = 2  # 行間
     edge_color = (128, 128, 128,  64)
     main_color = (255, 255, 255, 255)
@@ -357,7 +365,9 @@ def convert_IMG027(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     # 文字ついてない版の画像パス
     sora07_path = nsa_extract_path.parent / Path('sora07.jpg')
 
-    image_msg = "―　主人公　２００４年　秋　―"
+    # 文面 直置きは気が引けるので申し訳程度のバイナリ表記
+    image_msg = b'\xe2\x80\x95\xe3\x80\x80\xe4\xb8\xbb\xe4\xba\xba\xe5\x85\xac\xe3\x80\x80\xef\xbc\x92\xef\xbc\x90\xef\xbc\x90\xef\xbc\x94\xe5\xb9\xb4\xe3\x80\x80\xe7\xa7\x8b\xe3\x80\x80\xe2\x80\x95'
+
     line_s = 2  # 行間
     edge_color = (  0,   0,   0,  64)
     main_color = (255, 255, 255, 255)
