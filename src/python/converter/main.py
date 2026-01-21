@@ -1,33 +1,22 @@
 #!/usr/bin/env python3
+from pathlib import Path
 import tempfile
 
-from core.resource_extractor import extract_resources
-from core.file_checker import check_files
-from core.scenario_converter import convert_scenario
-from core.image_converter import convert_images
-from core.audio_converter import convert_audio
-from core.packer import pack_resources
 from core.config import create_config
 from core.gui import gui_main
 
-
 def main():
-    print("Start conversion tool")
+    """メイン処理"""
 
-    # メイン
+    # 一時ディレクトリを作成してから処理を行う
     with tempfile.TemporaryDirectory() as temp_dir:
+        temp_dir = Path(temp_dir)
 
-        gui_cfg = gui_main()
-        cfg = create_config(temp_dir, gui_cfg)
-        
-        extract_resources(cfg)
-        if check_files(cfg):
-            convert_scenario(cfg)
-            convert_images(cfg)
-            convert_audio(cfg)
-            pack_resources(cfg)
+        # 初期設定だけとりあえず作成
+        cfg = create_config(temp_dir)
 
-    print("All done!")
+        # GUI本処理
+        gui_main(cfg)
 
 
 if __name__ == "__main__":

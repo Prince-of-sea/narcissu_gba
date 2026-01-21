@@ -43,12 +43,11 @@ class AppConfig:
     debug_mode: bool = False
 
 
-def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
+def set_gui_config(cfg: AppConfig, gui_cfg: dict) -> None:
+    """GUIからの設定をAppConfigに反映させる"""
 
-    temp_dir = Path(temp_dir)
-    cwd = Path.cwd()
-    
     conv_mode_cfg = gui_cfg['conv_mode']
+    cwd = Path.cwd()
 
     if (conv_mode_cfg == 1):
         include_voice_cfg = True
@@ -60,10 +59,24 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
         sound_quality_cfg = 8738
         result_gba_name = "NarcissuGBA (no voice).gba"
 
+    cfg.include_voice    = include_voice_cfg
+    cfg.sound_quality    = sound_quality_cfg
+    cfg.output_debug_dir = Path(cwd / f"debug_{result_gba_name}")
+    cfg.result_gba       = Path(cwd / result_gba_name)
+    cfg.base_gba         = Path(cwd / "resources" / "base_gba" / f"base_{sound_quality_cfg}.gba")
+
+    return
+
+
+def create_config(temp_dir: Path) -> AppConfig:
+    """AppConfigを作成する"""
+
+    cwd = Path.cwd()
+
     cfg = AppConfig(
         input_exe        = Path(cwd / "resources" / "game_win" / "nana24.exe"),
-        include_voice    = bool(include_voice_cfg),
-        sound_quality    = int(sound_quality_cfg),
+        include_voice    = bool(),
+        sound_quality    = int(),
 
         image_filter_dir = Path(cwd / "resources" / "image_filters"),
         font_path        = Path(cwd / "resources" / "fonts" / "misaki_gothic.ttf"),
@@ -83,9 +96,9 @@ def create_config(temp_dir: str, gui_cfg: dict) -> AppConfig:
         debug_dir        = Path(temp_dir / "debug"),
         gbfs_path        = Path(temp_dir / "convert" / "data.gbfs"),
 
-        output_debug_dir = Path(cwd / f"debug_{result_gba_name}"),
-        result_gba       = Path(cwd / result_gba_name),
-        base_gba         = Path(cwd / "resources" / "base_gba" / f"base_{sound_quality_cfg}.gba"),
+        output_debug_dir = Path(),
+        result_gba       = Path(),
+        base_gba         = Path(),
 
         debug_mode       = bool(Path(cwd / ".debug").exists()),
     )
