@@ -33,8 +33,8 @@ def licenses():
 
 def conv_mode_radio_callback(sender, app_data, user_data):
     t = {
-        "ボイス搭載モード（声アリ・****Hz）": 1,
-        "高音質再生モード（声ナシ・****Hz）": 2,
+        cfg.sound_quality_high_message: 1,
+        cfg.sound_quality_low_message: 2,
     }
     gui_cfg["conv_mode"] = t[app_data]
     print(gui_cfg)
