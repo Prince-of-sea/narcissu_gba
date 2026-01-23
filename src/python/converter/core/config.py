@@ -47,8 +47,8 @@ class AppConfig:
     debug_mode: bool = False
 
     # ===== 設定関連 =====
-    sound_quality_high: int = 8738
-    sound_quality_low: int = 5734
+    sound_quality_high: int = 5734
+    sound_quality_low: int = 8738
     sound_quality_high_message: str = f"ボイス搭載モード(声アリ・{sound_quality_high}Hz)"
     sound_quality_low_message: str = f"高音質再生モード(声無し・{sound_quality_low}Hz)"
 
