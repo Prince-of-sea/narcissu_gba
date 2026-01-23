@@ -61,12 +61,12 @@ def set_gui_config(cfg: AppConfig, gui_cfg: dict) -> None:
 
     if (conv_mode_cfg == 1):
         include_voice_cfg = True
-        sound_quality_cfg = 5734
+        sound_quality_cfg = cfg.sound_quality_low
         result_gba_name = "NarcissuGBA.gba"
 
     elif (conv_mode_cfg == 2):
         include_voice_cfg = False
-        sound_quality_cfg = 8738
+        sound_quality_cfg = cfg.sound_quality_high
         result_gba_name = "NarcissuGBA (no voice).gba"
 
     cfg.include_voice    = include_voice_cfg

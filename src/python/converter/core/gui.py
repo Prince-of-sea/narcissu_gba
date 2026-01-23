@@ -113,6 +113,7 @@ def gui_main(cfg: AppConfig) -> None:
                 with dpg.group(horizontal=True):
                     dpg.add_checkbox(
                         label="変換途中のファイルを出力する（デバッグ）",
+                        tag="debug_checkbox",
                         default_value=False,
                     )
 
