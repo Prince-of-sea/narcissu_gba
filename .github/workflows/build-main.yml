@@ -3,6 +3,7 @@ name: ビルド時共通部分
 on: workflow_call
 
 jobs:
+
     build-gba:
         runs-on: ubuntu-latest
         container:
@@ -44,6 +45,10 @@ jobs:
                   python -m pip install --upgrade pip
                   pip install pyinstaller
                   pip install -r ./src/python/converter/requirements.txt
+            
+            - name: Run Python - create_licenses_txt
+              run: |
+                  python './src/python/create_licenses_txt/create_licenses_txt.py'
 
             - name: build exe
               run: |
@@ -55,6 +60,7 @@ jobs:
                   mv ./src/python/converter/tools ./dist/main/
                   mv ./src/python/converter/resources ./dist/main/
                   mv ./*.gba ./dist/main/resources/base_gba
+                  mv ./licenses_py.txt ./dist/main/resources/lib_license
 
             - name: upload artifact
               uses: actions/upload-artifact@v6

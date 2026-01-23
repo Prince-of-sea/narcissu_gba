@@ -33,8 +33,8 @@ def licenses():
 
 def conv_mode_radio_callback(sender, app_data, cfg: AppConfig):
     t = {
-        cfg.sound_quality_high_message: 1,
-        cfg.sound_quality_low_message: 2,
+        cfg.sound_quality_low_message: 1,
+        cfg.sound_quality_high_message: 2,
     }
     gui_cfg["conv_mode"] = t[app_data]
     print(gui_cfg)
@@ -42,6 +42,7 @@ def conv_mode_radio_callback(sender, app_data, cfg: AppConfig):
 
 
 def convert_button_callback(cfg: AppConfig, gui_cfg: dict):
+    cfg.debug_mode = bool(dpg.get_value("debug_checkbox"))
     convert_main(cfg, gui_cfg)
     return
 
@@ -64,7 +65,7 @@ def gui_main(cfg: AppConfig) -> None:
     dpg.set_exit_callback(close)
 
     with dpg.font_registry():
-        with dpg.font(file=r"C:\Windows\Fonts\meiryo.ttc", size=16) as default_font:
+        with dpg.font(file=cfg.font_path, size=16) as default_font:
             dpg.add_font_range_hint(dpg.mvFontRangeHint_Japanese)
         dpg.bind_font(default_font)
 
@@ -100,8 +101,8 @@ def gui_main(cfg: AppConfig) -> None:
                     dpg.add_text("変換モードの指定：")
                     dpg.add_radio_button(
                         items=(
-                            f"{cfg.sound_quality_high_message}",
                             f"{cfg.sound_quality_low_message}",
+                            f"{cfg.sound_quality_high_message}",
                         ),
                         horizontal=False,
                         tag="conv_mode_radio",
@@ -113,6 +114,7 @@ def gui_main(cfg: AppConfig) -> None:
                 with dpg.group(horizontal=True):
                     dpg.add_checkbox(
                         label="変換途中のファイルを出力する（デバッグ）",
+                        tag="debug_checkbox",
                         default_value=False,
                     )
 

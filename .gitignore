@@ -274,6 +274,7 @@ __marimo__/
 .streamlit/secrets.toml
 
 # core_gba
+src/python/converter/resources/lib_license/*.txt
 src/python/converter/resources/game_win/*.exe
 src/python/converter/*.gba_debug
 src/python/converter/.debug
