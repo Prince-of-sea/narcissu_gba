@@ -42,6 +42,7 @@ def conv_mode_radio_callback(sender, app_data, cfg: AppConfig):
 
 
 def convert_button_callback(cfg: AppConfig, gui_cfg: dict):
+    cfg.debug_mode = bool(dpg.get_value("debug_checkbox"))
     convert_main(cfg, gui_cfg)
     return
 
