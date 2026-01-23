@@ -31,7 +31,7 @@ def licenses():
     return
 
 
-def conv_mode_radio_callback(sender, app_data, user_data):
+def conv_mode_radio_callback(sender, app_data, cfg: AppConfig):
     t = {
         cfg.sound_quality_high_message: 1,
         cfg.sound_quality_low_message: 2,
@@ -100,12 +100,13 @@ def gui_main(cfg: AppConfig) -> None:
                     dpg.add_text("変換モードの指定：")
                     dpg.add_radio_button(
                         items=(
-                            "ボイス搭載モード（声アリ・****Hz）",
-                            "高音質再生モード（声ナシ・****Hz）",
+                            f"{cfg.sound_quality_high_message}",
+                            f"{cfg.sound_quality_low_message}",
                         ),
                         horizontal=False,
                         tag="conv_mode_radio",
                         callback=conv_mode_radio_callback,
+                        user_data=cfg,
                     )
 
             with dpg.tree_node(label="詳細設定", default_open=True):
