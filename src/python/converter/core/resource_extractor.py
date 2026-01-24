@@ -5,6 +5,7 @@ import zipfile
 
 from core.config import AppConfig
 from core.gui_utils import configure_progress_bar
+from core.converter_utils import subprocess_args
 
 
 def extract_nana24_exe(cfg: AppConfig) -> None:
@@ -35,7 +36,7 @@ def extract_arc_nsa(cfg: AppConfig) -> None:
     """arc.nsaの展開を行う"""
 
     cmd = [cfg.arc_unpacker_exe, '--dec=nscripter/nsa', f'--out={cfg.extract_dir}', cfg.nsa_path]
-    subprocess.run(cmd, cwd = cfg.arc_unpacker_exe.parent)
+    subprocess.run(cmd, cwd = cfg.arc_unpacker_exe.parent, **subprocess_args())
 
     # プログレスバー更新    
     configure_progress_bar(cfg.progress_dict["extract_arc_nsa"], True)

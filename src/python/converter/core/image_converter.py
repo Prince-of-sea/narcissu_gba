@@ -2,11 +2,13 @@
 import concurrent.futures
 import subprocess
 import struct
+
 from pathlib import Path
 from PIL import Image
 
 from core.config import AppConfig
 from core.gui_utils import configure_progress_bar
+from core.converter_utils import subprocess_args
 from .image_special import convert_IMG000
 from .image_special import convert_IMG001
 from .image_special import convert_IMG003_009
@@ -37,7 +39,7 @@ def run_grit(cfg: AppConfig, in_path: Path) -> None:
     """grit.exe を使って変換"""
 
     cmd = [cfg.grit_exe, in_path, '-gb', '-gB16', '-ftb', '-gu16', '-fh!']
-    subprocess.run(cmd, cwd = cfg.convert_dir)
+    subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
     
     return
 

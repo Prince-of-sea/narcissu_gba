@@ -5,6 +5,7 @@ import shutil
 
 from core.config import AppConfig
 from core.gui_utils import configure_progress_bar
+from core.converter_utils import subprocess_args
 
 
 def join_binary_files(cfg: AppConfig):
@@ -37,7 +38,7 @@ def run_gbfs(cfg: AppConfig) -> None:
     """gbfs.exe を使ってパックする"""
 
     cmd = [cfg.gbfs_exe, cfg.gbfs_path, f'{cfg.convert_dir}/*.*']
-    result = subprocess.run(cmd, cwd = cfg.convert_dir, stdout=subprocess.PIPE, text=True)
+    result = subprocess.run(cmd, cwd = cfg.convert_dir, stdout=subprocess.PIPE, text=True, **subprocess_args(False))
 
     # デバッグモード時
     if cfg.debug_mode:

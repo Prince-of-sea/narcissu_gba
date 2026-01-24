@@ -6,6 +6,7 @@ from pathlib import Path
 
 from core.config import AppConfig
 from core.gui_utils import configure_progress_bar
+from core.converter_utils import subprocess_args
 from .paths import BGM_LIST, SE_LIST, VOICE_LIST
 
 
@@ -24,7 +25,7 @@ def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) 
                'silence', '1', '0.1', '0.5%', 'reverse', 'silence', '1', '0.1', '0.5%', 'reverse']
 
     # メイン処理 - コマンド実行
-    subprocess.run(cmd, cwd = cfg.convert_dir)
+    subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
 
     # デバッグ用
     if cfg.debug_mode:
@@ -41,7 +42,7 @@ def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) 
                     'silence', '1', '0.1', '0.5%', 'reverse', 'silence', '1', '0.1', '0.5%', 'reverse']
 
         # テスト用処理 - コマンド実行
-        subprocess.run(cmd, cwd = cfg.convert_dir)
+        subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
     
     # 無音ファイルコピー
     shutil.copyfile(
@@ -63,7 +64,7 @@ def run_sox_dummy(cfg: AppConfig, dummyraw_path: Path) -> None:
     cmd = [cfg.sox_exe, '-n', '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', dummyraw_path, 'trim', '0', '0.7']
 
     # メイン処理 - コマンド実行
-    subprocess.run(cmd, cwd = cfg.convert_dir)
+    subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
 
     return
 
@@ -157,9 +158,4 @@ def convert_audio(cfg: AppConfig) -> None:
     configure_progress_bar(cfg.progress_dict["convert_audio"])
 
     return
-
-
-        # for i, ft in enumerate(concurrent.futures.as_completed(futures)):
-        #     # 進捗 0.05→0.95(連番時0.35)
-        #     configure_progress_bar(
-        #         0.05 + (float(i / len(list(cnvset_dict))) * cnvbarnum), '', useGUI)
+    
