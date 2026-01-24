@@ -60,18 +60,6 @@ def run_gbfs(cfg: AppConfig) -> None:
     return
 
 
-def clear_directory(cfg: AppConfig) -> None:
-    """不要ディレクトリの中身全部消す"""
-
-    shutil.rmtree(cfg.convert_dir)
-    shutil.rmtree(cfg.extract_dir)
-
-    if (cfg.debug_dir).exists():
-        shutil.rmtree(cfg.debug_dir)
-    
-    return
-
-
 def pack_resources(cfg: AppConfig) -> None:
     """結合処理全体"""
     run_gbfs(cfg)
@@ -84,8 +72,5 @@ def pack_resources(cfg: AppConfig) -> None:
             shutil.rmtree(cfg.output_debug_dir)
 
         shutil.copytree(cfg.debug_dir, cfg.output_debug_dir)
-    
-    # 最後に全部消す
-    clear_directory(cfg)
 
     return

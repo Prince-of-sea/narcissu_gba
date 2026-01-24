@@ -841,7 +841,7 @@ def convert_gray_background(nsa_extract_path: Path, temppng_path: Path, cfg: App
         bbox = binary_mask.getbbox()
 
         if not bbox:
-            print("文字が検出されませんでした。")
+            raise Exception ("文字が検出されませんでした。")
             return
 
         # bboxは (left, top, right, bottom)

@@ -163,27 +163,25 @@ def convert_images(cfg: AppConfig) -> None:
     prog_img = cfg.progress_dict["convert_images"]
     imglist_len = len(IMG_LIST)
 
-    if (not cfg.debug_mode):
-        # 並列ファイル変換 (通常時、エラーは無視)
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = []
+    # 並列ファイル変換 (通常時、エラーは無視)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = []
 
-            for img_info in IMG_LIST:
-                # 画像の並列変換処理
-                futures.append(executor.submit(
-                    convert_image_parallel, cfg, img_info))
-            
-            # 処理待ち&プログレスバー計算更新
-            for i, ft in enumerate(concurrent.futures.as_completed(futures)):
-                configure_progress_bar(
-                    prog_scn + float(i / imglist_len) * (prog_img - prog_scn))
+        for img_info in IMG_LIST:
+            # 画像の並列変換処理
+            futures.append(executor.submit(
+                convert_image_parallel, cfg, img_info))
+        
+        # 処理待ち&プログレスバー計算更新
+        for i, ft in enumerate(concurrent.futures.as_completed(futures)):
 
-    else:
-        # 非並列ファイル変換 (デバッグモード時、エラーチェック用)
-        for i, img_info in enumerate(IMG_LIST):
-            convert_image_parallel(cfg, img_info)
+            # エラー起きたらここで例外飛ぶ
+            ft.result()
+
+            # プログレスバー更新
             configure_progress_bar(
-                    prog_scn + float(i / imglist_len) * (prog_img - prog_scn))
+                prog_scn + float(i / imglist_len) * (prog_img - prog_scn))
+
 
     # プログレスバー更新
     configure_progress_bar(cfg.progress_dict["convert_images"])
