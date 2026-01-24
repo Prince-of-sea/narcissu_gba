@@ -5,6 +5,7 @@ import sys
 
 from core.config import AppConfig
 from core.converter import convert_main
+from core.gui_utils import message_box
 
 
 def close():
@@ -12,24 +13,16 @@ def close():
     sys.exit(0)
 
 
-def open_repositorieslink():
-    url = "https://github.com/Prince-of-sea/narcissu_gba/"
-    webbrowser.open(url, new=1, autoraise=True)
+def open_repositorieslink(cfg: AppConfig):
+    webbrowser.open(cfg.repo_url, new=1, autoraise=True)
     return
 
 
 def copyrights(cfg: AppConfig):
 
-    with dpg.mutex():
-        with dpg.window(label='copyrights', modal=True) as msg_window:
-            dpg.add_text(f'{cfg.app_name} ver.{cfg.app_version}\n(C) 2025-2026 Prince-of-sea / PC-CNT')
-            dpg.add_button(label='OK', callback=lambda: dpg.configure_item(
-                    msg_window, show=False))
-            
-    dpg.split_frame()
-    dpg.set_item_pos(msg_window,
-                    [dpg.get_viewport_client_width() // 2 - dpg.get_item_width(msg_window) // 2,
-                     dpg.get_viewport_client_height() // 2 - dpg.get_item_height(msg_window) // 2])
+    message_box('copyrights',
+                f'{cfg.app_name} ver.{cfg.app_version}\n(C) 2025-2026 Prince-of-sea / PC-CNT')
+
     return
 
 
@@ -58,7 +51,7 @@ def gui_main(cfg: AppConfig) -> None:
     dpg.create_viewport(
         title=f"{cfg.app_name} ver.{cfg.app_version}",
         width=480,
-        height=300,
+        height=280,
         resizable=False,
     )
 
@@ -68,7 +61,10 @@ def gui_main(cfg: AppConfig) -> None:
                 dpg.add_menu_item(label="終了", callback=close)
 
             with dpg.menu(label="このソフトについて"):
-                dpg.add_menu_item(label="サイトを開く", callback=open_repositorieslink)
+                dpg.add_menu_item(
+                    label="サイトを開く",
+                    callback=lambda: open_repositorieslink(cfg),
+                    )
                 dpg.add_menu_item(
                     label="権利者表記",
                     callback=lambda: copyrights(cfg),

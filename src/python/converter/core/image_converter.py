@@ -6,6 +6,7 @@ from pathlib import Path
 from PIL import Image
 
 from core.config import AppConfig
+from core.gui_utils import configure_progress_bar
 from .image_special import convert_IMG000
 from .image_special import convert_IMG001
 from .image_special import convert_IMG003_009
@@ -157,20 +158,34 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
 def convert_images(cfg: AppConfig) -> None:
     """画像の全変換処理"""
 
-    # 並列ファイル変換
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = []
+    # プログレスバー計算用  
+    prog_scn = cfg.progress_dict["convert_scenario"]
+    prog_img = cfg.progress_dict["convert_images"]
+    imglist_len = len(IMG_LIST)
 
-        for img_info in IMG_LIST:
-            # 画像の並列変換処理
-            futures.append(executor.submit(
-                convert_image_parallel, cfg, img_info))
-        
-        # gui対応時にはプログレスバー用に改良予定
-        concurrent.futures.as_completed(futures)
+    if (not cfg.debug_mode):
+        # 並列ファイル変換 (通常時、エラーは無視)
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = []
 
-    # 直列ファイル変換 (デバッグ用)
-    # for img_info in IMG_LIST:
-    #     convert_image_parallel(cfg, img_info)
+            for img_info in IMG_LIST:
+                # 画像の並列変換処理
+                futures.append(executor.submit(
+                    convert_image_parallel, cfg, img_info))
+            
+            # 処理待ち&プログレスバー計算更新
+            for i, ft in enumerate(concurrent.futures.as_completed(futures)):
+                configure_progress_bar(
+                    prog_scn + float(i / imglist_len) * (prog_img - prog_scn))
+
+    else:
+        # 非並列ファイル変換 (デバッグモード時、エラーチェック用)
+        for i, img_info in enumerate(IMG_LIST):
+            convert_image_parallel(cfg, img_info)
+            configure_progress_bar(
+                    prog_scn + float(i / imglist_len) * (prog_img - prog_scn))
+
+    # プログレスバー更新
+    configure_progress_bar(cfg.progress_dict["convert_images"])
 
     return

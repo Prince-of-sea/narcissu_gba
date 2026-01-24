@@ -20,6 +20,7 @@ class AppConfig:
     image_filter_dir: Path
     license_txt_path: Path
     font_path: Path
+    repo_url: str
 
     # ===== 外部ツール（exe）=====
     arc_unpacker_exe: Path
@@ -55,6 +56,9 @@ class AppConfig:
     sound_quality_high_message: str = f"高音質再生モード(声無し・{sound_quality_high}Hz)"
     sound_quality_low_message: str = f"ボイス搭載モード(声アリ・{sound_quality_low}Hz)"
 
+    # ===== プログレスバー進捗割合 =====
+    progress_dict: dict = None
+
 
 def set_gui_config(cfg: AppConfig) -> None:
     """GUIからの設定をAppConfigに反映させる"""
@@ -78,6 +82,9 @@ def set_gui_config(cfg: AppConfig) -> None:
     cfg.base_gba         = Path(cwd / "resources" / "base_gba" / f"base_{sound_quality_cfg}.gba")
     cfg.debug_mode       = bool(dpg.get_value("debug_checkbox"))
 
+    cfg.exe_extract_dir.mkdir(parents=True, exist_ok=True)
+    cfg.convert_dir.mkdir(parents=True, exist_ok=True)
+
     if (cfg.debug_mode):
         Path(cfg.debug_dir / 'img').mkdir(parents=True, exist_ok=True)
         Path(cfg.debug_dir / 'bgm').mkdir(parents=True, exist_ok=True)
@@ -94,7 +101,7 @@ def create_config(temp_dir: Path) -> AppConfig:
 
     cfg = AppConfig(
         app_name         = "Narcissu GBA Converter",
-        app_version      = "0.6.0",
+        app_version      = "0.7.0",
         
         input_exe        = Path(cwd / "resources" / "game_win" / "nana24.exe"),
         include_voice    = bool(),
@@ -103,6 +110,7 @@ def create_config(temp_dir: Path) -> AppConfig:
         image_filter_dir = Path(cwd / "resources" / "image_filters"),
         license_txt_path = Path(cwd / "resources" / "lib_license" / "licenses_py.txt"),
         font_path        = Path(cwd / "resources" / "fonts" / "misaki_gothic.ttf"),
+        repo_url         = str("https://github.com/Prince-of-sea/narcissu_gba/"),
 
         arc_unpacker_exe = Path(cwd / "tools" / "arc_unpacker" / "arc_unpacker.exe"),
         gbfs_exe         = Path(cwd / "tools" / "gbfs" / "gbfs.exe"),
@@ -124,9 +132,17 @@ def create_config(temp_dir: Path) -> AppConfig:
         base_gba         = Path(),
 
         debug_mode       = bool(),
-    )
 
-    cfg.exe_extract_dir.mkdir(parents=True, exist_ok=True)
-    cfg.convert_dir.mkdir(parents=True, exist_ok=True)
+        progress_dict    = {
+            "start": 0,
+            "extract_nana24_exe": 10,
+            "extract_arc_nsa": 20,
+            "convert_scenario": 30,
+            "convert_images": 40,
+            "convert_audio": 80,
+            "run_gbfs": 95,
+            "join_binary_files": 100,
+        },
+    )
 
     return cfg

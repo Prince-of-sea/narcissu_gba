@@ -4,6 +4,7 @@ import math
 import re
 
 from core.config import AppConfig
+from core.gui_utils import configure_progress_bar
 from .paths import IMG_LIST, BGM_LIST, SE_LIST, VOICE_LIST
 
 
@@ -431,5 +432,9 @@ def convert_scenario(cfg: AppConfig) -> None:
     
     # savid作成
     create_savid(cfg)
+
+    # プログレスバー更新
+    configure_progress_bar(cfg.progress_dict["convert_scenario"], True)
+
         
     return

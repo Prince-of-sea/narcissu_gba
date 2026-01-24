@@ -4,6 +4,7 @@ import subprocess
 import shutil
 
 from core.config import AppConfig
+from core.gui_utils import configure_progress_bar
 
 
 def join_binary_files(cfg: AppConfig):
@@ -25,6 +26,11 @@ def join_binary_files(cfg: AppConfig):
         # 2つ目のファイルをコピー
         with src2.open("rb") as infile2:
             shutil.copyfileobj(infile2, outfile)
+    
+    # プログレスバー更新
+    configure_progress_bar(cfg.progress_dict["join_binary_files"], True)
+
+    return
 
 
 def run_gbfs(cfg: AppConfig) -> None:
@@ -48,6 +54,21 @@ def run_gbfs(cfg: AppConfig) -> None:
             if (p.is_file() and cfg.gbfs_path.name not in p.name):
                 p.replace(debug_bin_dir / p.name)
     
+    # プログレスバー更新
+    configure_progress_bar(cfg.progress_dict["run_gbfs"], True)
+    
+    return
+
+
+def clear_directory(cfg: AppConfig) -> None:
+    """不要ディレクトリの中身全部消す"""
+
+    shutil.rmtree(cfg.convert_dir)
+    shutil.rmtree(cfg.extract_dir)
+
+    if (cfg.debug_dir).exists():
+        shutil.rmtree(cfg.debug_dir)
+    
     return
 
 
@@ -63,5 +84,8 @@ def pack_resources(cfg: AppConfig) -> None:
             shutil.rmtree(cfg.output_debug_dir)
 
         shutil.copytree(cfg.debug_dir, cfg.output_debug_dir)
+    
+    # 最後に全部消す
+    clear_directory(cfg)
 
     return

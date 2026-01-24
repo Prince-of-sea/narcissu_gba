@@ -5,6 +5,7 @@ import shutil
 from pathlib import Path
 
 from core.config import AppConfig
+from core.gui_utils import configure_progress_bar
 from .paths import BGM_LIST, SE_LIST, VOICE_LIST
 
 
@@ -113,6 +114,17 @@ def convert_audio_parallel(cfg: AppConfig, img_info: list[int, str], is_bgm: boo
 def convert_audio(cfg: AppConfig) -> None:
     """音源の全変換処理"""
 
+    # ボイス有無で変換リストを作成
+    if (cfg.include_voice):
+        fmx_list = (SE_LIST + VOICE_LIST)
+    else:
+        fmx_list = (SE_LIST)
+
+    # プログレスバー計算用  
+    prog_img = cfg.progress_dict["convert_images"]
+    prog_aud = cfg.progress_dict["convert_audio"]
+    alllist_len = len(BGM_LIST + fmx_list)
+    
     # 無音ファイルパス
     dummyraw_path = Path(cfg.convert_dir / f'dummy.raw')
 
@@ -122,11 +134,6 @@ def convert_audio(cfg: AppConfig) -> None:
     # 並列ファイル変換
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = []
-
-        if cfg.include_voice:
-            fmx_list = (SE_LIST + VOICE_LIST)
-        else:
-            fmx_list = (SE_LIST)
 
         for img_info in BGM_LIST:
             # 音源の並列変換処理(is_bgm=True)
@@ -138,10 +145,21 @@ def convert_audio(cfg: AppConfig) -> None:
             futures.append(executor.submit(
                 convert_audio_parallel, cfg, img_info, False))
 
-        # gui対応時にはプログレスバー用に改良予定
-        concurrent.futures.as_completed(futures)
+        # 処理待ち&プログレスバー計算更新
+        for i, ft in enumerate(concurrent.futures.as_completed(futures)):
+            configure_progress_bar(
+                prog_img + float(i / alllist_len) * (prog_aud - prog_img))
     
     # 無音ファイル削除
     dummyraw_path.unlink()
 
+    # プログレスバー更新
+    configure_progress_bar(cfg.progress_dict["convert_audio"])
+
     return
+
+
+        # for i, ft in enumerate(concurrent.futures.as_completed(futures)):
+        #     # 進捗 0.05→0.95(連番時0.35)
+        #     configure_progress_bar(
+        #         0.05 + (float(i / len(list(cnvset_dict))) * cnvbarnum), '', useGUI)
