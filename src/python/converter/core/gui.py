@@ -1,15 +1,10 @@
 #!/usr/bin/env python3
-from operator import call
-import sys
-import webbrowser
-
 import dearpygui.dearpygui as dpg
+import webbrowser
+import sys
 
 from core.config import AppConfig
 from core.converter import convert_main
-
-
-gui_cfg = {"conv_mode": 1}
 
 
 def close():
@@ -23,45 +18,36 @@ def open_repositorieslink():
     return
 
 
-def copyrights():
+def copyrights(cfg: AppConfig):
+
+    with dpg.mutex():
+        with dpg.window(label='copyrights', modal=True) as msg_window:
+            dpg.add_text(f'{cfg.app_name} ver.{cfg.app_version}\n(C) 2025-2026 Prince-of-sea / PC-CNT')
+            dpg.add_button(label='OK', callback=lambda: dpg.configure_item(
+                    msg_window, show=False))
+            
+    dpg.split_frame()
+    dpg.set_item_pos(msg_window,
+                    [dpg.get_viewport_client_width() // 2 - dpg.get_item_width(msg_window) // 2,
+                     dpg.get_viewport_client_height() // 2 - dpg.get_item_height(msg_window) // 2])
     return
 
 
-def licenses():
+def licenses(cfg: AppConfig):
+    webbrowser.open(cfg.license_txt_path, new=1, autoraise=True)
     return
 
 
-def conv_mode_radio_callback(sender, app_data, cfg: AppConfig):
-    t = {
-        cfg.sound_quality_low_message: 1,
-        cfg.sound_quality_high_message: 2,
-    }
-    gui_cfg["conv_mode"] = t[app_data]
-    print(gui_cfg)
-    return
-
-
-def convert_button_callback(cfg: AppConfig, gui_cfg: dict):
+def convert_button_callback(cfg: AppConfig):
     cfg.debug_mode = bool(dpg.get_value("debug_checkbox"))
-    convert_main(cfg, gui_cfg)
+    convert_main(cfg)
     return
 
 
 def gui_main(cfg: AppConfig) -> None:
     """gui本処理"""
 
-    ### 言うまでもなく仮 後で全部書き直す ###
-    print(f" +++ {cfg.app_name} Ver.{cfg.app_version} +++ ")
-
-    # root = tkinter.Tk()
-    # cnvmodegui = messagebox.askokcancel(
-    #     "確認", "モード？\nok:ボイス有り低音質\nキャンセル:ボイス無し高音質"
-    # )
-    # gui_cfg["conv_mode"] = 1 if cnvmodegui else 2
-    # root.destroy()
-
     dpg.create_context()
-
     dpg.set_exit_callback(close)
 
     with dpg.font_registry():
@@ -85,11 +71,11 @@ def gui_main(cfg: AppConfig) -> None:
                 dpg.add_menu_item(label="サイトを開く", callback=open_repositorieslink)
                 dpg.add_menu_item(
                     label="権利者表記",
-                    callback=copyrights,
+                    callback=lambda: copyrights(cfg),
                 )
                 dpg.add_menu_item(
                     label="ライセンス",
-                    callback=licenses,
+                    callback=lambda: licenses(cfg),
                 )
 
         with dpg.child_window(
@@ -106,7 +92,7 @@ def gui_main(cfg: AppConfig) -> None:
                         ),
                         horizontal=False,
                         tag="conv_mode_radio",
-                        callback=conv_mode_radio_callback,
+                        default_value=f"{cfg.sound_quality_low_message}",
                         user_data=cfg,
                     )
 
@@ -123,7 +109,7 @@ def gui_main(cfg: AppConfig) -> None:
             dpg.add_button(
                 label="Convert",
                 tag="convert_button",
-                callback=lambda: convert_button_callback(cfg, gui_cfg),
+                callback=lambda: convert_button_callback(cfg),
             )
 
     dpg.setup_dearpygui()
@@ -131,8 +117,5 @@ def gui_main(cfg: AppConfig) -> None:
     dpg.set_primary_window("Main Window", True)
     dpg.start_dearpygui()
     dpg.destroy_context()
-
-    ### 変換メイン処理呼び出し ### - 正式にはGUIから呼ばれる
-    # convert_main(cfg, gui_cfg)
 
     return

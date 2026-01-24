@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from pathlib import Path
 
+import dearpygui.dearpygui as dpg
+
 
 @dataclass
 class AppConfig:
@@ -16,6 +18,7 @@ class AppConfig:
 
     # ===== 外部リソース =====
     image_filter_dir: Path
+    license_txt_path: Path
     font_path: Path
 
     # ===== 外部ツール（exe）=====
@@ -53,18 +56,17 @@ class AppConfig:
     sound_quality_low_message: str = f"ボイス搭載モード(声アリ・{sound_quality_low}Hz)"
 
 
-def set_gui_config(cfg: AppConfig, gui_cfg: dict) -> None:
+def set_gui_config(cfg: AppConfig) -> None:
     """GUIからの設定をAppConfigに反映させる"""
-
-    conv_mode_cfg = gui_cfg['conv_mode']
+    
     cwd = Path.cwd()
 
-    if (conv_mode_cfg == 1):
+    if (dpg.get_value('conv_mode_radio') == cfg.sound_quality_low_message):
         include_voice_cfg = True
         sound_quality_cfg = cfg.sound_quality_low
         result_gba_name = "NarcissuGBA.gba"
 
-    elif (conv_mode_cfg == 2):
+    elif (dpg.get_value('conv_mode_radio') == cfg.sound_quality_high_message):
         include_voice_cfg = False
         sound_quality_cfg = cfg.sound_quality_high
         result_gba_name = "NarcissuGBA (no voice).gba"
@@ -74,7 +76,14 @@ def set_gui_config(cfg: AppConfig, gui_cfg: dict) -> None:
     cfg.output_debug_dir = Path(cwd / f"debug_{result_gba_name}")
     cfg.result_gba       = Path(cwd / result_gba_name)
     cfg.base_gba         = Path(cwd / "resources" / "base_gba" / f"base_{sound_quality_cfg}.gba")
+    cfg.debug_mode       = bool(dpg.get_value("debug_checkbox"))
 
+    if (cfg.debug_mode):
+        Path(cfg.debug_dir / 'img').mkdir(parents=True, exist_ok=True)
+        Path(cfg.debug_dir / 'bgm').mkdir(parents=True, exist_ok=True)
+        Path(cfg.debug_dir / 'fmx').mkdir(parents=True, exist_ok=True)
+        Path(cfg.debug_dir / 'scn').mkdir(parents=True, exist_ok=True)
+    
     return
 
 
@@ -92,6 +101,7 @@ def create_config(temp_dir: Path) -> AppConfig:
         sound_quality    = int(),
 
         image_filter_dir = Path(cwd / "resources" / "image_filters"),
+        license_txt_path = Path(cwd / "resources" / "lib_license" / "licenses_py.txt"),
         font_path        = Path(cwd / "resources" / "fonts" / "misaki_gothic.ttf"),
 
         arc_unpacker_exe = Path(cwd / "tools" / "arc_unpacker" / "arc_unpacker.exe"),
@@ -113,16 +123,10 @@ def create_config(temp_dir: Path) -> AppConfig:
         result_gba       = Path(),
         base_gba         = Path(),
 
-        debug_mode       = bool(Path(cwd / ".debug").exists()),
+        debug_mode       = bool(),
     )
 
     cfg.exe_extract_dir.mkdir(parents=True, exist_ok=True)
     cfg.convert_dir.mkdir(parents=True, exist_ok=True)
-
-    if (cfg.debug_mode):
-        Path(cfg.debug_dir / 'img').mkdir(parents=True, exist_ok=True)
-        Path(cfg.debug_dir / 'bgm').mkdir(parents=True, exist_ok=True)
-        Path(cfg.debug_dir / 'fmx').mkdir(parents=True, exist_ok=True)
-        Path(cfg.debug_dir / 'scn').mkdir(parents=True, exist_ok=True)
 
     return cfg
