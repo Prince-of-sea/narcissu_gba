@@ -48,7 +48,7 @@ jobs:
             
             - name: Run Python - create_licenses_txt
               run: |
-                  python '.github/workflows/create_licenses_txt.py'
+                  python './src/python/create_licenses_txt/create_licenses_txt.py'
 
             - name: build exe
               run: |
