@@ -4,6 +4,7 @@ import math
 import re
 
 from core.config import AppConfig
+from core.gui_utils import configure_progress_bar
 from .paths import IMG_LIST, BGM_LIST, SE_LIST, VOICE_LIST
 
 
@@ -25,6 +26,7 @@ class CommandCnt:
         """3. 0初期化"""
         self._value = 0
 
+
 # !s命令用カウンタ管理クラス
 class StepCnt:
     def __init__(self):
@@ -32,9 +34,7 @@ class StepCnt:
         self.count_b = 0
 
     def call(self, val_x):
-        """
-        引数を受け取り、カウントアップして [A, B, X] を返す
-        """
+        """引数を受け取り、カウントアップして [A, B, X] を返す"""
         self.count_b += 1
         
         # 8進法のように、8に達した瞬間に繰り上げ
@@ -45,9 +45,7 @@ class StepCnt:
         return [str(val_x), '!s', str(self.count_a), str(self.count_b)]
 
     def reset(self):
-        """
-        カウントを初期化する
-        """
+        """カウントを初期化する"""
         self.count_a = 0
         self.count_b = 0
 
@@ -70,7 +68,7 @@ def decrypt_0x84(data: bytes) -> bytes:
 
 
 def extract_concept(text):
-    # 文字列を抽出する正規表現 - "（"以降は除外
+    """文字列を抽出する正規表現 - "（"以降は除外"""
     match = re.search(r'(csel )?"　■　(.+?)(（.+)?",\*ns[0-9]{2},', text)
     if match:
         return match.group(2)
@@ -78,6 +76,7 @@ def extract_concept(text):
 
 
 def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], is_product: bool = False) -> list[str]:
+    """シナリオ変換メイン処理"""
 
     # パターン定義
     # 上から順で読み取らせるので基準が緩いものほど下に
@@ -271,8 +270,13 @@ def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], 
                             line_command = [cmd_cnt.get_str(), '!t', midasi]
                             line_command += s_cnt.call(cmd_cnt.get_str())
                         else:
-                            print(f'unknown val_name: {line}')
+                            raise Exception (f'unknown val_name: {line}')
+                        
+                    # クリック待ち
+                    elif (ptkey in [CLICK_PATTERN]):
+                        line_command += [cmd_cnt.get_str(), '_r', '　'*68]
 
+                    # ウェイト
                     elif (ptkey in [WAIT_PATTERN, WAIT_SHORT_PATTERN]):
                         wait_time_rawstr = matched_data.group('arg1')
                         wait_time_rawint = int(wait_time_rawstr)
@@ -290,7 +294,7 @@ def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], 
                     break
 
             if (ismatch == False):
-                print(f'no_match: {line}')
+                raise Exception (f'no_match: {line}')
 
     
     # 2→1次元配列へ変換
@@ -431,5 +435,9 @@ def convert_scenario(cfg: AppConfig) -> None:
     
     # savid作成
     create_savid(cfg)
+
+    # プログレスバー更新
+    configure_progress_bar(cfg.progress_dict["convert_scenario"], True)
+
         
     return

@@ -366,7 +366,7 @@ def convert_IMG027(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     sora07_path = nsa_extract_path.parent / Path('sora07.jpg')
 
     # 文面 直置きは気が引けるので申し訳程度のバイナリ表記
-    image_msg = b'\xe2\x80\x95\xe3\x80\x80\xe4\xb8\xbb\xe4\xba\xba\xe5\x85\xac\xe3\x80\x80\xef\xbc\x92\xef\xbc\x90\xef\xbc\x90\xef\xbc\x94\xe5\xb9\xb4\xe3\x80\x80\xe7\xa7\x8b\xe3\x80\x80\xe2\x80\x95'
+    image_msg = b'\xe2\x80\x95\xe3\x80\x80\xe4\xb8\xbb\xe4\xba\xba\xe5\x85\xac\xe3\x80\x80\xef\xbc\x92\xef\xbc\x90\xef\xbc\x90\xef\xbc\x94\xe5\xb9\xb4\xe3\x80\x80\xe7\xa7\x8b\xe3\x80\x80\xe2\x80\x95'.decode('utf-8')
 
     line_s = 2  # 行間
     edge_color = (  0,   0,   0,  64)
@@ -841,7 +841,7 @@ def convert_gray_background(nsa_extract_path: Path, temppng_path: Path, cfg: App
         bbox = binary_mask.getbbox()
 
         if not bbox:
-            print("文字が検出されませんでした。")
+            raise Exception ("文字が検出されませんでした。")
             return
 
         # bboxは (left, top, right, bottom)

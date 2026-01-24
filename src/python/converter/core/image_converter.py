@@ -2,10 +2,13 @@
 import concurrent.futures
 import subprocess
 import struct
+
 from pathlib import Path
 from PIL import Image
 
 from core.config import AppConfig
+from core.gui_utils import configure_progress_bar
+from core.converter_utils import subprocess_args
 from .image_special import convert_IMG000
 from .image_special import convert_IMG001
 from .image_special import convert_IMG003_009
@@ -36,13 +39,15 @@ def run_grit(cfg: AppConfig, in_path: Path) -> None:
     """grit.exe を使って変換"""
 
     cmd = [cfg.grit_exe, in_path, '-gb', '-gB16', '-ftb', '-gu16', '-fh!']
-    subprocess.run(cmd, cwd = cfg.convert_dir)
+    subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
     
     return
 
 
 def append_footer_data(i: Path, f: Path) -> None:
     """末尾に独自データを追記"""
+    # 以下から流用
+    # https://github.com/akkera102/gbadev-ja-test/blob/main/132_shuumatsu_gba/gbfs/exe/img/img_para.py
 
     # 元画像のサイズだけ取得
     p = Image.open(i)
@@ -157,7 +162,12 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
 def convert_images(cfg: AppConfig) -> None:
     """画像の全変換処理"""
 
-    # 並列ファイル変換
+    # プログレスバー計算用  
+    prog_scn = cfg.progress_dict["convert_scenario"]
+    prog_img = cfg.progress_dict["convert_images"]
+    imglist_len = len(IMG_LIST)
+
+    # 並列ファイル変換 (通常時、エラーは無視)
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = []
 
@@ -166,11 +176,18 @@ def convert_images(cfg: AppConfig) -> None:
             futures.append(executor.submit(
                 convert_image_parallel, cfg, img_info))
         
-        # gui対応時にはプログレスバー用に改良予定
-        concurrent.futures.as_completed(futures)
+        # 処理待ち&プログレスバー計算更新
+        for i, ft in enumerate(concurrent.futures.as_completed(futures)):
 
-    # 直列ファイル変換 (デバッグ用)
-    # for img_info in IMG_LIST:
-    #     convert_image_parallel(cfg, img_info)
+            # エラー起きたらここで例外飛ぶ
+            ft.result()
+
+            # プログレスバー更新
+            configure_progress_bar(
+                prog_scn + float(i / imglist_len) * (prog_img - prog_scn))
+
+
+    # プログレスバー更新
+    configure_progress_bar(cfg.progress_dict["convert_images"])
 
     return
