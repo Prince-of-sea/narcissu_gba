@@ -40,17 +40,17 @@ def configure_progress_bar(value: float, is_smooth: bool = False) -> None:
     # 滑らかに移動する場合
     if (is_smooth):
 
-        # 現在の進捗率から0.5秒掛けて目標値までスムーズに移動
+        # 現在の進捗率から0.3秒掛けて目標値までスムーズに移動
         now_value = dpg.get_value("progress_bar") * 100
         datetime_start = datetime.datetime.now()
-        datetime_end = datetime_start + datetime.timedelta(seconds=0.5)
+        datetime_end = datetime_start + datetime.timedelta(seconds=0.3)
 
         while True:
             datetime_now = datetime.datetime.now()
             if (datetime_now > datetime_end):
                 break
             elapsed = (datetime_now - datetime_start).total_seconds()
-            progress = now_value + (value - now_value) * (elapsed / 0.5)
+            progress = now_value + (value - now_value) * (elapsed / 0.3)
             dpg.set_value("progress_bar", progress / 100)
             dpg.configure_item("progress_bar", overlay=f"{int(progress)}%")
             time.sleep(0.01)
