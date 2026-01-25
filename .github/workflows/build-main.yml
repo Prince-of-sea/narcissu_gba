@@ -57,14 +57,14 @@ jobs:
 
             - name: 必要なファイルを移動
               run: |
-                  mv ./src/python/converter/tools ./dist/main/
-                  mv ./src/python/converter/resources ./dist/main/
-                  mv ./*.gba ./dist/main/resources/base_gba
-                  mv ./licenses_py.txt ./dist/main/resources/lib_license
+                  mv ./src/python/converter/tools ./dist/Narcissu_GBA_Converter.exe/
+                  mv ./src/python/converter/resources ./dist/Narcissu_GBA_Converter.exe/
+                  mv ./*.gba ./dist/Narcissu_GBA_Converter.exe/resources/base_gba
+                  mv ./licenses_py.txt ./dist/Narcissu_GBA_Converter.exe/resources/lib_license
 
             - name: upload artifact
               uses: actions/upload-artifact@v6
               with:
                   name: build-exe
                   path: |
-                      ./dist/main
+                      ./dist/Narcissu_GBA_Converter.exe
