@@ -101,7 +101,7 @@ def create_config(temp_dir: Path) -> AppConfig:
 
     cfg = AppConfig(
         app_name         = "Narcissu GBA Converter",
-        app_version      = "0.7.1",
+        app_version      = "0.7.2",
         
         input_exe        = Path(cwd / "resources" / "game_win" / "nana24.exe"),
         include_voice    = bool(),
