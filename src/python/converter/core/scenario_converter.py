@@ -271,7 +271,12 @@ def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], 
                             line_command += s_cnt.call(cmd_cnt.get_str())
                         else:
                             raise Exception (f'unknown val_name: {line}')
+                        
+                    # クリック待ち
+                    elif (ptkey in [CLICK_PATTERN]):
+                        line_command += [cmd_cnt.get_str(), '_r', '　'*68]
 
+                    # ウェイト
                     elif (ptkey in [WAIT_PATTERN, WAIT_SHORT_PATTERN]):
                         wait_time_rawstr = matched_data.group('arg1')
                         wait_time_rawint = int(wait_time_rawstr)
