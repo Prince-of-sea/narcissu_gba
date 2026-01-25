@@ -46,6 +46,8 @@ def run_grit(cfg: AppConfig, in_path: Path) -> None:
 
 def append_footer_data(i: Path, f: Path) -> None:
     """末尾に独自データを追記"""
+    # 以下から流用
+    # https://github.com/akkera102/gbadev-ja-test/blob/main/132_shuumatsu_gba/gbfs/exe/img/img_para.py
 
     # 元画像のサイズだけ取得
     p = Image.open(i)
