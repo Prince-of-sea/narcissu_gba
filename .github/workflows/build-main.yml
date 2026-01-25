@@ -53,7 +53,7 @@ jobs:
             - name: build exe
               run: |
                   ls ./src/python/converter/
-                  pyinstaller ./src/python/converter/main.py --noconsole --name Narcissu_GBA_Converter.exe
+                  pyinstaller ./src/python/converter/main.py --noconsole --icon ./src/python/converter/resources/icon/icon.ico --name Narcissu_GBA_Converter.exe
 
             - name: 必要なファイルを移動
               run: |
