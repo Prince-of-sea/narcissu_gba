@@ -27,7 +27,7 @@ jobs:
 
         - name: download game
           run: |
-                wget -P ./build-exe/resources/game_win https://ftp.vector.co.jp/37/65/1834/nana24.exe
+                wget -P ./build-exe/resources/game_win https://web.archive.org/web/20241128191233fw_/https://ftp.vector.co.jp/37/65/1834/nana24.exe
 
         - name: create 7z archive
           run: |
