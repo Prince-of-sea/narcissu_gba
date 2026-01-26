@@ -202,7 +202,7 @@ def convert_IMG017(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         # 描画準備
         tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(tmp)
-        font = ImageFont.truetype(cfg.font_path, 8)
+        font = ImageFont.truetype(cfg.font_path, 11)
 
         # 1行目を基準とした中央座標計算
         first_line = image_msg.split('\n')[0]
@@ -247,7 +247,7 @@ def convert_IMG024(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         # 描画準備
         tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(tmp)
-        font = ImageFont.truetype(cfg.font_path, 8)
+        font = ImageFont.truetype(cfg.font_path, 10)
 
         # 1行目を基準とした中央座標計算
         first_line = image_msg.split('\n')[0]
@@ -292,7 +292,7 @@ def convert_IMG025(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         # 描画準備
         tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(tmp)
-        font = ImageFont.truetype(cfg.font_path, 8)
+        font = ImageFont.truetype(cfg.font_path, 10)
 
         # 1行目を基準とした中央座標計算
         first_line = image_msg.split('\n')[0]
@@ -337,7 +337,7 @@ def convert_IMG026(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         # 描画準備
         tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(tmp)
-        font = ImageFont.truetype(cfg.font_path, 8)
+        font = ImageFont.truetype(cfg.font_path, 11)
 
         # 1行目を基準とした中央座標計算
         first_line = image_msg.split('\n')[0]
@@ -382,7 +382,7 @@ def convert_IMG027(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         # 描画準備
         tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(tmp)
-        font = ImageFont.truetype(cfg.font_path, 8)
+        font = ImageFont.truetype(cfg.font_path, 11)
 
         # 1行目を基準とした中央座標計算
         first_line = image_msg.split('\n')[0]
@@ -762,10 +762,8 @@ def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 日時
 　{datetime.now().strftime('%Y/%m/%d %H:%M:%S')}
 
-
-
 本ソフトやコンバータに関する
-詳細な情報、利用方法はこちら→
+詳細情報、利用方法はこちら→
 
 https://github.com
 /Prince-of-sea/narcissu_gba"""
@@ -789,19 +787,12 @@ https://github.com
         # シャープネスを少し上げる
         img = img.filter(ImageFilter.UnsharpMask(radius=2, percent=30, threshold=3))
 
-        # QRコード画像のパス
-        filter_image_path = cfg.image_filter_dir / Path('filter_999_1.bin')
-
-        # QRコード画像を読み込み
-        with Image.open(filter_image_path) as filter_img:
-            img.paste(filter_img.convert('RGB'), (157, 77))
-
         # メッセージ描画用の透明レイヤー
         tmp = Image.new('RGBA', img.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(tmp)
-        font = ImageFont.truetype(cfg.font_path, 8)
+        font = ImageFont.truetype(cfg.font_path, 10)
 
-        # 文字貼り付け開始位置 (9, 9)
+        # 文字貼り付け開始位置
         x, y = 9, 9
 
         # 描画（縁4方向 + 本体）    
@@ -809,8 +800,19 @@ https://github.com
             draw.multiline_text((x+ox, y+oy), msg, font=font, fill=edge_color, spacing=line_s, align="left")
         draw.multiline_text((x, y), msg, font=font, fill=main_color, spacing=line_s, align="left")
 
-        # 合成して保存
+        # 文字合成
         img.paste(tmp, (0, 0), tmp)
+
+        # QRコード画像のパス
+        filter_image_path = cfg.image_filter_dir / Path('filter_999_1.bin')
+
+        # QRコード画像を読み込み
+        with Image.open(filter_image_path) as filter_img:
+
+            # QRコード貼り付け
+            img.paste(filter_img.convert('RGB'), (157, 77))
+
+        # 保存
         img.save(temppng_path, "PNG")
 
     return

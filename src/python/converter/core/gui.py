@@ -52,6 +52,8 @@ def gui_main(cfg: AppConfig) -> None:
         title=f"{cfg.app_name} ver.{cfg.app_version}",
         width=480,
         height=280,
+        small_icon=f"{cfg.icon_path}",
+        large_icon=f"{cfg.icon_path}",
         resizable=False,
     )
 
