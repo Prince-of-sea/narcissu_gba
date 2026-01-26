@@ -110,7 +110,7 @@ def create_config(temp_dir: Path) -> AppConfig:
 
         image_filter_dir = Path(cwd / "resources" / "image_filters"),
         license_txt_path = Path(cwd / "resources" / "lib_license" / "licenses_py.txt"),
-        font_path        = Path(cwd / "resources" / "fonts" / "misaki_gothic.ttf"),
+        font_path        = Path(cwd / "resources" / "fonts" / "GenJyuuGothic-Monospace-Bold.ttf"),
         icon_path        = Path(cwd / "resources" / "icon" / "icon.ico"),
         repo_url         = str("https://github.com/Prince-of-sea/narcissu_gba/"),
 
