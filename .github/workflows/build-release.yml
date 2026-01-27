@@ -33,9 +33,9 @@ jobs:
           run: |
                 ls -al
                 sudo apt-get install p7zip-full
-                7z a -t7z ./release.7z ./build-exe/* -mx9
+                7z a -t7z ./narcissu_gba.7z ./build-exe/* -mx9
 
         - name: upload asset
           uses: softprops/action-gh-release@v2
           with:
-              files: ./release.7z
+              files: ./narcissu_gba.7z
