@@ -1,6 +1,6 @@
 # narcissu_gba
 ## ソフトについて
-2005年に"ステージ☆なな"から公開されたゲーム「narcissu」を、GBAで動作させるための変換ツールです。
+2005年に同人サークル「ステージ☆なな」から公開されたゲーム「narcissu」を、GBAで動作させるための変換ツールです。
 
 
 ## 動作環境
@@ -22,7 +22,7 @@ PCスペック: <br>
 
 ## 基本的な使い方
  1. [Releasesから最新のnarcissu_gba.7zをダウンロード](https://github.com/Prince-of-sea/narcissu_gba/releases/latest)し、展開してください
- 2. "Narcissu_GBA_Converter.exe"を起動します
+ 2. 「Narcissu_GBA_Converter.exe」を起動します
  3. ラジオボタンのどちらか一方を選択し、「Convert」を押してください
  4. 進捗バーが100%になり、「変換が完了しました」という表示が出たら完了です
 
@@ -40,29 +40,29 @@ PCスペック: <br>
  - 「環境設定→音楽」の順番および内容が原作のサウンドモードと全く合致しません
  - 章ごとの選択画面がなく、読み終わるとそのまま次の章へ遷移します(Productも同様)
  - Productの文字の表示位置が本編と同じになっています、また文字数の関係で一部の改行だった場所が改ページになっています
- - 独自のBボタンメニュー「変換情報」について、背景が切り替わる場面まで変換情報画面が表示されたままになります(「環境設定→画像」と同様の仕様)
+ - 独自のBボタンメニュー「変換情報」について、背景が切り替わる場面まで変換情報画面が表示されたままになります(「環境設定」→「画像」と同様の仕様)
 
 
 ### ライセンス
 
-| GBA ROM側                          | license |
-| :--------------------------------- | :------ |
-| 下記を除くGBAソースコード          | CC0     |
-| libgba                             | LGPL2.0 |
-| CULT-GBA and fixed Lorenzooone ver | MIT     |
-| crt0.s                             | MPL2.0  |
+| GBA ROM側                          | license                                                |
+| :--------------------------------- | :----------------------------------------------------- |
+| 下記を除くGBAソースコード          | CC0                                                    |
+| libgba                             | [LGPL2.0](./src/c/game_core/libgba/libgba_license.txt) |
+| CULT-GBA and fixed Lorenzooone ver | [MIT](./src/c/game_core/libbios/lz77.s)                |
+| crt0.s                             | [MPL2.0](./src/c/game_core/libgba/crt0.s)              |
 
-| コンバータ側           | license       |
-| :--------------------- | :------------ |
-| pythonソースコード全般 | GPL2 or later |
-| 源柔ゴシック           | SIL           |
-| arc_unpacker.exe       | GPL3          |
-| gbfs.exe               | GPL3          |
-| grit.exe               | GPL2          |
-| sox.exeおよび同梱のdll | GPL2          |
-| libmad.dll             | GPL2          |
+| コンバータ側           | license                                                                        |
+| :--------------------- | :----------------------------------------------------------------------------- |
+| Pythonソースコード全般 | [GPL2 or later](./src/python/converter/LICENSE)                                |
+| 源柔ゴシック           | [SIL](./src/python/converter/resources/fonts/GenJyuuGothic-Monospace-Bold.ttf) |
+| arc_unpacker.exe       | [GPL3](./src/python/converter/tools/arc_unpacker/LICENSE.md)                   |
+| gbfs.exe               | [GPL3](./src/python/converter/tools/gbfs/COPYING)                              |
+| grit.exe               | [GPL2](./src/python/converter/tools/grit/license-gpl.txt)                      |
+| sox.exeおよび同梱のdll | [GPL2](./src/python/converter/tools/sox/LICENSE.GPL.txt)                       |
 
-narcissuのゲーム本体(nana24.exe)については、以下の内容が"はじめに.txt"に書いていたので同梱しています
+ - Pythonで利用しているライブラリのライセンスは、コンバータ内メニューの「このソフトについて」→「ライセンス」で確認できます
+ - narcissuのゲーム本体(nana24.exe)については、「はじめに.txt」に以下の内容が書いていたのでReleasesに同梱しています
 ```
 ★転載等について…
 
