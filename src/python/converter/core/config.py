@@ -99,7 +99,6 @@ def set_gui_config(cfg: AppConfig) -> None:
 
 def set_rom_audio_rate(cfg: AppConfig) -> list[int]:
     """置いてあるROMのビットレート数値を取得してリストで返す"""
-    
 
     # ベースROM置き場
     base_gba_dir = Path(cfg.cwd / "resources" / "base_gba")
