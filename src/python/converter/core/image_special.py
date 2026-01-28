@@ -72,7 +72,7 @@ def convert_IMG001(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
 
 ###################################################################################################
-def convert_IMG003_009(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+def convert_IMG002_009(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """yobi/system.chapter02.bmp～yobi/system.chapter08.bmp 変換"""
 
     # 拡大率
