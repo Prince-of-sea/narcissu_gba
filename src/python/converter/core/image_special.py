@@ -746,21 +746,22 @@ def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
     # 変換モード文字列
     if cfg.include_voice:
-        voice_mode = f"ボイス搭載モード(声アリ・{cfg.sound_quality}Hz)"
+        voice_mode = cfg.sound_quality_low_message
     else:
-        voice_mode = f"高音質再生モード(声無し・{cfg.sound_quality}Hz)"
+        voice_mode = cfg.sound_quality_high_message
 
-    username = os.getlogin()
+    # 時刻取得
+    dt = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
 
-    # メッセージ内容(仮) バージョンなどは後にクラス管理にする
+    # メッセージ内容
     msg = f"""バージョン
 　{cfg.app_name} Ver.{cfg.app_version}
 変換モード
 　{voice_mode}
 ユーザー名
-　{username}
+　{cfg.user_name}
 日時
-　{datetime.now().strftime('%Y/%m/%d %H:%M:%S')}
+　{dt}
 
 本ソフトやコンバータに関する
 詳細情報、利用方法はこちら→

@@ -3,13 +3,16 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import dearpygui.dearpygui as dpg
-
+import os
 
 @dataclass
 class AppConfig:
     # ===== ツールについて =====
     app_name:    str
     app_version: str
+
+    # 利用ユーザー情報
+    user_name: str
     
     # ===== 入出力 =====
     input_exe:     Path
@@ -123,8 +126,10 @@ def create_config(temp_dir: Path) -> AppConfig:
     cwd = Path.cwd()
 
     cfg = AppConfig(
-        app_name         = "Narcissu GBA Converter",
-        app_version      = "0.7.3",
+        app_name         = str("Narcissu GBA Converter"),
+        app_version      = str("0.7.3"),
+
+        user_name        = str(os.getlogin()),
         
         input_exe        = Path(cwd / "resources" / "game_win" / "nana24.exe"),
         include_voice    = bool(),
