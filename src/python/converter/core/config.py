@@ -116,7 +116,7 @@ def set_rom_audio_rate(cfg: AppConfig) -> list[int]:
         rom_audio_rate_list.append(rate)
     
     # ソートして返却
-    return sorted(rom_audio_rate_list, reverse=True)
+    return sorted(rom_audio_rate_list)
 
 
 def create_config(temp_dir: Path) -> AppConfig:
@@ -174,7 +174,7 @@ def create_config(temp_dir: Path) -> AppConfig:
         },
     )
 
-    cfg.sound_quality_high, *_, cfg.sound_quality_low = set_rom_audio_rate(cfg)
+    cfg.sound_quality_low, *_, cfg.sound_quality_high = set_rom_audio_rate(cfg)
     cfg.sound_quality_high_message = f"高音質再生モード(声無し・{cfg.sound_quality_high}Hz)"
     cfg.sound_quality_low_message = f"ボイス搭載モード(声アリ・{cfg.sound_quality_low}Hz)"
 
