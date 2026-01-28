@@ -481,14 +481,15 @@ IMG_LIST = [
 	[  0,'e/title_off2.jpg',                   'special_000'],
 	[  1,'tui/title_off.bmp',                  'special_001'],
 
-	# 2~8章開始時のミニタイトル
-	[  3,'yobi/system/chapter02.bmp',          'special_003_009'],
-	[  4,'yobi/system/chapter03.bmp',          'special_003_009'],    
-	[  5,'yobi/system/chapter04.bmp',          'special_003_009'],    
-	[  6,'yobi/system/chapter05.bmp',          'special_003_009'],    
-	[  7,'yobi/system/chapter06.bmp',          'special_003_009'],    
-	[  8,'yobi/system/chapter07.bmp',          'special_003_009'],    
-	[  9,'yobi/system/chapter08.bmp',          'special_003_009'],
+	# 1~8章開始時のミニタイトル
+    [  2,'yobi/system/chapter01.bmp',          'special_002_009'],
+	[  3,'yobi/system/chapter02.bmp',          'special_002_009'],
+	[  4,'yobi/system/chapter03.bmp',          'special_002_009'],    
+	[  5,'yobi/system/chapter04.bmp',          'special_002_009'],    
+	[  6,'yobi/system/chapter05.bmp',          'special_002_009'],    
+	[  7,'yobi/system/chapter06.bmp',          'special_002_009'],    
+	[  8,'yobi/system/chapter07.bmp',          'special_002_009'],    
+	[  9,'yobi/system/chapter08.bmp',          'special_002_009'],
 
 	# 他の画像
 	[ 10,'e/amazora02.jpg',                    'fit_frame'],

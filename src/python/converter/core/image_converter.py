@@ -11,7 +11,7 @@ from core.gui_utils import configure_progress_bar
 from core.converter_utils import subprocess_args
 from .image_special import convert_IMG000
 from .image_special import convert_IMG001
-from .image_special import convert_IMG003_009
+from .image_special import convert_IMG002_009
 from .image_special import convert_IMG015
 from .image_special import convert_IMG017
 from .image_special import convert_IMG018_023
@@ -91,8 +91,8 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
             convert_IMG000(nsa_extract_path, temppng_path, cfg)
         case 'special_001':
             convert_IMG001(nsa_extract_path, temppng_path, cfg)
-        case 'special_003_009':
-            convert_IMG003_009(nsa_extract_path, temppng_path, cfg)
+        case 'special_002_009':
+            convert_IMG002_009(nsa_extract_path, temppng_path, cfg)
         case 'special_015':
             convert_IMG015(nsa_extract_path, temppng_path, cfg)
         case 'special_017':
