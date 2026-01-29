@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
 from PIL import Image, ImageFilter, ImageOps, ImageDraw, ImageFont
-from datetime import datetime
-import os
 
 from core.config import AppConfig
 
@@ -750,9 +748,6 @@ def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     else:
         voice_mode = cfg.sound_quality_high_message
 
-    # 時刻取得
-    dt = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
-
     # メッセージ内容
     msg = f"""バージョン
 　{cfg.app_name} Ver.{cfg.app_version}
@@ -761,7 +756,7 @@ def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 ユーザー名
 　{cfg.user_name}
 日時
-　{dt}
+　{cfg.convert_time}
 
 本ソフトやコンバータに関する
 詳細情報、利用方法はこちら→
@@ -773,11 +768,8 @@ https://github.com
     edge_color = (128, 128, 128, 64)
     main_color = (255, 255, 255, 255)
 
-    # 背景CG画像のパス
-    na02_path = cfg.nsa_extract_dir / Path('tui') / Path('na02.png')
-
     # 画像を読み込み
-    with Image.open(na02_path) as img:
+    with Image.open(nsa_extract_path) as img:
 
         # 240x180にリサイズ（縮小）
         img = img.resize((240, 180), Image.Resampling.LANCZOS)
@@ -787,6 +779,15 @@ https://github.com
 
         # シャープネスを少し上げる
         img = img.filter(ImageFilter.UnsharpMask(radius=2, percent=30, threshold=3))
+        
+        # フィルター画像のパス
+        filter2_image_path = cfg.image_filter_dir / Path('filter_999_2.bin')
+
+        # フィルター画像を読み込み
+        with Image.open(filter2_image_path) as filter_img:
+            
+            # 画像にフィルターを合成
+            img = Image.alpha_composite(img.convert('RGBA'), filter_img.convert('RGBA'))
 
         # メッセージ描画用の透明レイヤー
         tmp = Image.new('RGBA', img.size, (0, 0, 0, 0))
@@ -805,10 +806,10 @@ https://github.com
         img.paste(tmp, (0, 0), tmp)
 
         # QRコード画像のパス
-        filter_image_path = cfg.image_filter_dir / Path('filter_999_1.bin')
+        filter1_image_path = cfg.image_filter_dir / Path('filter_999_1.bin')
 
         # QRコード画像を読み込み
-        with Image.open(filter_image_path) as filter_img:
+        with Image.open(filter1_image_path) as filter_img:
 
             # QRコード貼り付け
             img.paste(filter_img.convert('RGB'), (157, 77))
