@@ -61,7 +61,7 @@ PCスペック: <br>
 | sox.exeおよび同梱のdll | [GPL2](./src/python/converter/tools/sox/LICENSE.GPL.txt)                       |
 
  - Pythonで利用しているライブラリのライセンスは、コンバータ内メニューの「このソフトについて」→「ライセンス」で確認できます
- - narcissuのゲーム本体(nana24.exe)については、「はじめに.txt」に以下の内容が書いてあったのでReleasesに同梱しています
+ - narcissuのゲーム本体(nana24.exe)については「はじめに.txt」に以下の内容が書いてあったので、Releasesに同梱させていただいています。
 ```
 ★転載等について…
 
