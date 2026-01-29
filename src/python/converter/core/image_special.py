@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
 from PIL import Image, ImageFilter, ImageOps, ImageDraw, ImageFont
-from datetime import datetime
-import os
 
 from core.config import AppConfig
 
@@ -750,9 +748,6 @@ def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     else:
         voice_mode = cfg.sound_quality_high_message
 
-    # 時刻取得
-    dt = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
-
     # メッセージ内容
     msg = f"""バージョン
 　{cfg.app_name} Ver.{cfg.app_version}
@@ -761,7 +756,7 @@ def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 ユーザー名
 　{cfg.user_name}
 日時
-　{dt}
+　{cfg.convert_time}
 
 本ソフトやコンバータに関する
 詳細情報、利用方法はこちら→

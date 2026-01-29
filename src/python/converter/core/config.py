@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 
 import dearpygui.dearpygui as dpg
@@ -12,7 +13,8 @@ class AppConfig:
     app_version: str
 
     # 利用ユーザー情報
-    user_name: str
+    user_name   : str
+    convert_time: str
     
     # ===== 入出力 =====
     input_exe:     Path
@@ -51,17 +53,15 @@ class AppConfig:
     base_gba:         Path
 
     # ===== 音声関連 =====
-    sound_quality_high:         int = 0
-    sound_quality_low:          int = 0
-    sound_quality_high_message: str = ""
-    sound_quality_low_message:  str = ""
+    sound_quality_high:         int
+    sound_quality_low:          int
+    sound_quality_high_message: str
+    sound_quality_low_message:  str
 
     # ===== 設定関連 =====
-    bgm_high_quality:          bool = False
-    voice_on:                  bool = True
-    outtmpfile_checkbox:       bool = False
-    ch1subtitle_checkbox:      bool = False
-    change_user_name_checkbox: bool = False
+    outtmpfile_checkbox:       bool
+    ch1subtitle_checkbox:      bool
+    change_user_name_checkbox: bool
 
     # ===== プログレスバー進捗割合 =====
     progress_dict: dict = None
@@ -79,7 +79,8 @@ def set_gui_config(cfg: AppConfig) -> None:
         include_voice_cfg = False
         sound_quality_cfg = cfg.sound_quality_high
         result_gba_name = "NarcissuGBA (no voice).gba"
-
+    
+    cfg.convert_time     = str(datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
     cfg.include_voice    = include_voice_cfg
     cfg.sound_quality    = sound_quality_cfg
     cfg.output_debug_dir = Path(cfg.cwd / f"debug_{result_gba_name}")
@@ -136,6 +137,7 @@ def create_config(temp_dir: Path) -> AppConfig:
         app_version      = str("0.7.4"),
 
         user_name        = str(os.getlogin()),
+        convert_time     = str(),
         
         input_exe        = Path(cwd / "resources" / "game_win" / "nana24.exe"),
         include_voice    = bool(),
@@ -167,7 +169,14 @@ def create_config(temp_dir: Path) -> AppConfig:
         result_gba       = Path(),
         base_gba         = Path(),
 
+        sound_quality_high         = int(),
+        sound_quality_low          = int(),
+        sound_quality_high_message = str(),
+        sound_quality_low_message  = str(),
+
         outtmpfile_checkbox       = bool(),
+        ch1subtitle_checkbox      = bool(),
+        change_user_name_checkbox = bool(),
 
         progress_dict    = {
             "start": 0,
