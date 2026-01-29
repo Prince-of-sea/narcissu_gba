@@ -20,6 +20,7 @@ jobs:
               uses: actions/upload-artifact@v6
               with:
                   name: build-gba
+                  retention-days: 1
                   path: |
                       ./*.gba
 
@@ -66,5 +67,6 @@ jobs:
               uses: actions/upload-artifact@v6
               with:
                   name: build-exe
+                  retention-days: 1
                   path: |
                       ./dist/Narcissu_GBA_Converter.exe
