@@ -28,7 +28,7 @@ def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) 
     subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
 
     # デバッグ用
-    if cfg.debug_mode:
+    if cfg.outtmpfile_checkbox:
 
         # パス設定
         tempwav_path = tempraw_path.with_suffix('.wav')
@@ -92,7 +92,7 @@ def convert_audio_parallel(cfg: AppConfig, img_info: list[int, str], is_bgm: boo
     run_sox(cfg, input_path, tempraw_path, is_bgm)
 
     # デバッグ用にwavファイルをdebug_dirにコピー
-    if cfg.debug_mode:
+    if cfg.outtmpfile_checkbox:
         if is_bgm:
             tempwavpath = tempraw_path.with_suffix('.wav')
             debugwavpath = Path(cfg.debug_dir / 'bgm' / f'bgm{p_index}.wav')

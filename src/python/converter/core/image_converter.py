@@ -141,7 +141,7 @@ def convert_image_parallel(cfg: AppConfig, img_info: list[int, str, str]) -> Non
     # 末尾に独自データを追記
     append_footer_data(temppng_path, tempbin_path)
 
-    if (cfg.debug_mode):
+    if (cfg.outtmpfile_checkbox):
         # デバッグ用に中間pngファイルをdebug_dirにコピー
         debug_png_path = Path(cfg.debug_dir / 'img' / f'img{p_index}.png')
         temppng_path.replace(debug_png_path)

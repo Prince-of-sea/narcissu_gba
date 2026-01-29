@@ -31,8 +31,17 @@ def licenses(cfg: AppConfig):
     return
 
 
+def change_user_name_callback(sender, app_data, user_data):
+
+    if (app_data):
+        dpg.show_item("change_user_name_text")
+    else:
+        dpg.hide_item("change_user_name_text") 
+    return
+
+
 def convert_button_callback(cfg: AppConfig):
-    cfg.debug_mode = bool(dpg.get_value("debug_checkbox"))
+    cfg.outtmpfile_checkbox = bool(dpg.get_value("outtmpfile_checkbox"))
     convert_main(cfg)
     return
 
@@ -94,16 +103,52 @@ def gui_main(cfg: AppConfig) -> None:
                         user_data=cfg,
                     )
 
-            with dpg.tree_node(label="詳細設定", default_open=True):
-                with dpg.group(horizontal=True):
-                    dpg.add_checkbox(
-                        label="変換途中のファイルを出力する（デバッグ）",
-                        tag="debug_checkbox",
-                        default_value=False,
-                    )
+            with dpg.tree_node(label="詳細設定", default_open=False):
+                with dpg.table(header_row=False, borders_innerH=False, borders_innerV=False):
+                    dpg.add_table_column(no_resize=True, width_fixed=True)
+                    dpg.add_table_column(no_resize=True, width_fixed=True)
+
+                    with dpg.table_row():
+                        dpg.add_checkbox(
+                            label="変換途中のファイルを出力する",
+                            tag="outtmpfile_checkbox",
+                            default_value=False,
+                        )
+                        with dpg.tooltip(parent="outtmpfile_checkbox"):
+                            dpg.add_text("GBA向け圧縮データを、\nROMとは別に出力します")
+
+                    with dpg.table_row():
+                        dpg.add_checkbox(
+                            label="Chapter1のサブタイトルを表示",
+                            tag="ch1subtitle_checkbox",
+                            default_value=False,
+                        )
+                        with dpg.tooltip(parent="ch1subtitle_checkbox"):
+                            dpg.add_text("Chapter1開始時にサブタイトルが\n挟まれるようになります\n(原作には存在しない表示です)")
+
+                    with dpg.table_row():
+                        dpg.add_checkbox(
+                            label="ROMに書き込まれるユーザー名を変更",
+                            tag="change_user_name_checkbox",
+                            default_value=False,
+                            callback=change_user_name_callback,
+                        )
+                        with dpg.tooltip(parent="change_user_name_checkbox"):
+                            dpg.add_text("「変換情報」欄に表示される\nユーザー名を自由に変更できます")
+                        dpg.add_input_text(
+                            tag="change_user_name_text",
+                            default_value=cfg.user_name,
+                            width=180,
+                            show=False,
+                        )
 
         with dpg.group(horizontal=True):
-            dpg.add_progress_bar(default_value=0, tag="progress_bar", overlay="0%")
+            dpg.add_progress_bar(
+                tag="progress_bar",
+                default_value=0,
+                overlay="0%",
+                width=400,
+            )
             dpg.add_button(
                 label="Convert",
                 tag="convert_button",
