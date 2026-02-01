@@ -86,7 +86,7 @@ def gui_main(cfg: AppConfig) -> None:
                 )
 
         with dpg.child_window(
-            height=180,
+            height=176,
             border=True,
         ):
             with dpg.tree_node(label="基本設定", default_open=True):
@@ -147,7 +147,7 @@ def gui_main(cfg: AppConfig) -> None:
                 tag="progress_bar",
                 default_value=0,
                 overlay="0%",
-                width=400,
+                width=380,
             )
             dpg.add_button(
                 label="Convert",
