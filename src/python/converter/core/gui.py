@@ -31,15 +31,6 @@ def licenses(cfg: AppConfig):
     return
 
 
-def change_user_name_callback(sender, app_data, user_data):
-
-    if (app_data):
-        dpg.show_item("change_user_name_text")
-    else:
-        dpg.hide_item("change_user_name_text") 
-    return
-
-
 def convert_button_callback(cfg: AppConfig):
     cfg.outtmpfile_checkbox = bool(dpg.get_value("outtmpfile_checkbox"))
     convert_main(cfg)
@@ -125,22 +116,6 @@ def gui_main(cfg: AppConfig) -> None:
                         )
                         with dpg.tooltip(parent="ch1subtitle_checkbox"):
                             dpg.add_text("Chapter1開始時にサブタイトルが\n挟まれるようになります\n(原作には存在しない表示です)")
-
-                    with dpg.table_row():
-                        dpg.add_checkbox(
-                            label="ROMに書き込まれるユーザー名を変更",
-                            tag="change_user_name_checkbox",
-                            default_value=False,
-                            callback=change_user_name_callback,
-                        )
-                        with dpg.tooltip(parent="change_user_name_checkbox"):
-                            dpg.add_text("「変換情報」欄に表示される\nユーザー名を自由に変更できます")
-                        dpg.add_input_text(
-                            tag="change_user_name_text",
-                            default_value=cfg.user_name,
-                            width=180,
-                            show=False,
-                        )
 
         with dpg.group(horizontal=True):
             dpg.add_progress_bar(

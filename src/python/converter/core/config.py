@@ -4,7 +4,7 @@ from datetime import datetime
 from pathlib import Path
 
 import dearpygui.dearpygui as dpg
-import os
+
 
 @dataclass
 class AppConfig:
@@ -13,7 +13,6 @@ class AppConfig:
     app_version: str
 
     # 利用ユーザー情報
-    user_name   : str
     convert_time: str
     
     # ===== 入出力 =====
@@ -61,7 +60,6 @@ class AppConfig:
     # ===== 設定関連 =====
     outtmpfile_checkbox:       bool
     ch1subtitle_checkbox:      bool
-    change_user_name_checkbox: bool
 
     # ===== プログレスバー進捗割合 =====
     progress_dict: dict = None
@@ -88,7 +86,6 @@ def set_gui_config(cfg: AppConfig) -> None:
     cfg.base_gba         = Path(cfg.cwd / "resources" / "base_gba" / f"base_{sound_quality_cfg}.gba")
     cfg.outtmpfile_checkbox       = bool(dpg.get_value("outtmpfile_checkbox"))
     cfg.ch1subtitle_checkbox      = bool(dpg.get_value("ch1subtitle_checkbox"))
-    cfg.change_user_name_checkbox = bool(dpg.get_value("change_user_name_checkbox"))
 
     cfg.exe_extract_dir.mkdir(parents=True, exist_ok=True)
     cfg.convert_dir.mkdir(parents=True, exist_ok=True)
@@ -98,9 +95,6 @@ def set_gui_config(cfg: AppConfig) -> None:
         Path(cfg.debug_dir / 'bgm').mkdir(parents=True, exist_ok=True)
         Path(cfg.debug_dir / 'fmx').mkdir(parents=True, exist_ok=True)
         Path(cfg.debug_dir / 'scn').mkdir(parents=True, exist_ok=True)
-    
-    if (cfg.change_user_name_checkbox):
-        cfg.user_name = dpg.get_value("change_user_name_text")
     
     return
 
@@ -134,9 +128,8 @@ def create_config(temp_dir: Path) -> AppConfig:
 
     cfg = AppConfig(
         app_name         = str("Narcissu GBA Converter"),
-        app_version      = str("0.7.5"),
+        app_version      = str("0.8.0"),
 
-        user_name        = str(os.getlogin()),
         convert_time     = str(),
         
         input_exe        = Path(cwd / "resources" / "game_win" / "nana24.exe"),
@@ -176,7 +169,6 @@ def create_config(temp_dir: Path) -> AppConfig:
 
         outtmpfile_checkbox       = bool(),
         ch1subtitle_checkbox      = bool(),
-        change_user_name_checkbox = bool(),
 
         progress_dict    = {
             "start": 0,

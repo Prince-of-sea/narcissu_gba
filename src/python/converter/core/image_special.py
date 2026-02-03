@@ -744,19 +744,24 @@ def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
     # 変換モード文字列
     if cfg.include_voice:
-        voice_mode = cfg.sound_quality_low_message
+        voice_mode = 'ボイスON'
     else:
-        voice_mode = cfg.sound_quality_high_message
+        voice_mode = 'ボイスOFF'
+    
+    if cfg.ch1subtitle_checkbox:
+        ch1_mode = '表示'
+    else:
+        ch1_mode = '非表示'
 
     # メッセージ内容
-    msg = f"""バージョン
-　{cfg.app_name} Ver.{cfg.app_version}
-変換モード
-　{voice_mode}
-ユーザー名
-　{cfg.user_name}
-日時
+    msg = f"""ROM変換日時
 　{cfg.convert_time}
+バージョン
+　Ver.{cfg.app_version}
+音声変換設定
+　{voice_mode} / {cfg.sound_quality}Hz
+Chapter1タイトル
+　{ch1_mode}
 
 本ソフトやコンバータに関する
 詳細情報、利用方法はこちら→
