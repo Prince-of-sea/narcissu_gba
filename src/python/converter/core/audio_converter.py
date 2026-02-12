@@ -61,7 +61,7 @@ def run_sox_dummy(cfg: AppConfig, dummyraw_path: Path) -> None:
 
     # 無音ファイル作成(音声再生後に、「データ上で次にあるファイル」の先頭が一瞬流れるバグがあるのでその解消用)
     # 次が流れてもそれが無音なら気づかれなくて済む、実害無い、とかいう雑な回避策
-    cmd = [cfg.sox_exe, '-n', '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', dummyraw_path, 'trim', '0', '1.15']
+    cmd = [cfg.sox_exe, '-n', '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', dummyraw_path, 'trim', '0', '1']
 
     # メイン処理 - コマンド実行
     subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
