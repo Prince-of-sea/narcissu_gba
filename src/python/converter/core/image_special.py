@@ -149,34 +149,6 @@ def convert_IMG015(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
 
 
 ###################################################################################################
-def convert_IMG018_023(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
-    """e/c001.jpg～e/c004.jpg 変換"""
-
-    # 画像を読み込み
-    with Image.open(nsa_extract_path).convert("RGB") as img:
-        
-        # 元画像の左上 (0, 0) の色を取得
-        bg_color = img.getpixel((0, 0))
-
-        # 元画像の左上の色をもとに240x160の新画像を作成
-        img_new = Image.new("RGB", (240, 160), bg_color)
-
-        # 元画像の(160, 196)から(640, 322)までを切り出し
-        img_cropped = img.crop((160, 196, 640, 322))
-
-        # 240x61に縮小
-        img_cropped = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
-
-        # 新切り出し画像を新画像の(0, 32)にはりつけ
-        img_new.paste(img_cropped, (0, 32))
-
-        # PNGで保存
-        img_new.save(temppng_path, "PNG")
-
-    return
-
-
-###################################################################################################
 def convert_IMG017(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     """e/c00.jpg 変換"""
 
@@ -218,6 +190,71 @@ def convert_IMG017(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         # 保存
         img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3)).save(temppng_path, "PNG")
     
+    return
+
+
+###################################################################################################
+def convert_IMG018_023(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c001.jpg、e/c004.jpg 変換"""
+
+    # 画像を読み込み
+    with Image.open(nsa_extract_path).convert("RGB") as img:
+        
+        # 元画像の左上 (0, 0) の色を取得
+        bg_color = img.getpixel((0, 0))
+
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        img_new = Image.new("RGB", (240, 160), bg_color)
+
+        # 元画像の(160, 196)から(640, 322)までを切り出し
+        img_cropped = img.crop((160, 196, 640, 322))
+
+        # 240x61に縮小
+        img_cropped = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
+
+        # 新切り出し画像を新画像の(0, 32)にはりつけ
+        img_new.paste(img_cropped, (0, 32))
+
+        # PNGで保存
+        img_new.save(temppng_path, "PNG")
+
+    return
+
+
+###################################################################################################
+def convert_IMG019_020(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """e/c001a.jpg～e/c001b.jpg 変換"""
+
+    # フィルター画像のパス
+    filter_image_path = cfg.image_filter_dir / Path('filter_019_1.bin')
+
+    # 画像を読み込み
+    with Image.open(nsa_extract_path).convert("RGB") as img:
+        
+        # 元画像の左上 (0, 0) の色を取得
+        bg_color = img.getpixel((0, 0))
+
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        img_new = Image.new("RGB", (240, 160), bg_color)
+
+        # 元画像の(160, 196)から(640, 322)までを切り出し
+        img_cropped = img.crop((160, 196, 640, 322))
+
+        # 240x61に縮小
+        img_cropped = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
+
+        # 新切り出し画像を新画像の(0, 32)にはりつけ
+        img_new.paste(img_cropped, (0, 32))
+
+        # フィルター画像を読み込み
+        with Image.open(filter_image_path) as filter_img:
+            
+            # 画像にフィルターを合成
+            img_new = Image.alpha_composite(img_new.convert('RGBA'), filter_img.convert('RGBA'))
+
+        # PNGで保存
+        img_new.save(temppng_path, "PNG")
+
     return
 
 
