@@ -82,7 +82,13 @@ def gui_main(cfg: AppConfig) -> None:
         ):
             with dpg.tree_node(label="基本設定", default_open=True):
                 with dpg.group(horizontal=False):
-                    dpg.add_text("変換モードの指定：")
+                    dpg.add_text(
+                        "変換モードの指定：",
+                        tag="convert_mode_text",
+                    )
+                    with dpg.tooltip(parent="convert_mode_text"):
+                        dpg.add_text("変換モードを指定できます\nボイスがない方が高音質です")
+
                     dpg.add_radio_button(
                         items=(
                             f"{cfg.sound_quality_low_message}",
