@@ -813,10 +813,7 @@ Chapter1タイトル
 　{ch1_mode}
 
 本ソフトやコンバータに関する
-詳細情報、利用方法はこちら→
-
-https://github.com
-/Prince-of-sea/narcissu_gba"""
+詳細情報、利用方法はこちら→"""
     
     line_s = 2  # 行間
     edge_color = (128, 128, 128, 64)
