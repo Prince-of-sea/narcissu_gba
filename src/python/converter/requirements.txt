@@ -1,2 +1,2 @@
-Pillow==11.1.0
+Pillow==12.1.1
 dearpygui==2.1.1
