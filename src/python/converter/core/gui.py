@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import dearpygui.dearpygui as dpg
 import webbrowser
-import sys
 
 from core.config import AppConfig
 from core.converter import convert_main
