@@ -10,7 +10,6 @@ from core.gui_utils import message_box
 
 def close():
     dpg.stop_dearpygui()
-    sys.exit(0)
 
 
 def open_repositorieslink(cfg: AppConfig):
@@ -32,7 +31,7 @@ def licenses(cfg: AppConfig):
 
 
 def convert_button_callback(cfg: AppConfig):
-    cfg.outtmpfile_checkbox = bool(dpg.get_value("outtmpfile_checkbox"))
+    cfg.out_temp_file_checkbox = bool(dpg.get_value("out_temp_file_checkbox"))
     convert_main(cfg)
     return
 
@@ -108,19 +107,19 @@ def gui_main(cfg: AppConfig) -> None:
                     with dpg.table_row():
                         dpg.add_checkbox(
                             label="変換途中のファイルを出力する",
-                            tag="outtmpfile_checkbox",
+                            tag="out_temp_file_checkbox",
                             default_value=False,
                         )
-                        with dpg.tooltip(parent="outtmpfile_checkbox"):
+                        with dpg.tooltip(parent="out_temp_file_checkbox"):
                             dpg.add_text("GBA向け圧縮データを、\nROMとは別に出力します")
 
                     with dpg.table_row():
                         dpg.add_checkbox(
                             label="Chapter1のサブタイトルを表示",
-                            tag="ch1subtitle_checkbox",
+                            tag="ch1_subtitle_checkbox",
                             default_value=False,
                         )
-                        with dpg.tooltip(parent="ch1subtitle_checkbox"):
+                        with dpg.tooltip(parent="ch1_subtitle_checkbox"):
                             dpg.add_text("Chapter1開始時にサブタイトルが\n挟まれるようになります\n(原作には存在しない表示です)")
 
         with dpg.group(horizontal=True):

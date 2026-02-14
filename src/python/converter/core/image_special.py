@@ -849,7 +849,7 @@ def convert_IMG999(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     else:
         voice_mode = 'ボイスOFF'
     
-    if cfg.ch1subtitle_checkbox:
+    if cfg.ch1_subtitle_checkbox:
         ch1_mode = '表示'
     else:
         ch1_mode = '非表示'
@@ -893,8 +893,8 @@ Chapter1タイトル
             img = Image.alpha_composite(img.convert('RGBA'), filter_img.convert('RGBA'))
 
         # メッセージ描画用の透明レイヤー
-        tmp = Image.new('RGBA', img.size, (0, 0, 0, 0))
-        draw = ImageDraw.Draw(tmp)
+        temp = Image.new('RGBA', img.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(temp)
         font = ImageFont.truetype(cfg.font_path, 10)
 
         # 文字貼り付け開始位置
@@ -906,7 +906,7 @@ Chapter1タイトル
         draw.multiline_text((x, y), msg, font=font, fill=main_color, spacing=line_s, align="left")
 
         # 文字合成
-        img.paste(tmp, (0, 0), tmp)
+        img.paste(temp, (0, 0), temp)
 
         # QRコード画像のパス
         filter1_image_path = cfg.image_filter_dir / Path('filter_999_1.bin')

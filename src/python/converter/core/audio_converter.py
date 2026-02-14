@@ -10,7 +10,7 @@ from core.converter_utils import subprocess_args
 from .paths import BGM_LIST, SE_LIST, VOICE_LIST
 
 
-def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) -> None:
+def run_sox(cfg: AppConfig, input_path: Path, temp_raw_path: Path, is_bgm: bool) -> None:
     """sox.exeを使って変換"""
 
     # 音質設定
@@ -18,27 +18,27 @@ def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) 
 
     # メイン処理 - コマンド組み立て
     if is_bgm:
-        cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_path,
+        cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', temp_raw_path,
                'silence', '1', '0.1', '1%', 'reverse', 'silence', '1', '0.1', '1%', 'reverse']
     else:
-        cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', tempraw_path, 'gain', '-l', '6',
+        cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', temp_raw_path, 'gain', '-l', '6',
                'silence', '1', '0.1', '0.5%', 'reverse', 'silence', '1', '0.1', '0.5%', 'reverse']
 
     # メイン処理 - コマンド実行
     subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
 
     # デバッグ用
-    if cfg.outtmpfile_checkbox:
+    if cfg.out_temp_file_checkbox:
 
         # パス設定
-        tempwav_path = tempraw_path.with_suffix('.wav')
+        temp_wav_path = temp_raw_path.with_suffix('.wav')
 
         # テスト用処理 - コマンド組み立て
         if is_bgm:
-            cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-b8', tempwav_path, 
+            cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-b8', temp_wav_path, 
                     'silence', '1', '0.1', '1%', 'reverse', 'silence', '1', '0.1', '1%', 'reverse']
         else:
-            cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-b8', tempwav_path, 'gain', '-l', '6',
+            cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-b8', temp_wav_path, 'gain', '-l', '6',
                     'silence', '1', '0.1', '0.5%', 'reverse', 'silence', '1', '0.1', '0.5%', 'reverse']
 
         # テスト用処理 - コマンド実行
@@ -47,13 +47,13 @@ def run_sox(cfg: AppConfig, input_path: Path, tempraw_path: Path, is_bgm: bool) 
     # 無音ファイルコピー
     shutil.copyfile(
         Path(cfg.convert_dir / 'dummy.raw'),
-        Path(cfg.convert_dir / f'{tempraw_path.stem}_'),
+        Path(cfg.convert_dir / f'{temp_raw_path.stem}_'),
     )
 
     return
 
 
-def run_sox_dummy(cfg: AppConfig, dummyraw_path: Path) -> None:
+def run_sox_dummy(cfg: AppConfig, dummy_raw_path: Path) -> None:
     """sox.exeを使って無音ファイルを作成"""
 
     # 音質設定
@@ -61,7 +61,7 @@ def run_sox_dummy(cfg: AppConfig, dummyraw_path: Path) -> None:
 
     # 無音ファイル作成(音声再生後に、「データ上で次にあるファイル」の先頭が一瞬流れるバグがあるのでその解消用)
     # 次が流れてもそれが無音なら気づかれなくて済む、実害無い、とかいう雑な回避策
-    cmd = [cfg.sox_exe, '-n', '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', dummyraw_path, 'trim', '0', '1']
+    cmd = [cfg.sox_exe, '-n', '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', dummy_raw_path, 'trim', '0', '1']
 
     # メイン処理 - コマンド実行
     subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
@@ -77,37 +77,37 @@ def convert_audio_parallel(cfg: AppConfig, img_info: list[int, str], is_bgm: boo
 
     if is_bgm:
         p_index = str(img_info[0]).zfill(2)
-        tempraw_path = (cfg.convert_dir  / f'bgm{p_index}.raw')
+        temp_raw_path = (cfg.convert_dir  / f'bgm{p_index}.raw')
         output_path  = (cfg.convert_dir  / f'bgm{p_index}.bin')
     else:
         p_index = str(img_info[0]).zfill(3)
-        tempraw_path = (cfg.convert_dir  / f'fmx{p_index}.raw')
+        temp_raw_path = (cfg.convert_dir  / f'fmx{p_index}.raw')
         output_path  = (cfg.convert_dir  / f'fmx{p_index}.bin')
 
     # 競合するファイルがあれば削除
-    if tempraw_path.exists():
-        tempraw_path.unlink()
+    if temp_raw_path.exists():
+        temp_raw_path.unlink()
 
     # sox.exeを使って変換
-    run_sox(cfg, input_path, tempraw_path, is_bgm)
+    run_sox(cfg, input_path, temp_raw_path, is_bgm)
 
     # デバッグ用にwavファイルをdebug_dirにコピー
-    if cfg.outtmpfile_checkbox:
+    if cfg.out_temp_file_checkbox:
         if is_bgm:
-            tempwavpath = tempraw_path.with_suffix('.wav')
-            debugwavpath = Path(cfg.debug_dir / 'bgm' / f'bgm{p_index}.wav')
+            temp_wav_path = temp_raw_path.with_suffix('.wav')
+            debug_wav_path = Path(cfg.debug_dir / 'bgm' / f'bgm{p_index}.wav')
         else:
-            tempwavpath = tempraw_path.with_suffix('.wav')
-            debugwavpath = Path(cfg.debug_dir / 'fmx' / f'fmx{p_index}.wav')
+            temp_wav_path = temp_raw_path.with_suffix('.wav')
+            debug_wav_path = Path(cfg.debug_dir / 'fmx' / f'fmx{p_index}.wav')
 
-        tempwavpath.replace(debugwavpath)
+        temp_wav_path.replace(debug_wav_path)
     
     # 競合するファイルがあれば削除
     if output_path.exists(): 
         output_path.unlink()
 
     # 変換したrawファイルをrenameして出力パスに移動
-    tempraw_path.replace(output_path)
+    temp_raw_path.replace(output_path)
 
     return
 
@@ -124,13 +124,13 @@ def convert_audio(cfg: AppConfig) -> None:
     # プログレスバー計算用  
     prog_img = cfg.progress_dict["convert_images"]
     prog_aud = cfg.progress_dict["convert_audio"]
-    alllist_len = len(BGM_LIST + fmx_list)
+    all_list_len = len(BGM_LIST + fmx_list)
     
     # 無音ファイルパス
-    dummyraw_path = Path(cfg.convert_dir / f'dummy.raw')
+    dummy_raw_path = Path(cfg.convert_dir / f'dummy.raw')
 
     # 無音ファイル作成
-    run_sox_dummy(cfg, dummyraw_path)
+    run_sox_dummy(cfg, dummy_raw_path)
 
     # 並列ファイル変換
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -149,10 +149,10 @@ def convert_audio(cfg: AppConfig) -> None:
         # 処理待ち&プログレスバー計算更新
         for i, ft in enumerate(concurrent.futures.as_completed(futures)):
             configure_progress_bar(
-                prog_img + float(i / alllist_len) * (prog_aud - prog_img))
+                prog_img + float(i / all_list_len) * (prog_aud - prog_img))
     
     # 無音ファイル削除
-    dummyraw_path.unlink()
+    dummy_raw_path.unlink()
 
     # プログレスバー更新
     configure_progress_bar(cfg.progress_dict["convert_audio"])

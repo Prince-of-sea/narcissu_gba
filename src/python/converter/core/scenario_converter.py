@@ -326,7 +326,7 @@ def convert_txt(lines: list[str], cfg: AppConfig) -> dict:
         # ボイス無し版
         scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[639:1101])
 
-        if (cfg.ch1subtitle_checkbox):
+        if (cfg.ch1_subtitle_checkbox):
             scn_list['003'] += ([cmd_cnt.get_str(), '!g', '2', cmd_cnt.get_str(), '#t', '120'])
         
         scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[1105:2184])
@@ -348,7 +348,7 @@ def convert_txt(lines: list[str], cfg: AppConfig) -> dict:
         # ボイス有り版
         scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[10126:10598]))
 
-        if (cfg.ch1subtitle_checkbox):
+        if (cfg.ch1_subtitle_checkbox):
             scn_list['003'] += ([cmd_cnt.get_str(), '!g', '2', cmd_cnt.get_str(), '#t', '120'])
         
         scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[10622:11709]))
@@ -401,7 +401,7 @@ def create_scenario_files(scn_list: dict, cfg: AppConfig) -> None:
             f.write(scn_bin)
 
         # デバッグ用テキスト出力
-        if (cfg.outtmpfile_checkbox):
+        if (cfg.out_temp_file_checkbox):
             output_txt_path = Path(cfg.debug_dir / 'scn' / f'SCN{scn_key}.txt')
             debug_txt = "\n".join(scn_val)
             

@@ -58,8 +58,8 @@ class AppConfig:
     sound_quality_low_message:  str
 
     # ===== 設定関連 =====
-    outtmpfile_checkbox:       bool
-    ch1subtitle_checkbox:      bool
+    out_temp_file_checkbox:    bool
+    ch1_subtitle_checkbox:      bool
 
     # ===== プログレスバー進捗割合 =====
     progress_dict: dict = None
@@ -84,13 +84,13 @@ def set_gui_config(cfg: AppConfig) -> None:
     cfg.output_debug_dir = Path(cfg.cwd / f"debug_{result_gba_name}")
     cfg.result_gba       = Path(cfg.cwd / result_gba_name)
     cfg.base_gba         = Path(cfg.cwd / "resources" / "base_gba" / f"base_{sound_quality_cfg}.gba")
-    cfg.outtmpfile_checkbox       = bool(dpg.get_value("outtmpfile_checkbox"))
-    cfg.ch1subtitle_checkbox      = bool(dpg.get_value("ch1subtitle_checkbox"))
+    cfg.out_temp_file_checkbox     = bool(dpg.get_value("out_temp_file_checkbox"))
+    cfg.ch1_subtitle_checkbox      = bool(dpg.get_value("ch1_subtitle_checkbox"))
 
     cfg.exe_extract_dir.mkdir(parents=True, exist_ok=True)
     cfg.convert_dir.mkdir(parents=True, exist_ok=True)
 
-    if (cfg.outtmpfile_checkbox):
+    if (cfg.out_temp_file_checkbox):
         Path(cfg.debug_dir / 'img').mkdir(parents=True, exist_ok=True)
         Path(cfg.debug_dir / 'bgm').mkdir(parents=True, exist_ok=True)
         Path(cfg.debug_dir / 'fmx').mkdir(parents=True, exist_ok=True)
@@ -167,8 +167,8 @@ def create_config(temp_dir: Path) -> AppConfig:
         sound_quality_high_message = str(),
         sound_quality_low_message  = str(),
 
-        outtmpfile_checkbox       = bool(),
-        ch1subtitle_checkbox      = bool(),
+        out_temp_file_checkbox       = bool(),
+        ch1_subtitle_checkbox      = bool(),
 
         progress_dict    = {
             "start": 0,

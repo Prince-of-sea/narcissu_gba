@@ -7,7 +7,7 @@ from core.config import AppConfig
 
 
 def subprocess_args(include_stdout=True):
-    # subprocessがexe化時正常に動かないときの対策
+    """subprocessがexe化時正常に動かないときの対策"""
 
     if hasattr(subprocess, 'STARTUPINFO'):
         si = subprocess.STARTUPINFO()

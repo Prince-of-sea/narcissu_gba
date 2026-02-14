@@ -41,7 +41,7 @@ def run_gbfs(cfg: AppConfig) -> None:
     result = subprocess.run(cmd, cwd = cfg.convert_dir, stdout=subprocess.PIPE, text=True, **subprocess_args(False))
 
     # デバッグモード時
-    if cfg.outtmpfile_checkbox:
+    if cfg.out_temp_file_checkbox:
 
         # ログを保存
         log_path = Path(cfg.debug_dir / "gbfs_log.txt")
@@ -67,7 +67,7 @@ def pack_resources(cfg: AppConfig) -> None:
     join_binary_files(cfg)
 
     # デバッグモード時はdebug_dir内の中間生成物を保存
-    if (cfg.outtmpfile_checkbox):
+    if (cfg.out_temp_file_checkbox):
         # debug_dirをoutput_dir以下にコピー
         if cfg.output_debug_dir.exists():
             shutil.rmtree(cfg.output_debug_dir)
