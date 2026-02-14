@@ -155,42 +155,52 @@ def convert_IMG017(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     # 文字ついてない版の画像パス
     sora01_path = nsa_extract_path.parent / Path('sora01.jpg')
 
-    # 文面 直置きは気が引けるので申し訳程度のバイナリ表記
-    image_msg = b'\xe2\x80\x95\xe3\x80\x80\xef\xbc\x92\xef\xbc\x90\xef\xbc\x90\xef\xbc\x94\xe5\xb9\xb4\xe3\x80\x80\xe4\xb8\xbb\xe4\xba\xba\xe5\x85\xac\xe3\x80\x80\xe5\x88\x9d\xe5\xa4\x8f\xe3\x80\x80\xe2\x80\x95'.decode('utf-8')
-
-    line_s = 2  # 行間
-    edge_color = (128, 128, 128,  64)
-    main_color = (255, 255, 255, 255)
+    # フィルター画像のパス
+    filter_image_path = cfg.image_filter_dir / Path('filter_017_1.bin')
 
     with Image.open(sora01_path) as img:
-        img = img.convert("RGB")
-        img_new = Image.new("RGB", (240, 160), img.getpixel((0, 0)))
+
+        # 元画像の左上の色をもとに240x160の新画像を作成
+        bg_color = img.getpixel((0, 0))
+        img_new = Image.new("RGB", (240, 160), bg_color)
         
-        # 縮小画像(240x61)の作成
-        img_resized = img.crop((0, 145, 800, 349)).resize((240, 61), Image.Resampling.LANCZOS)
-
-        # 描画準備
-        tmp = Image.new('RGBA', img_resized.size, (0, 0, 0, 0))
-        draw = ImageDraw.Draw(tmp)
-        font = ImageFont.truetype(cfg.font_path, 11)
-
-        # 1行目を基準とした中央座標計算
-        first_line = image_msg.split('\n')[0]
-        bbox = draw.textbbox((0, 0), first_line, font=font)
-        x, y = (img_resized.width - (bbox[2]-bbox[0])) // 2, (img_resized.height - (bbox[3]-bbox[1])) // 2
-
-        # 描画（縁4方向 + 本体
-        for ox, oy in [(-1,0), (1,0), (0,-1), (0,1)]:
-            draw.multiline_text((x+ox, y+oy), image_msg, font=font, fill=edge_color, spacing=line_s, align="center")
-        draw.multiline_text((x, y), image_msg, font=font, fill=main_color, spacing=line_s, align="center")
-
-        img_resized.paste(tmp, (0, 0), tmp)
+        # 元画像の(0,145)から(800,349)を切り出し
+        img_cropped = img.crop((0, 145, 800, 349))
+        
+        # 240x61に縮小
+        img_resized = img_cropped.resize((240, 61), Image.Resampling.LANCZOS)
+        
+        # 新画像の(0,32)にはりつけ
         img_new.paste(img_resized, (0, 32))
+
+        # 元画像を開く
+        with Image.open(nsa_extract_path) as img_ex:
+
+            # フィルター画像(透過用)を開く
+            with Image.open(filter_image_path) as img_alpha:
+                # 同サイズの透明な画像を生成
+                img_new2 = Image.new("RGBA", img_new.size, (255, 255, 255, 0))
+
+                # 透過
+                img_ex.putalpha(img_alpha.convert('L'))
+
+                # 切り出し
+                img_ex = img_ex.crop((292, 250, 513, 267))#222 18
+
+                # 縮小
+                img_ex = img_ex.resize((148, 12))
+
+                # 新画像にはりつけ
+                img_new2.paste(img_ex, (46, 57))
+
+                # 透明な画像を重ね合わせる
+                img_new = Image.alpha_composite(img_new.convert("RGBA"), img_new2)
         
+        # シャープネスを少し上げる
+        img_new = img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3))
+
         # 保存
-        img_new.filter(ImageFilter.UnsharpMask(radius=2, percent=15, threshold=3)).save(temppng_path, "PNG")
-    
-    return
+        img_new.save(temppng_path, "PNG")
 
 
 ###################################################################################################
@@ -390,7 +400,7 @@ def convert_IMG026(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
                 # 縮小
                 img_ex = img_ex.resize((150, 12))
 
-                # 新画像の(62,84)にはりつけ
+                # 新画像にはりつけ
                 img_new2.paste(img_ex, (45, 57))
 
                 # 透明な画像を重ね合わせる
