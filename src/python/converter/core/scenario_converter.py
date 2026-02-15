@@ -226,7 +226,7 @@ def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], 
                                 cmd_cnt.add(20)
 
                                 # エンディング直前(直前であることをcソース側で検知させるために他と被らない数値で指定)
-                                if ((cfg.include_voice) and (cmd_cnt.get_str() == '4100')) or (
+                                if ((cfg.include_voice) and (cmd_cnt.get_str() == '4128')) or (
                                     (not cfg.include_voice) and (cmd_cnt.get_str() == '41A0')):
                                     line_command += [cmd_cnt.get_str(), '#t', str(12)]
                                 
