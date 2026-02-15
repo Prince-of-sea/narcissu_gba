@@ -451,13 +451,17 @@ void NvExecParse3T(void)
 	{
 		Nv.isSkip = false;
 	}
+	*/
+	if(w == 12 && Nv.no == 3)
+	{
+		Nv.isSkip = false;
+	}
+	///// ソース改変ここまで /////
 
 	if(Nv.isSkip == true)
 	{
 		return;
 	}
-	*/
-	///// ソース改変ここまで /////
 
 	Nv.wait = w * 2;
 	Nv.isLoop = false;
