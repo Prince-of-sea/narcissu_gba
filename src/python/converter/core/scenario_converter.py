@@ -122,6 +122,9 @@ def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], 
     # 出力用配列
     line_command_list = []
 
+    # エンディング直前フラグ
+    ending_flug = False
+
     # 一行ごと読み込み
     for line in txt_lines:
 
@@ -225,10 +228,10 @@ def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], 
                                 # -以下画像切り替えフェード用のウェイト追加-
                                 cmd_cnt.add(20)
 
-                                # エンディング直前(直前であることをcソース側で検知させるために他と被らない数値で指定)
-                                if ((cfg.include_voice) and (cmd_cnt.get_str() == '4100')) or (
-                                    (not cfg.include_voice) and (cmd_cnt.get_str() == '41A0')):
+                                # [特殊]エンディング直前(直前であることをcソース側で検知させるために他と被らない数値で指定)
+                                if (ending_flug):
                                     line_command += [cmd_cnt.get_str(), '#t', str(12)]
+                                    ending_flug = False
                                 
                                 # それ以外は通常のウェイト指定
                                 else:
@@ -276,6 +279,10 @@ def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], 
                             # 普通の文章
                             elif (ptkey == TEXT_PATTERN):
                                 line_command += [cmd_cnt.get_str(), '_m', ls]
+                            
+                            # エンディング手前かどうかチェック
+                            if (ls == b'\x81c\x81c\x8ec\x82\xb9\x82\xbd\x89\xb4\x92B\x82\xcc\x8f\xd8\x82\xb5\x81c\x81c'.decode('cp932')):
+                                ending_flug = True
 
                     # 見出し
                     elif (ptkey in [MOV_STR_PATTERN]):
@@ -324,13 +331,23 @@ def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], 
 def convert_txt(lines: list[str], cfg: AppConfig) -> dict:
     """シナリオテキスト変換の全処理"""
 
-    # 必要な初期データ準備
+    # 必要な初期データ準備(共通)
     scn_list = {
         '000': ['0', '0000', '!t', '起動', '0000', '#W', '200', '0000', '#t', '10', '0000', 
                 '!g', '0', '0000', '#t', '6', '0000', '!g', '1', '0000', '#t', '6', '0000', '!j', '1', '0000', ';;', ''],
-        '003': ['0', '0000', '#W',  '0', '0000', '#t',  '1', '0000', '#W', '1'],
+        
+        '005': ['0', '0000', '#W',  '0', '0000', '#t',  '1', '0000', '#W', '1'],
         '006': ['0', '0000', '!t', 'プロダクト',   '0000', '#W', '0'],
     }
+
+    # ボイス有りの場合は004追加
+    if (cfg.include_voice):
+        scn_list['004'] = ['0', '0000', '#W',  '0', '0000', '#t',  '1', '0000', '#W', '1']
+
+    # ボイス無しの場合は自動ジャンプ用003追加
+    else:
+        scn_list['003'] = ['0', '0000', '!j',  '5', ';;', '']
+    
 
     # 謎コマンドカウンタ管理クラス初期化
     cmd_cnt  = CommandCnt()
@@ -338,56 +355,53 @@ def convert_txt(lines: list[str], cfg: AppConfig) -> dict:
     # !s命令用カウンタ管理クラス初期化
     s_cnt = StepCnt()
 
-    # 本編シナリオ
+    # ボイス有り版
+    if (cfg.include_voice):
+        cmd_cnt.reset()
+        cmd_cnt.add(20)
+        scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[10126:10598], False, cfg))
+        if (cfg.ch1_subtitle_checkbox):
+            scn_list['004'] += ([cmd_cnt.get_str(), '!g', '2', cmd_cnt.get_str(), '#t', '120'])
+        scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[10622:11709], False, cfg))
+        scn_list['004'] += ([cmd_cnt.get_str(), '!g', '3', cmd_cnt.get_str(), '#t', '120'])
+        scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[11717:13244], False, cfg))
+        scn_list['004'] += ([cmd_cnt.get_str(), '!g', '4', cmd_cnt.get_str(), '#t', '120'])
+        scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[13247:14528], False, cfg))
+        scn_list['004'] += ([cmd_cnt.get_str(), '!g', '5', cmd_cnt.get_str(), '#t', '120'])
+        scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[14531:15539], False, cfg))
+        scn_list['004'] += ([cmd_cnt.get_str(), '!g', '6', cmd_cnt.get_str(), '#t', '120'])
+        scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[15543:16884], False, cfg))
+        scn_list['004'] += ([cmd_cnt.get_str(), '!g', '7', cmd_cnt.get_str(), '#t', '120'])
+        scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[16889:17897], False, cfg))
+        scn_list['004'] += ([cmd_cnt.get_str(), '!g', '8', cmd_cnt.get_str(), '#t', '120'])
+        scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[17899:19128], False, cfg))
+        scn_list['004'] += ([cmd_cnt.get_str(), '!g', '9', cmd_cnt.get_str(), '#t', '120'])
+        scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[19131:19758], False, cfg))
+        scn_list['004'] += ([cmd_cnt.get_str(), '!g', '1', cmd_cnt.get_str(), '#t', '1', cmd_cnt.get_str(), '!j', '1', cmd_cnt.get_str(), ';;', ''])
+
+    # ボイス無し版
+    cmd_cnt.reset()
     cmd_cnt.add(20)
-    if (not cfg.include_voice):
-        # ボイス無し版
-        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[639:1101], False, cfg)
-
-        if (cfg.ch1_subtitle_checkbox):
-            scn_list['003'] += ([cmd_cnt.get_str(), '!g', '2', cmd_cnt.get_str(), '#t', '120'])
-        
-        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[1105:2184], False, cfg)
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '3', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[2188:3690], False, cfg)
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '4', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[3693:4945], False, cfg)
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '5', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[4948:5926], False, cfg)
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '6', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[5930:7258], False, cfg)
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '7', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[7263:8255], False, cfg)
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '8', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[8257:9471], False, cfg)
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '9', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += convert_txt_main(cmd_cnt, s_cnt, lines[9474:10120], False, cfg)
-    else:
-        # ボイス有り版
-        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[10126:10598], False, cfg))
-
-        if (cfg.ch1_subtitle_checkbox):
-            scn_list['003'] += ([cmd_cnt.get_str(), '!g', '2', cmd_cnt.get_str(), '#t', '120'])
-        
-        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[10622:11709], False, cfg))
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '3', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[11717:13244], False, cfg))
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '4', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[13247:14528], False, cfg))
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '5', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[14531:15539], False, cfg))
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '6', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[15543:16884], False, cfg))
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '7', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[16889:17897], False, cfg))
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '8', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[17899:19128], False, cfg))
-        scn_list['003'] += ([cmd_cnt.get_str(), '!g', '9', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['003'] += (convert_txt_main(cmd_cnt, s_cnt, lines[19131:19758], False, cfg))
-
-    # 本編シナリオ末尾追加
-    scn_list['003'] += ([cmd_cnt.get_str(), '!g', '1', cmd_cnt.get_str(), '#t', '1', cmd_cnt.get_str(), '!j', '1', cmd_cnt.get_str(), ';;', ''])
-
+    scn_list['005'] += convert_txt_main(cmd_cnt, s_cnt, lines[639:1101], False, cfg)
+    if (cfg.ch1_subtitle_checkbox):
+        scn_list['005'] += ([cmd_cnt.get_str(), '!g', '2', cmd_cnt.get_str(), '#t', '120'])
+    scn_list['005'] += convert_txt_main(cmd_cnt, s_cnt, lines[1105:2184], False, cfg)
+    scn_list['005'] += ([cmd_cnt.get_str(), '!g', '3', cmd_cnt.get_str(), '#t', '120'])
+    scn_list['005'] += convert_txt_main(cmd_cnt, s_cnt, lines[2188:3690], False, cfg)
+    scn_list['005'] += ([cmd_cnt.get_str(), '!g', '4', cmd_cnt.get_str(), '#t', '120'])
+    scn_list['005'] += convert_txt_main(cmd_cnt, s_cnt, lines[3693:4945], False, cfg)
+    scn_list['005'] += ([cmd_cnt.get_str(), '!g', '5', cmd_cnt.get_str(), '#t', '120'])
+    scn_list['005'] += convert_txt_main(cmd_cnt, s_cnt, lines[4948:5926], False, cfg)
+    scn_list['005'] += ([cmd_cnt.get_str(), '!g', '6', cmd_cnt.get_str(), '#t', '120'])
+    scn_list['005'] += convert_txt_main(cmd_cnt, s_cnt, lines[5930:7258], False, cfg)
+    scn_list['005'] += ([cmd_cnt.get_str(), '!g', '7', cmd_cnt.get_str(), '#t', '120'])
+    scn_list['005'] += convert_txt_main(cmd_cnt, s_cnt, lines[7263:8255], False, cfg)
+    scn_list['005'] += ([cmd_cnt.get_str(), '!g', '8', cmd_cnt.get_str(), '#t', '120'])
+    scn_list['005'] += convert_txt_main(cmd_cnt, s_cnt, lines[8257:9471], False, cfg)
+    scn_list['005'] += ([cmd_cnt.get_str(), '!g', '9', cmd_cnt.get_str(), '#t', '120'])
+    scn_list['005'] += convert_txt_main(cmd_cnt, s_cnt, lines[9474:10120], False, cfg)
+    scn_list['005'] += ([cmd_cnt.get_str(), '!g', '1', cmd_cnt.get_str(), '#t', '1', cmd_cnt.get_str(), '!j', '1', cmd_cnt.get_str(), ';;', ''])
+    
     # Ｐｒｏｄｕｃｔシナリオ
     cmd_cnt.reset()
     cmd_cnt.add(20)
@@ -402,6 +416,7 @@ def convert_txt(lines: list[str], cfg: AppConfig) -> dict:
     scn_list['006'] += ([cmd_cnt.get_str(), '!t', extract_concept(lines[324])])
     scn_list['006'] += (convert_txt_main(cmd_cnt, s_cnt, lines[528:570], True, cfg))
     scn_list['006'] += ([cmd_cnt.get_str(), '!g', '1', cmd_cnt.get_str(), '#t', '1', cmd_cnt.get_str(), '!j', '1', cmd_cnt.get_str(), ';;', ''])
+
     return scn_list
 
 
@@ -425,6 +440,98 @@ def create_scenario_files(scn_list: dict, cfg: AppConfig) -> None:
             
             with open(output_txt_path, "w", encoding="cp932") as f:
                 f.write(debug_txt)
+    
+    return
+
+
+def convert_txt_select_main(d: dict) -> bytes:
+    """選択肢シナリオ変換メイン処理"""
+    data = bytearray()
+    data_add_list = []
+    
+    # 選択肢の数を追加
+    data += str(len(d.items())).encode("shift_jis")
+
+    # 区切りのためのNULLバイト
+    data += b"\x00"
+
+    for key in d.keys():
+        # キーをShift_JISでエンコードして追加
+        data += key.encode("shift_jis")
+
+        # 区切りのためのNULLバイト
+        data += b"\x00"
+
+        # データの追加位置を記録
+        data_add_list.append(len(data))
+
+        # 仮
+        data += b"\xFF\xFF"
+
+        # 区切りのためのNULLバイト
+        data += b"\x00\x00\x00"
+
+    # 区切りのためのNULLバイト
+    data += b"\x00"
+
+    # エラー時終了用区切り？
+    data += ';;'.encode("shift_jis")
+
+    # 区切りのためのNULLバイト
+    data += b"\x00"
+
+    for i, value in enumerate(d.values()):
+
+        # data_add_list[i]の位置からdata_add_list[i]+1の場所に、現在のdataの長さを2バイトで上書きする
+        # 但し逆に(10A0の場合はA0 10の順で上書きする)
+        data[data_add_list[i]:data_add_list[i]+2] = len(data).to_bytes(2, byteorder='little')
+
+        # 既読管理(仮)
+        data += '0000'.encode("shift_jis")
+
+        # 区切りのためのNULLバイト
+        data += b"\x00"
+
+        # ジャンプ
+        data += '!j'.encode("shift_jis")
+
+        # 区切りのためのNULLバイト
+        data += b"\x00"
+
+        # 飛び先の値
+        data += str(value).encode("shift_jis")
+
+        # 区切りのためのNULLバイト
+        data += b"\x00"
+
+        # 既読管理(仮)
+        data += '0000'.encode("shift_jis")
+
+        # 区切りのためのNULLバイト
+        data += b"\x00"
+
+        # エラー時終了用区切り？
+        data += ';;'.encode("shift_jis")
+
+        # 区切りのためのNULLバイト
+        data += b"\x00"
+
+    return bytes(data)
+
+
+def create_scenario_select_files(cfg: AppConfig) -> None:
+    """選択肢シナリオ変換の全処理"""
+
+    # ボイス有無選択肢 - ボイス有りの時のみ実装
+    if (cfg.include_voice):
+
+        # 選択肢シナリオ変換(今回はとりあえず1つだけ実装)
+        d = {"ボイス有り": 4, "ボイス無し": 5}
+        select_bin = convert_txt_select_main(d)
+
+        # 保存
+        with open(cfg.convert_dir / 'SCN003.bin', 'wb') as f:
+            f.write(select_bin)
     
     return
 
@@ -458,6 +565,9 @@ def convert_scenario(cfg: AppConfig) -> None:
 
     # シナリオ書き出し
     create_scenario_files(scn_list, cfg)
+
+    # 選択肢シナリオ変換&書き出し
+    create_scenario_select_files(cfg)
     
     # savid作成
     create_savid(cfg)

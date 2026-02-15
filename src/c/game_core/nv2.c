@@ -452,7 +452,7 @@ void NvExecParse3T(void)
 		Nv.isSkip = false;
 	}
 	*/
-	if(w == 12 && Nv.no == 3)
+	if(w == 12 && (Nv.no == 4 || Nv.no == 5))
 	{
 		Nv.isSkip = false;
 	}
