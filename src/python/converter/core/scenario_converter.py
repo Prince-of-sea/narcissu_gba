@@ -75,7 +75,7 @@ def extract_concept(text):
     return None
 
 
-def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], is_product: bool, cfg: AppConfig) -> list[str]:
+def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], is_product: bool, cfg: AppConfig) -> tuple[list[str], list[dict]]:
     """シナリオ変換メイン処理"""
 
     # パターン定義
@@ -419,7 +419,14 @@ def convert_txt(lines: list[str], cfg: AppConfig) -> dict:
     scn_list['006'] += (convert_txt_main(cmd_cnt, s_cnt, lines[528:570], True, cfg))
     scn_list['006'] += ([cmd_cnt.get_str(), '!g', '1', cmd_cnt.get_str(), '#t', '1', cmd_cnt.get_str(), '!j', '1', cmd_cnt.get_str(), ';;', ''])
 
-    return scn_list
+    # 選択肢の定義
+    sel_dict = {}
+
+    # ボイスがある場合選択肢追加
+    if (cfg.include_voice):
+        sel_dict['007'] = {'ボイス有り': 4, 'ボイス無し': 5}
+
+    return scn_list, sel_dict
 
 
 def create_scenario_files(scn_list: dict, cfg: AppConfig) -> None:
@@ -521,18 +528,15 @@ def convert_txt_select_main(d: dict) -> bytes:
     return bytes(data)
 
 
-def create_scenario_select_files(cfg: AppConfig) -> None:
-    """選択肢シナリオ変換の全処理"""
+def create_scenario_select_files(sel_dict: dict, cfg: AppConfig) -> None:
+    """シナリオ選択肢ファイル作成"""
 
-    # ボイス有無選択肢 - ボイス有りの時のみ実装
-    if (cfg.include_voice):
-
-        # 選択肢シナリオ変換(今回はとりあえず1つだけ実装)
-        d = {"ボイス有り": 4, "ボイス無し": 5}
-        select_bin = convert_txt_select_main(d)
+    for sel_key, sel_val in sel_dict.items():
+        
+        select_bin = convert_txt_select_main(sel_val)
 
         # 保存
-        with open(cfg.convert_dir / 'SCN007.bin', 'wb') as f:
+        with open(cfg.convert_dir / f'SCN{sel_key}.bin', 'wb') as f:
             f.write(select_bin)
     
     return
@@ -563,13 +567,13 @@ def convert_scenario(cfg: AppConfig) -> None:
     lines = [line.strip() for line in lines]
 
     # シナリオ変換
-    scn_list = convert_txt(lines, cfg)
+    scn_list, sel_dict = convert_txt(lines, cfg)
 
     # シナリオ書き出し
     create_scenario_files(scn_list, cfg)
 
-    # 選択肢シナリオ変換&書き出し
-    create_scenario_select_files(cfg)
+    # 選択肢書き出し
+    create_scenario_select_files(sel_dict, cfg)
     
     # savid作成
     create_savid(cfg)
