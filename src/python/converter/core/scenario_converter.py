@@ -426,6 +426,10 @@ def convert_txt(lines: list[str], cfg: AppConfig) -> dict:
     if (cfg.include_voice):
         sel_dict['007'] = {'ボイス有り': 4, 'ボイス無し': 5}
 
+
+    # 通常シナリオはテキスト配列→バイナリ、
+    # 選択肢は辞書配列→バイナリ になっている
+    # 分かりにくいのでいつか統一するかもしれないが、とりあえずはこのまま
     return scn_list, sel_dict
 
 
