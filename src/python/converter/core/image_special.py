@@ -275,6 +275,9 @@ def convert_IMG024(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
     # 文字ついてない版の画像パス
     chara_0013b_path = nsa_extract_path.parent / Path('chara_0013b.jpg')
 
+    # 文字だけ取ってくる用の画像パス
+    c0052_path = nsa_extract_path.parent / Path('c0052.jpg')
+
     # フィルター画像のパス
     filter_image_path = cfg.image_filter_dir / Path('filter_024-025_1.bin')
 
@@ -293,16 +296,13 @@ def convert_IMG024(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
         # 新画像の(0,32)にはりつけ
         img_new.paste(img_resized, (0, 32))
 
-        # 元画像を開く
-        with Image.open(nsa_extract_path) as img_ex:
+        # 文字だけ取ってくる用の画像を開く
+        with Image.open(c0052_path) as img_ex:
 
             # フィルター画像(透過用)を開く
             with Image.open(filter_image_path) as img_alpha:
                 # 同サイズの透明な画像を生成
                 img_new2 = Image.new("RGBA", img_new.size, (255, 255, 255, 0))
-
-                # グレースケール
-                img_ex = img_ex.convert('L').convert('RGBA')
 
                 # 透過
                 img_ex.putalpha(img_alpha.convert('L'))
