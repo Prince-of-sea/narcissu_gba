@@ -629,6 +629,7 @@ IMG_LIST = [
     
 	[144,'tui/na01.bmp',                       ''],
 	[145,'tui/na02.bmp',                       ''],
-    
+
+	[500,'tui/title_off.bmp',                  'special_500'],
 	[999,'sys/config.bmp',                     'special_999']
 ]

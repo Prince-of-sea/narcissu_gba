@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-from PIL import Image, ImageFilter, ImageOps, ImageDraw, ImageFont
+from PIL import Image, ImageFilter, ImageEnhance, ImageOps, ImageDraw, ImageFont
 
 from core.config import AppConfig
 
@@ -832,6 +832,43 @@ def convert_IMG139(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
             
             # 画像にフィルターを合成
             img = Image.alpha_composite(img.convert('RGBA'), filter_img.convert('RGBA'))
+
+        # PNGで保存
+        img.save(temppng_path, "PNG")
+
+    return
+
+
+###################################################################################################
+def convert_IMG500(nsa_extract_path: Path, temppng_path: Path, cfg: AppConfig):
+    """tui/title_off.bmp 変換"""
+
+    # フィルター画像のパス
+    filter_image_path = cfg.image_filter_dir / Path('filter_001_1.bin')
+
+    # 画像を読み込み
+    with Image.open(nsa_extract_path) as img:
+
+        # 240x180にリサイズ（縮小）
+        img = img.resize((240, 180), Image.Resampling.LANCZOS)
+        
+        # 上下10pxを捨てる（240x160にクロップ）
+        img = img.crop((0, 10, 240, 170))
+
+        # シャープネスを少し上げる
+        img = img.filter(ImageFilter.UnsharpMask(radius=2, percent=30, threshold=3))
+
+        # フィルター画像を読み込み
+        with Image.open(filter_image_path) as filter_img:
+            
+            # 画像にフィルターを合成
+            img = Image.alpha_composite(img.convert('RGBA'), filter_img.convert('RGBA'))
+
+        # enhancerオブジェクト生成
+        enhancer = ImageEnhance.Brightness(img)
+
+        # enhancerオブジェクトの強調
+        img = enhancer.enhance(0.5)
 
         # PNGで保存
         img.save(temppng_path, "PNG")
