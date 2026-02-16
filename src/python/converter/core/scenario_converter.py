@@ -75,7 +75,7 @@ def extract_concept(text):
     return None
 
 
-def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], is_product: bool, cfg: AppConfig) -> tuple[list[str], list[dict]]:
+def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], is_product: bool, cfg: AppConfig) -> list[str]:
     """シナリオ変換メイン処理"""
 
     # パターン定義
