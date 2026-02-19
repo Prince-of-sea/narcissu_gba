@@ -10,19 +10,23 @@ from core.converter_utils import subprocess_args
 from .paths import BGM_LIST, SE_LIST, VOICE_LIST
 
 
-def run_sox(cfg: AppConfig, input_path: Path, temp_raw_path: Path, is_bgm: bool) -> None:
+def run_sox(cfg: AppConfig, input_path: Path, temp_raw_path: Path, is_bgm: bool, no_music_threshold: float) -> None:
     """sox.exeを使って変換"""
 
     # 音質設定
     rate = cfg.sound_quality
 
+    # 無音判定の閾値設定
+    no_music_threshold_0 = no_music_threshold[0] #前
+    no_music_threshold_1 = no_music_threshold[1] #後
+
     # メイン処理 - コマンド組み立て
     if is_bgm:
         cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', temp_raw_path,
-               'silence', '1', '0.1', '1%', 'reverse', 'silence', '1', '0.1', '1%', 'reverse']
+               'silence', '1', '0.1', f'{no_music_threshold_0}%', 'reverse', 'silence', '1', '0.1', f'{no_music_threshold_1}%', 'reverse']
     else:
         cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', temp_raw_path, 'gain', '-l', '6',
-               'silence', '1', '0.1', '0.5%', 'reverse', 'silence', '1', '0.1', '0.5%', 'reverse']
+               'silence', '1', '0.1', f'{no_music_threshold_0}%', 'reverse', 'silence', '1', '0.1', f'{no_music_threshold_1}%', 'reverse']
 
     # メイン処理 - コマンド実行
     subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
@@ -73,6 +77,8 @@ def convert_audio_parallel(cfg: AppConfig, img_info: list[int, str], is_bgm: boo
     """音声の並列変換処理"""
 
     p_relative_path = img_info[1]
+    p_no_music_threshold = img_info[2]
+
     input_path   = (cfg.nsa_extract_dir / Path(p_relative_path))
 
     if is_bgm:
@@ -89,7 +95,7 @@ def convert_audio_parallel(cfg: AppConfig, img_info: list[int, str], is_bgm: boo
         temp_raw_path.unlink()
 
     # sox.exeを使って変換
-    run_sox(cfg, input_path, temp_raw_path, is_bgm)
+    run_sox(cfg, input_path, temp_raw_path, is_bgm, p_no_music_threshold)
 
     # デバッグ用にwavファイルをdebug_dirにコピー
     if cfg.out_temp_file_checkbox:
