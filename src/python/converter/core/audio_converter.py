@@ -40,10 +40,10 @@ def run_sox(cfg: AppConfig, input_path: Path, temp_raw_path: Path, is_bgm: bool,
         # テスト用処理 - コマンド組み立て
         if is_bgm:
             cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-b8', temp_wav_path, 
-                    'silence', '1', '0.1', '1%', 'reverse', 'silence', '1', '0.1', '1%', 'reverse']
+                    'silence', '1', '0.1', f'{no_music_threshold_0}%', 'reverse', 'silence', '1', '0.1', f'{no_music_threshold_1}%', 'reverse']
         else:
             cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-b8', temp_wav_path, 'gain', '-l', '6',
-                    'silence', '1', '0.1', '0.5%', 'reverse', 'silence', '1', '0.1', '0.5%', 'reverse']
+                    'silence', '1', '0.1', f'{no_music_threshold_0}%', 'reverse', 'silence', '1', '0.1', f'{no_music_threshold_1}%', 'reverse']
 
         # テスト用処理 - コマンド実行
         subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
