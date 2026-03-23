@@ -128,7 +128,7 @@ def create_config(temp_dir: Path) -> AppConfig:
 
     cfg = AppConfig(
         app_name         = str("Narcissu GBA Converter"),
-        app_version      = str("0.8.2"),
+        app_version      = str("0.8.3"),
 
         convert_time     = str(),
         
