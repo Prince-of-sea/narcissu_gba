@@ -364,7 +364,7 @@ def convert_txt(lines: list[str], cfg: AppConfig) -> dict:
         scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[10126:10598], False, cfg))
         if (cfg.ch1_subtitle_checkbox):
             scn_list['004'] += ([cmd_cnt.get_str(), '!g', '2', cmd_cnt.get_str(), '#t', '120'])
-        scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[10622:11709], False, cfg))
+        scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[10606:11709], False, cfg))
         scn_list['004'] += ([cmd_cnt.get_str(), '!g', '3', cmd_cnt.get_str(), '#t', '120'])
         scn_list['004'] += (convert_txt_main(cmd_cnt, s_cnt, lines[11717:13244], False, cfg))
         scn_list['004'] += ([cmd_cnt.get_str(), '!g', '4', cmd_cnt.get_str(), '#t', '120'])
