@@ -40,6 +40,14 @@ IWRAM_CODE void MemIncFast(void* src, void* dst, u32 size)
 	SwiCpuFastSet(src, dst, (size / 4));
 }
 //---------------------------------------------------------------------------
+///// ソース改変ここから /////
+// 最小限合わせてLZ77対応
+IWRAM_CODE void MemIncLZ77(void* src, void* dst)
+{
+	LZ77UnCompWram(src, dst);
+}
+//---------------------------------------------------------------------------
+///// ソース改変ここまで /////
 IWRAM_CODE void MemFixFast(void* src, void* dst, u32 size)
 {
 	_ASSERT((size & 31) == 0);

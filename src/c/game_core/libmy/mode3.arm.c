@@ -23,7 +23,7 @@ IWRAM_CODE void Mode3DrawBg(u16* pImg)
 	/*
 	MemIncFast(pImg, pDst, 212*160*2);
 	*/
-	MemIncFast(pImg, pDst, 240*160*2);
+	MemIncLZ77(pImg, pDst);
 	///// É\Å[ÉXâ¸ïœÇ±Ç±Ç‹Ç≈ /////
 }
 //---------------------------------------------------------------------------

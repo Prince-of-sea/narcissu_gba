@@ -25,6 +25,9 @@ IWRAM_CODE void MemFix(void* src, void* dst, u32 size);
 IWRAM_CODE void MemClear(void* dst, u32 size);
 
 IWRAM_CODE void MemIncFast(void* src, void* dst, u32 size);
+///// ソース改変ここから /////
+IWRAM_CODE void MemIncLZ77(void* src, void* dst);
+///// ソース改変ここまで /////
 IWRAM_CODE void MemFixFast(void* src, void* dst, u32 size);
 IWRAM_CODE void MemClearFast(void* dst, u32 size);
 

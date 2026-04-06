@@ -40,7 +40,7 @@ from .paths import IMG_LIST
 def run_grit(cfg: AppConfig, in_path: Path) -> None:
     """grit.exe を使って変換"""
 
-    cmd = [cfg.grit_exe, in_path, '-gb', '-gB16', '-ftb', '-gu16', '-fh!']
+    cmd = [cfg.grit_exe, in_path, '-gb', '-gB16', '-gzl', '-ftb', '-gu16', '-fh!']
     subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
     
     return
