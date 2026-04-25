@@ -13,7 +13,7 @@ extern "C" {
 #define SND_AUDIO_RATE			21024
 */
 #ifndef SND_AUDIO_RATE
-#define SND_AUDIO_RATE			5734
+#define SND_AUDIO_RATE			8778
 #endif
 ///// É\Å[ÉXâ¸ïœÇ±Ç±Ç‹Ç≈ /////
 #define SND_FPS					60
