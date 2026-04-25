@@ -49,10 +49,11 @@ def run_sox(cfg: AppConfig, input_path: Path, temp_raw_path: Path, is_bgm: bool,
         subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
     
     # 無音ファイルコピー
-    shutil.copyfile(
-        Path(cfg.convert_dir / 'dummy.raw'),
-        Path(cfg.convert_dir / f'{temp_raw_path.stem}_'),
-    )
+    if ((is_bgm) or (input_path.stem == 'fmx045')):
+        shutil.copyfile(
+            Path(cfg.convert_dir / 'dummy.raw'),
+            Path(cfg.convert_dir / f'{temp_raw_path.stem}_'),
+        )
 
     return
 
@@ -63,7 +64,7 @@ def run_sox_dummy(cfg: AppConfig, dummy_raw_path: Path) -> None:
     # 音質設定
     rate = cfg.sound_quality
 
-    # 無音ファイル作成(音声再生後に、「データ上で次にあるファイル」の先頭が一瞬流れるバグがあるのでその解消用)
+    # 無音ファイル作成(BGM再生後に、「データ上で次にあるファイル」の先頭が一瞬流れるバグがあるのでその解消用)
     # 次が流れてもそれが無音なら気づかれなくて済む、実害無い、とかいう雑な回避策
     cmd = [cfg.sox_exe, '-n', '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', dummy_raw_path, 'trim', '0', '1.3']
 
