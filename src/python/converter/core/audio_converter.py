@@ -22,12 +22,17 @@ def run_sox(cfg: AppConfig, input_path: Path, temp_raw_path: Path, is_bgm: bool,
 
     # メイン処理 - コマンド組み立て
     if is_bgm:
-        cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', temp_raw_path,
-               'silence', '1', '0.1', f'{no_music_threshold_0}%', 'reverse', 'silence', '1', '0.1', f'{no_music_threshold_1}%', 'reverse']
+        cmd = [cfg.sox_exe, '-D', input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', temp_raw_path,
+                'silence', '1', '0.1', f'{no_music_threshold_0}%', 'reverse', 'silence', '1', '0.1', f'{no_music_threshold_1}%', 'reverse',
+                'rate', '-v', str(rate),
+                'norm', '-1']
     else:
-        cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', temp_raw_path, 'gain', '-l', '6',
-               'silence', '1', '0.1', f'{no_music_threshold_0}%', 'reverse', 'silence', '1', '0.1', f'{no_music_threshold_1}%', 'reverse']
-
+        cmd = [cfg.sox_exe, '-D', input_path, '-c1', f'-r{rate}', '-B', '-b8', '-e', 'signed-integer', temp_raw_path,
+                'silence', '1', '0.1', f'{no_music_threshold_0}%', 'reverse', 'silence', '1', '0.1', f'{no_music_threshold_1}%', 'reverse',
+                'gain', '-l', '6',
+                'rate', '-v', str(rate),
+                'norm', '-1']
+    
     # メイン処理 - コマンド実行
     subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
 
@@ -39,11 +44,16 @@ def run_sox(cfg: AppConfig, input_path: Path, temp_raw_path: Path, is_bgm: bool,
 
         # テスト用処理 - コマンド組み立て
         if is_bgm:
-            cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-b8', temp_wav_path, 
-                    'silence', '1', '0.1', f'{no_music_threshold_0}%', 'reverse', 'silence', '1', '0.1', f'{no_music_threshold_1}%', 'reverse']
+            cmd = [cfg.sox_exe, '-D', input_path, '-c1', f'-r{rate}', '-b8', temp_wav_path,
+                    'silence', '1', '0.1', f'{no_music_threshold_0}%', 'reverse', 'silence', '1', '0.1', f'{no_music_threshold_1}%', 'reverse',
+                    'rate', '-v', str(rate),
+                    'norm', '-1']
         else:
-            cmd = [cfg.sox_exe, input_path, '-c1', f'-r{rate}', '-b8', temp_wav_path, 'gain', '-l', '6',
-                    'silence', '1', '0.1', f'{no_music_threshold_0}%', 'reverse', 'silence', '1', '0.1', f'{no_music_threshold_1}%', 'reverse']
+            cmd = [cfg.sox_exe, '-D', input_path, '-c1', f'-r{rate}', '-b8', temp_wav_path,
+                   'silence', '1', '0.1', f'{no_music_threshold_0}%', 'reverse', 'silence', '1', '0.1', f'{no_music_threshold_1}%', 'reverse',
+                   'gain', '-l', '6',
+                   'rate', '-v', str(rate),
+                   'norm', '-1']
 
         # テスト用処理 - コマンド実行
         subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
