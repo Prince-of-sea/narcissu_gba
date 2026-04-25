@@ -24,7 +24,7 @@
 ## 基本的な使い方
  1. [Releasesから最新のnarcissu_gba.7zをダウンロード](https://github.com/Prince-of-sea/narcissu_gba/releases/latest)し、展開してください
  2. [vectorからナルキッソス(nana24.exe)をダウンロード](https://www.vector.co.jp/soft/win95/amuse/se376566.html)し、  
-    __展開せずに__`./build-exe/resources/game_win`へ配置してください ※調子悪いとき用の[魚拓はこちら](https://web.archive.org/web/20241128191233fw_/https://ftp.vector.co.jp/37/65/1834/nana24.exe)
+    __展開せずに__`./resources/game_win`へ配置してください ※調子悪いとき用の[魚拓はこちら](https://web.archive.org/web/20241128191233fw_/https://ftp.vector.co.jp/37/65/1834/nana24.exe)
  3. 「Narcissu_GBA_Converter.exe」を起動します
  4. 選択項目を確認し、「Convert」を押してください
  5. 進捗バーが100%になり、「変換が完了しました」という表示が出たら完了です
