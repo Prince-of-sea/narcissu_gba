@@ -19,7 +19,7 @@ def open_repositorieslink(cfg: AppConfig):
 def copyrights(cfg: AppConfig):
 
     message_box('copyrights',
-                f'{cfg.app_name} ver.{cfg.app_version}\n(C) 2025-2026 Prince-of-sea / PC-CNT')
+                f'{cfg.app_name} ver.{cfg.app_version}\n(C) 2025-2026 COM(Prince-of-sea) / PC-CNT')
 
     return
 
