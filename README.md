@@ -17,6 +17,8 @@
  以下の環境でセーブ/ロード、クリアまでの動作は確認しました。
  - [mGBA 0.10.5  (Windows, 64bit, portable版)](https://mgba.io/downloads.html)
  - [ChisFlash V1.1 RTC Cart (EPICJOY製)](https://ja.aliexpress.com/item/1005010183225651.html)
+ - [SuperChis FRAM](https://ja.aliexpress.com/item/1005011683828513.html) + [SuperFW v0.20](https://github.com/davidgfnet/superfw/releases/tag/v0.20) [(gba-patch-gen
+使用)](https://patchtool.superfw.davidgf.net/)
 
  ※RTC対応カートリッジで動作確認を行っただけであり、本ROMがRTC機能を使用するわけではありません
 
