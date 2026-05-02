@@ -233,6 +233,10 @@ def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], 
                                     line_command += [cmd_cnt.get_str(), '#t', str(12)]
                                     ending_flug = False
                                 
+                                # ロゴ画像だけ直打ちでウェイト指定
+                                if (iml_0 in [82, 83, 84]):
+                                    line_command += [cmd_cnt.get_str(), '#t', str(0)]
+                                
                                 # それ以外は通常のウェイト指定
                                 else:
                                     line_command += [cmd_cnt.get_str(), '#t', str(wait_time)]
