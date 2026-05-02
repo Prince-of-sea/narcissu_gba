@@ -224,19 +224,19 @@ ROM_DATA s32 InfoBgm[] = {
 //	3,		// RADIO
 //	11,		// RADIONZ
 	*/
-	10,		// bgm/3_12.mp3
-	11,		// bgm/a01.mp3
 	12,		// bgm/e02.mp3
-	13,		// bgm/n03.mp3
+	21,		// tui2/e01.mp3
 	14,		// bgm/n04.mp3
+	17,		// bgm/o012.mp3
+	13,		// bgm/n03.mp3
+	20,		// bgm/sen02_20.mp3
+	22,		// tui/sen032.mp3
+	11,		// bgm/a01.mp3
+	10,		// bgm/3_12.mp3
+	18,		// bgm/o02.mp3
 	15,		// bgm/n05.mp3
 	16,		// bgm/o01.mp3
-	17,		// bgm/o012.mp3
-	18,		// bgm/o02.mp3
 	19,		// bgm/sen02.mp3
-	20,		// bgm/sen02_20.mp3
-	21,		// tui2/e01.mp3
-	22,		// tui/sen032.mp3
 	///// É\Å[ÉXâ¸ïœÇ±Ç±Ç‹Ç≈ /////
 };
 
