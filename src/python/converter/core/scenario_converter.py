@@ -299,7 +299,7 @@ def convert_txt_main(cmd_cnt: CommandCnt, s_cnt: StepCnt, txt_lines: list[str], 
                         
                     # クリック待ち
                     elif (ptkey in [CLICK_PATTERN]):
-                        line_command += [cmd_cnt.get_str(), '_r', '　'*68]
+                        line_command += [cmd_cnt.get_str(), '_r', '']
 
                     # ウェイト
                     elif (ptkey in [WAIT_PATTERN, WAIT_SHORT_PATTERN]):

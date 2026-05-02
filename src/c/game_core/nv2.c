@@ -130,7 +130,18 @@ void NvExecParse1R(void)
 
 	TxtSetMsg(s);
 	TxtSetExec();
+	///// ソース改変ここから /////
+	/*
 	CurSetPage();
+	*/
+	if(*s != '\0'){
+		CurSetPage();
+	}
+	else
+	{
+		CurSetPageNone();
+	}
+	///// ソース改変ここまで /////
 	CurSetExec();
 
 	Nv.isPage = true;

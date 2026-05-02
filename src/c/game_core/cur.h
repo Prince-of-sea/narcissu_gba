@@ -30,6 +30,7 @@ void CurExec(void);
 /*
 void CurSetLf(void);
 */
+void CurSetPageNone(void);
 ///// ƒ\[ƒX‰ü•Ï‚±‚±‚Ü‚Å /////
 void CurSetPage(void);
 void CurSetExec(void);
