@@ -554,7 +554,7 @@ def create_savid(cfg: AppConfig) -> None:
     """savid 作成"""
     
     # byte列として変数に格納
-    # 終末GBAと同一内容のものをもってきただけなので詳細不明
+    # Analogue Pocketでセーブを行えるようにするために"SRAM_Vnnn"を書いておく必要がある
     savid_hex = bytes.fromhex('53 52 41 4D 5F 56 6E 6E 6E 00 00 00 00 00 00 00')
 
     # ファイル「savid.bin」として保存
