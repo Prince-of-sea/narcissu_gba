@@ -6,6 +6,23 @@
 //---------------------------------------------------------------------------
 ST_BGM Bgm;
 
+///// ソース改変ここから /////
+s32 adjustList[13] = {
+	36,		// bgm10.bin
+	35,		// bgm11.bin
+	40,		// bgm12.bin
+	51,		// bgm13.bin
+	60,		// bgm14.bin
+	41,		// bgm15.bin
+	66,		// bgm16.bin
+	76,		// bgm17.bin
+	50,		// bgm18.bin
+	42,		// bgm19.bin
+	42,		// bgm20.bin
+	31,		// bgm21.bin
+	32,		// bgm22.bin
+};
+///// ソース改変ここまで /////
 
 //---------------------------------------------------------------------------
 void BgmInit(void)
@@ -52,7 +69,8 @@ void BgmPlayRaw(s32 no)
 	/*
 	SndPlay(SND_ID_BGM, p, size, 2, false);
 	*/
-	SndPlay(SND_ID_BGM, p, size, 2, true);
+	s32 adjust = adjustList[no - 10]; // BGMナンバーはbgm10始まり
+	SndPlay(SND_ID_BGM, p, size, adjust, true);
 	///// ソース改変ここまで /////
 }
 //---------------------------------------------------------------------------

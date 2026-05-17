@@ -57,13 +57,6 @@ def run_sox(cfg: AppConfig, input_path: Path, temp_raw_path: Path, is_bgm: bool,
 
         # テスト用処理 - コマンド実行
         subprocess.run(cmd, cwd = cfg.convert_dir, **subprocess_args())
-    
-    # 無音ファイルコピー
-    if ((is_bgm) or (input_path.stem == 'fmx045')):
-        shutil.copyfile(
-            Path(cfg.convert_dir / 'dummy.raw'),
-            Path(cfg.convert_dir / f'{temp_raw_path.stem}_'),
-        )
 
     return
 
@@ -142,12 +135,6 @@ def convert_audio(cfg: AppConfig) -> None:
     prog_img = cfg.progress_dict["convert_images"]
     prog_aud = cfg.progress_dict["convert_audio"]
     all_list_len = len(BGM_LIST + fmx_list)
-    
-    # 無音ファイルパス
-    dummy_raw_path = Path(cfg.convert_dir / f'dummy.raw')
-
-    # 無音ファイル作成
-    run_sox_dummy(cfg, dummy_raw_path)
 
     # 並列ファイル変換
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -167,9 +154,6 @@ def convert_audio(cfg: AppConfig) -> None:
         for i, ft in enumerate(concurrent.futures.as_completed(futures)):
             configure_progress_bar(
                 prog_img + float(i / all_list_len) * (prog_aud - prog_img))
-    
-    # 無音ファイル削除
-    dummy_raw_path.unlink()
 
     # プログレスバー更新
     configure_progress_bar(cfg.progress_dict["convert_audio"])
