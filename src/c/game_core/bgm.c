@@ -69,7 +69,17 @@ void BgmPlayRaw(s32 no)
 	/*
 	SndPlay(SND_ID_BGM, p, size, 2, false);
 	*/
-	s32 adjust = adjustList[no - 10]; // BGMナンバーはbgm10始まり
+	s32 adjust;
+	if(no == 2)
+	{
+		// 特殊処理(タイトル"se/umi13.wav"用)
+		adjust = 2;
+	}
+	else
+	{
+		// 通常時(BGMナンバーはbgm10始まり)
+		adjust = adjustList[no - 10];
+	}
 	SndPlay(SND_ID_BGM, p, size, adjust, true);
 	///// ソース改変ここまで /////
 }
